@@ -27,18 +27,3 @@ module.exports.validateRegisterInput = (
         valid: Object.keys(errors).length < 1
     };
 };
-
-module.exports.validateLoginInput = (email, password) => {
-    const errors = {};
-    if (!email || email.trim() === '') {
-        errors.username = 'Email must not be empty';
-    }
-    if (!password || password.trim() === '') {
-        errors.password = 'Password must not be empty';
-    }
-
-    return {
-        errors,
-        valid: Object.keys(errors).length < 1
-    };
-};

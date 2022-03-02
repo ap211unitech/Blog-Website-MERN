@@ -1,0 +1,5 @@
+
+# Server 
+server/node_modules
+server/.env
+server/requests.http

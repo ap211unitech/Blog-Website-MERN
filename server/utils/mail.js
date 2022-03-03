@@ -8,10 +8,11 @@ const API_KEY = process.env.SENDGRID_KEY
 const SENDER_EMAIL = process.env.SENDER_EMAIL
 
 const sgMail = require("@sendgrid/mail");
-const { activationTemplate } = require("./mailTemplates");
+const { activationTemplate, forgotPasswordTemplate } = require("./mailTemplates");
 
 sgMail.setApiKey(API_KEY);
 
+// Sends Email For Activate Account
 const activationEmail = async ({ to, token }) => {
     const message = {
         to: [to],
@@ -24,12 +25,32 @@ const activationEmail = async ({ to, token }) => {
     }
     try {
         await sgMail.send(message);
-        console.log('Email Sent...')
+        console.log('Activation Link Email Sent...')
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+// Sends Email For Reset Password
+const forgotPasswordEmail = async ({ to, token }) => {
+    const message = {
+        to: [to],
+        from: {
+            name: 'Reset Password',
+            email: SENDER_EMAIL
+        },
+        subject: 'Test mail',
+        html: forgotPasswordTemplate(URL, token)
+    }
+    try {
+        await sgMail.send(message);
+        console.log('Forgot Password Email Sent...')
     } catch (err) {
         console.log(err)
     }
 }
 
 module.exports = {
-    activationEmail
+    activationEmail,
+    forgotPasswordEmail
 }

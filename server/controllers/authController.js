@@ -1,7 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const { validateRegisterInput } = require("../utils/validators");
 const bcryptjs = require("bcryptjs");
-const { activationEmail } = require("../utils/mail");
+const { activationEmail, forgotPasswordEmail } = require("../utils/mail");
 const jwt = require("jsonwebtoken");
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY
 const User = require("../models/User");
@@ -86,40 +86,92 @@ const login = asyncHandler(async (req, res) => {
 // @Route   /auth/activate/:token
 // @Access  Public
 const activateAccount = asyncHandler(async (req, res) => {
+
     //Token
     const token = req.params.token;
 
-    if (!token) {
+    try {
+        const decoded = await jwt.verify(token, JWT_SECRET_KEY);
+        const userExists = await User.findById(decoded.id).select('-password');
+
+        if (!userExists) {
+            res.status(400)
+            throw new Error(JSON.stringify({ err: 'Invalid Link' }))
+        }
+
+        if (userExists.isActivated) {
+            res.status(400)
+            throw new Error(JSON.stringify({ err: 'User account already activated' }))
+        }
+
+        // Set isActivated Property to true
+        userExists.isActivated = true;
+        await userExists.save();
+
+        res.json(userExists);
+
+    } catch (e) {
         res.status(400)
-        throw new Error(JSON.stringify({ err: 'Not able to activate account, No token found' }))
+        throw new Error(JSON.stringify({ err: 'Invalid/Expired Link' }))
+    }
+})
+
+// @Desc    Forgot Password Link ( Email Sending )
+// @Route   /auth/forgotpassword
+// @Access  Public
+const forgotPassword = asyncHandler(async (req, res) => {
+    const { email } = req.body;
+
+    // Check if user with that email exists
+    const userExists = await User.findOne({ email });
+
+    if (!userExists) {
+        res.status(400)
+        throw new Error(JSON.stringify({ err: 'No such user exists' }))
+    }
+
+    // Generate token
+    const token = generateToken(userExists._id);
+
+    // Send Reset Password Email
+    forgotPasswordEmail({ to: userExists.email, token })
+
+    res.status(200).json({ msg: 'Reset Password Link sent' });
+})
+
+// @Desc    Reset Password ( After Mail Sent )
+// @Route   /auth/resetpassword/:token
+// @Access  Public
+const resetPassword = asyncHandler(async (req, res) => {
+    const token = req.params.token;
+    const { newPassword } = req.body;
+
+    if (!newPassword || newPassword.trim().length < 6) {
+        res.status(400)
+        throw new Error(JSON.stringify({ err: 'Password must be length of greater than 6' }))
     }
 
     const decoded = await jwt.verify(token, JWT_SECRET_KEY);
 
-    if (!decoded.id) {
-        res.status(400)
-        throw new Error(JSON.stringify({ err: 'Invalid Link' }))
-    }
-
-    const userExists = await User.findById(decoded.id).select('-password');
+    // Check if user exists for that id 
+    const userExists = await User.findById(decoded.id);
 
     if (!userExists) {
         res.status(400)
-        throw new Error(JSON.stringify({ err: 'Invalid Link' }))
+        throw new Error(JSON.stringify({ err: 'No such user exists' }))
     }
 
-    if (userExists.isActivated) {
-        res.status(400)
-        throw new Error(JSON.stringify({ err: 'User account already activated' }))
-    }
+    // Hash Password
+    const salt = await bcryptjs.genSalt(10);
+    const hashedPassword = await bcryptjs.hash(newPassword, salt);
 
-    // Set isActivated Property to true
-    userExists.isActivated = true;
+    userExists.password = hashedPassword;
     await userExists.save();
 
-    res.json(userExists);
+    res.status(200).json({ msg: 'Passord reset successfully' });
 
 })
+
 
 // Generate Token
 const generateToken = (id) => {
@@ -130,5 +182,7 @@ const generateToken = (id) => {
 module.exports = {
     register,
     login,
-    activateAccount
+    activateAccount,
+    forgotPassword,
+    resetPassword
 }

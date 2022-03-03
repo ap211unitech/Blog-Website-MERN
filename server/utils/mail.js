@@ -3,15 +3,16 @@ const path = require("path");
 // Environmental Variables
 require("dotenv").config({ path: path.resolve(__dirname, '../.env') });
 
+const URL = process.env.BACKEND_HOST_URL
 const API_KEY = process.env.SENDGRID_KEY
 const SENDER_EMAIL = process.env.SENDER_EMAIL
 
 const sgMail = require("@sendgrid/mail");
-const { activation } = require("./mailTemplates");
+const { activationTemplate } = require("./mailTemplates");
 
 sgMail.setApiKey(API_KEY);
 
-const activationLink = async ({ to, token }) => {
+const activationEmail = async ({ to, token }) => {
     const message = {
         to: [to],
         from: {
@@ -19,7 +20,7 @@ const activationLink = async ({ to, token }) => {
             email: SENDER_EMAIL
         },
         subject: 'Test mail',
-        html: activation(token)
+        html: activationTemplate(URL, token)
     }
     try {
         await sgMail.send(message);
@@ -28,7 +29,7 @@ const activationLink = async ({ to, token }) => {
         console.log(err)
     }
 }
-activationLink({ to: 'bjp4168@gmail.com', token: 'abc' })
+
 module.exports = {
-    activationLink
+    activationEmail
 }

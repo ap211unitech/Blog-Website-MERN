@@ -1,13 +1,14 @@
 const asyncHandler = require("express-async-handler");
 const { validateRegisterInput } = require("../utils/validators");
 const bcryptjs = require("bcryptjs");
+const { activationEmail } = require("../utils/mail");
 const jwt = require("jsonwebtoken");
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY
 const User = require("../models/User");
 
-// @Desc Public
-// @Route /auth/register
-// @Access Public
+// @Desc    Register New user through formdata
+// @Route   /auth/register
+// @Access  Public
 const register = asyncHandler(async (req, res) => {
     const { name, email, password } = req.body;
 
@@ -23,7 +24,7 @@ const register = asyncHandler(async (req, res) => {
     const userExists = await User.findOne({ email });
     if (userExists) {
         res.status(400)
-        throw new Error('User Already exists')
+        throw new Error(JSON.stringify({ err: 'User Already exists' }))
     }
 
     // Hash Password
@@ -38,17 +39,24 @@ const register = asyncHandler(async (req, res) => {
     })
 
     await user.save();
+
+    // Generate Token
+    const token = generateToken(user._id);
+
+    // Send Confirmation/Activation Email 
+    activationEmail({ to: user.email.trim(), token });
+
     res.json({
         _id: user._id,
         name: user.name,
         email: user.email,
-        token: generateToken(user._id)
+        token
     });
 })
 
-// @Desc Public
-// @Route /auth/login
-// @Access Public
+// @Desc    Login User through formdata
+// @Route   /auth/login
+// @Access  Public
 const login = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
 
@@ -56,14 +64,14 @@ const login = asyncHandler(async (req, res) => {
     const userExists = await User.findOne({ email });
     if (!userExists) {
         res.status(400)
-        throw new Error('No such user exists')
+        throw new Error(JSON.stringify({ err: 'No such user exists' }))
     }
 
     // Verify Password
     const isMatch = await bcryptjs.compare(password, userExists.password);
     if (!isMatch) {
         res.status(400)
-        throw new Error('Incorrect Password')
+        throw new Error(JSON.stringify({ err: 'Incorrect Password' }))
     }
 
     res.json({
@@ -74,12 +82,53 @@ const login = asyncHandler(async (req, res) => {
     });
 })
 
+// @Desc    Activate User Account
+// @Route   /auth/activate/:token
+// @Access  Public
+const activateAccount = asyncHandler(async (req, res) => {
+    //Token
+    const token = req.params.token;
+
+    if (!token) {
+        res.status(400)
+        throw new Error(JSON.stringify({ err: 'Not able to activate account, No token found' }))
+    }
+
+    const decoded = await jwt.verify(token, JWT_SECRET_KEY);
+
+    if (!decoded.id) {
+        res.status(400)
+        throw new Error(JSON.stringify({ err: 'Invalid Link' }))
+    }
+
+    const userExists = await User.findById(decoded.id).select('-password');
+
+    if (!userExists) {
+        res.status(400)
+        throw new Error(JSON.stringify({ err: 'Invalid Link' }))
+    }
+
+    if (userExists.isActivated) {
+        res.status(400)
+        throw new Error(JSON.stringify({ err: 'User account already activated' }))
+    }
+
+    // Set isActivated Property to true
+    userExists.isActivated = true;
+    await userExists.save();
+
+    res.json(userExists);
+
+})
+
+// Generate Token
 const generateToken = (id) => {
     const payload = { id };
-    return jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: '365d' })
+    return jwt.sign(payload, JWT_SECRET_KEY, { expiresIn: '1d' })
 }
 
 module.exports = {
     register,
-    login
+    login,
+    activateAccount
 }

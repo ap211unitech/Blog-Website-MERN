@@ -3,7 +3,10 @@ const { validateRegisterInput } = require("../utils/validators");
 const bcryptjs = require("bcryptjs");
 const { activationEmail, forgotPasswordEmail } = require("../utils/mail");
 const jwt = require("jsonwebtoken");
+
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY
+const JWT_RESET_KEY = process.env.JWT_RESET_KEY
+
 const User = require("../models/User");
 
 // @Desc    Register New user through formdata
@@ -131,7 +134,8 @@ const forgotPassword = asyncHandler(async (req, res) => {
     }
 
     // Generate token
-    const token = generateToken(userExists._id);
+    const payload = { id: userExists._id };
+    const token = jwt.sign(payload, JWT_RESET_KEY, { expiresIn: '10m' })
 
     // Send Reset Password Email
     forgotPasswordEmail({ to: userExists.email, token })
@@ -143,32 +147,57 @@ const forgotPassword = asyncHandler(async (req, res) => {
 // @Route   /auth/resetpassword/:token
 // @Access  Public
 const resetPassword = asyncHandler(async (req, res) => {
-    const token = req.params.token;
-    const { newPassword } = req.body;
+    try {
+        const token = req.params.token;
+        const { newPassword } = req.body;
 
-    if (!newPassword || newPassword.trim().length < 6) {
+        if (!newPassword || newPassword.trim().length < 6) {
+            res.status(400)
+            throw new Error(JSON.stringify({ err: 'Password must be length of greater than 6' }))
+        }
+
+        const decoded = await jwt.verify(token, JWT_RESET_KEY);
+
+        // Check if user exists for that id 
+        const userExists = await User.findById(decoded.id);
+
+        if (!userExists) {
+            res.status(400)
+            throw new Error(JSON.stringify({ err: 'No such user exists' }))
+        }
+
+        // Hash Password
+        const salt = await bcryptjs.genSalt(10);
+        const hashedPassword = await bcryptjs.hash(newPassword, salt);
+
+        userExists.password = hashedPassword;
+        await userExists.save();
+
+        res.status(200).json({ msg: 'Passord reset successfully' });
+
+    } catch (err) {
         res.status(400)
-        throw new Error(JSON.stringify({ err: 'Password must be length of greater than 6' }))
+        throw new Error(JSON.stringify({ err: 'Invalid/Expired Link' }))
     }
+})
 
-    const decoded = await jwt.verify(token, JWT_SECRET_KEY);
 
-    // Check if user exists for that id 
-    const userExists = await User.findById(decoded.id);
+// @Desc    Send Activation Link If Normal Activation Link Expires
+// @Route   /auth/send-activation-link
+// @Access  Private
+const sendActivationLink = asyncHandler(async (req, res) => {
+    // Check if user find with that id
+    const userExists = await User.findById(req.user._id);
 
     if (!userExists) {
         res.status(400)
         throw new Error(JSON.stringify({ err: 'No such user exists' }))
     }
 
-    // Hash Password
-    const salt = await bcryptjs.genSalt(10);
-    const hashedPassword = await bcryptjs.hash(newPassword, salt);
+    const token = generateToken(req.user._id);
+    activationEmail({ to: userExists.email, token })
 
-    userExists.password = hashedPassword;
-    await userExists.save();
-
-    res.status(200).json({ msg: 'Passord reset successfully' });
+    res.status(200).json({ msg: 'Activation Link Sent' });
 
 })
 
@@ -183,6 +212,7 @@ module.exports = {
     register,
     login,
     activateAccount,
+    sendActivationLink,
     forgotPassword,
     resetPassword
 }

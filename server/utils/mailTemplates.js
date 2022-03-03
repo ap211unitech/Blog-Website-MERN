@@ -179,7 +179,7 @@ module.exports = {
                                             <tr>
                                                 <td>
                                                     <h1>Confirm your email</h1>
-                                                    <h3>You are just one step away. This link is one time accessible only.</h3>
+                                                    <h3>You are just one step away. This link is one time accessible and valid for 24 hours only.</h3>
                                                     <table border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
                                                         <tbody>
                                                             <tr>

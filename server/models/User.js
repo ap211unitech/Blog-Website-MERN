@@ -19,6 +19,10 @@ const userSchema = new mongoose.Schema({
     isActivated: {
         type: Boolean,
         default: false
+    },
+    role: {
+        type: String,
+        default: 'user'
     }
 }, { timestamps: true })
 

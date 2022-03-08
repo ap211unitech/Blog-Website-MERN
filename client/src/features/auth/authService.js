@@ -38,10 +38,23 @@ const resetPassword = async ({ newPassword, token }) => {
     return res.data;
 }
 
+// Activate Account
+const activateAccount = async ({ token, authToken }) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${authToken}`
+        }
+    }
+    const res = await axios.get(`${URL}/auth/activate/${token}`, config);
+    console.log(res.data)
+    return res.data;
+}
+
 export default {
     registerUserForm,
     loginUserForm,
     logout,
     forgotPassword,
-    resetPassword
+    resetPassword,
+    activateAccount
 }

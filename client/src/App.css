@@ -12,3 +12,7 @@
 .back-to-login {
     margin-left: 8px !important;
 }
+
+.activation-message {
+    font-size: 15px !important;
+}

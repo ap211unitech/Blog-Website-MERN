@@ -63,6 +63,17 @@ export const resetPassword = createAsyncThunk('/auth/resetPassword', async ({ ne
     }
 })
 
+// Activate Account
+export const activateAccount = createAsyncThunk('/auth/activateAccount', async ({ token }, thunkAPI) => {
+    try {
+        const authToken = thunkAPI.getState().auth.user.token;
+        return await authService.activateAccount({ token, authToken });
+    } catch (err) {
+        const message = (err.response && err.response.data && err.response.data.message) || err.message || err.toString();
+        return thunkAPI.rejectWithValue(message);
+    }
+})
+
 export const authSlice = createSlice({
     name: 'auth',
     initialState,
@@ -182,6 +193,28 @@ export const authSlice = createSlice({
                 state.successMessage = [];
                 state.isLoading = false;
             })
+            .addCase(activateAccount.pending, (state, action) => {
+                state.isError = false;
+                state.isSuccess = false;
+                state.errorMessage = [];
+                state.successMessage = [];
+                state.isLoading = true;
+            })
+            .addCase(activateAccount.fulfilled, (state, action) => {
+                state.isError = false;
+                state.isSuccess = true;
+                state.errorMessage = [];
+                state.successMessage = ['Account verified successfully'];
+                state.isLoading = false;
+            })
+            .addCase(activateAccount.rejected, (state, action) => {
+                state.isError = true;
+                state.isSuccess = false;
+                state.errorMessage = isValidJSON(action.payload) ? Object.values(JSON.parse(action.payload)) : [action.payload];
+                state.successMessage = [];
+                state.isLoading = false;
+            })
+
 
     }
 })

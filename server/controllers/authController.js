@@ -9,6 +9,7 @@ const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY
 const JWT_RESET_KEY = process.env.JWT_RESET_KEY
 
 const User = require("../models/User");
+const Profile = require("../models/Profile");
 
 // @Desc    Register New user through formdata
 // @Route   /auth/register
@@ -56,6 +57,13 @@ const register = asyncHandler(async (req, res) => {
         email: user.email,
         token
     });
+
+    // Create profile for user
+    const profile = new Profile({
+        user: user._id,
+    })
+    await profile.save();
+
 })
 
 // @Desc    Login User through formdata
@@ -103,20 +111,29 @@ const activateAccount = asyncHandler(async (req, res) => {
             throw new Error(JSON.stringify({ err: 'Invalid Link' }))
         }
 
-        if (userExists.isActivated) {
+        if (req.user._id.toString() !== userExists._id.toString()) {
+            res.status(400)
+            throw new Error(JSON.stringify({ err: 'Not authorized' }))
+        }
+
+        // Find Profile of that user
+        const profile = await Profile.findOne({ user: userExists._id });
+
+        if (profile.isActivated) {
             res.status(400)
             throw new Error(JSON.stringify({ err: 'User account already activated' }))
         }
 
         // Set isActivated Property to true
-        userExists.isActivated = true;
-        await userExists.save();
+        profile.isActivated = true;
+        await profile.save();
 
-        res.json(userExists);
+        res.status(200).json(profile);
 
-    } catch (e) {
+    } catch (err) {
+        const errMsg = isValidJSON(err.message) ? JSON.parse(err.message) : { err: 'Invalid/Expired Link' };
         res.status(400)
-        throw new Error(JSON.stringify({ err: 'Invalid/Expired Link' }))
+        throw new Error(JSON.stringify(errMsg));
     }
 })
 

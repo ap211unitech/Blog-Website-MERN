@@ -1,8 +1,32 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Form, Button, Icon, Grid } from 'semantic-ui-react';
 import { toast } from 'react-toastify';
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { registerUserForm, authReset } from '../features/auth/authSlice';
 
 function Register() {
+
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const { user, isLoading, isError, isSuccess, errorMessage } = useSelector(state => state.auth);
+
+    useEffect(() => {
+
+        if (user || isSuccess) {
+            navigate('/');
+        }
+        else {
+            dispatch(authReset());
+        }
+
+        if (isError) {
+            errorMessage.map(msg => toast.error(msg));
+            return;
+        }
+
+
+    }, [user, isError, isSuccess, navigate, dispatch])
 
     const [formData, setFormData] = useState({
         name: '',
@@ -29,7 +53,7 @@ function Register() {
             return;
         }
 
-        console.log(formData)
+        dispatch(registerUserForm(formData));
     }
 
     return (
@@ -46,7 +70,7 @@ function Register() {
                 Please create an account
             </h2>
             <div className="form-control">
-                <Form onSubmit={onSubmit}>
+                <Form onSubmit={onSubmit} className={isLoading ? 'loading' : ''} >
                     <Form.Field>
                         <label>Name</label>
                         <input

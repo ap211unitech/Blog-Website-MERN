@@ -6,11 +6,13 @@ dbConnect();
 
 const express = require("express");
 const app = express();
+const cors = require("cors");
 
 const errHandler = require('./middleware/errHandler');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
 // Routes
 app.use('/', require('./routes/auth'));

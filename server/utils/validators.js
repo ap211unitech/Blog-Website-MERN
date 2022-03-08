@@ -5,10 +5,10 @@ module.exports.validateRegisterInput = (
 ) => {
     const errors = {};
     if (!name || name.trim() === '') {
-        errors.name = 'Name must not be empty';
+        errors.fields = 'Please add all fields';
     }
     if (!email || email.trim() === '') {
-        errors.email = 'Email must not be empty';
+        errors.fields = 'Please add all fields';
     } else {
         const regEx = /^([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})$/;
         if (!email.match(regEx)) {
@@ -16,7 +16,7 @@ module.exports.validateRegisterInput = (
         }
     }
     if (!password || password === '') {
-        errors.password = 'Password must not empty';
+        errors.fields = 'Please add all fields';
     }
     else if (password.length < 6) {
         errors.password = 'Password must be length of greater than 6'

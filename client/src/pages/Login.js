@@ -1,13 +1,36 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { Form, Button, Icon, Grid } from 'semantic-ui-react';
 import { toast } from 'react-toastify';
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { authReset, loginUserForm } from '../features/auth/authSlice';
 
 function Login() {
+
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const { user, isLoading, isError, isSuccess, errorMessage } = useSelector(state => state.auth);
 
     const [formData, setFormData] = useState({
         email: '',
         password: '',
     })
+
+    useEffect(() => {
+
+        if (user && user.token) {
+            navigate('/');
+        }
+        else {
+            dispatch(authReset());
+        }
+
+        if (isError) {
+            errorMessage.map(msg => toast.error(msg));
+            return;
+        }
+
+    }, [user, isError, isSuccess, navigate, dispatch])
 
     const onChange = (e) => {
         setFormData(prevState => (
@@ -21,7 +44,7 @@ function Login() {
 
     const onSubmit = (e) => {
         e.preventDefault();
-        console.log(formData)
+        dispatch(loginUserForm(formData));
     }
 
     return (

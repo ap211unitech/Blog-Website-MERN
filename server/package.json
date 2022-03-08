@@ -7,7 +7,7 @@
     "start": "nodemon server.js",
     "server": "node server.js",
     "client": "cd.. && cd client && npm start",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run start\" \"npm run client\""
   },
   "author": "Arjun Porwal",
   "license": "ISC",

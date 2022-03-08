@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { Form, Button, Icon, Grid } from 'semantic-ui-react';
 import { toast } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { authReset, loginUserForm } from '../features/auth/authSlice';
 
 function Login() {
@@ -61,7 +61,7 @@ function Login() {
                 Login and start writting blogs
             </h2>
             <div className="form-control">
-                <Form onSubmit={onSubmit}>
+                <Form onSubmit={onSubmit} className={isLoading ? 'loading' : ''}>
                     <Form.Field>
                         <label>Email</label>
                         <input
@@ -83,6 +83,25 @@ function Login() {
                     </Form.Field>
                     <Button type='submit' color='teal'>Login</Button>
                 </Form>
+                <div style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    marginTop: 10
+                }} >
+                    <div>
+                        <h5>Already have an account ?{' '}
+                            <Link to={'/register'}>Sign Up</Link>
+                        </h5>
+                    </div>
+                    <div>
+                        <h5 >
+                            <Link to={'/forgotpassword'}>
+                                Forgot Password
+                            </Link>
+                        </h5>
+                    </div>
+                </div>
             </div>
         </Fragment>
     )

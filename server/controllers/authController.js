@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const { validateRegisterInput } = require("../utils/validators");
 const bcryptjs = require("bcryptjs");
+const { isValidJSON } = require("../utils/helpers");
 const { activationEmail, forgotPasswordEmail } = require("../utils/mail");
 const jwt = require("jsonwebtoken");
 
@@ -173,11 +174,12 @@ const resetPassword = asyncHandler(async (req, res) => {
         userExists.password = hashedPassword;
         await userExists.save();
 
-        res.status(200).json({ msg: 'Passord reset successfully' });
+        res.status(200).json({ msg: 'Password reset successfully' });
 
     } catch (err) {
+        const errMsg = isValidJSON(err.message) ? JSON.parse(err.message) : { err: 'Invalid/Expired Link' };
         res.status(400)
-        throw new Error(JSON.stringify({ err: 'Invalid/Expired Link' }))
+        throw new Error(JSON.stringify(errMsg));
     }
 })
 

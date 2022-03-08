@@ -13,6 +13,9 @@ import Navbar from './components/Navbar';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import ForgotPassword from './pages/ForgotPassword';
+import NotFound from './pages/NotFound';
+import ResetPassword from './pages/ResetPassword';
 
 function App() {
   return (
@@ -25,6 +28,9 @@ function App() {
             <Route path='/' element={<Landing />} />
             <Route path='/login' element={<Login />} />
             <Route path='/register' element={<Register />} />
+            <Route path='/forgotpassword' element={<ForgotPassword />} />
+            <Route path='/auth/resetpassword/:token' element={<ResetPassword />} />
+            <Route path='*' element={<NotFound />} />
           </Routes>
         </Container>
       </BrowserRouter>

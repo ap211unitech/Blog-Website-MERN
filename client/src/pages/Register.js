@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { Form, Button, Icon, Grid } from 'semantic-ui-react';
 import { toast } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { registerUserForm, authReset } from '../features/auth/authSlice';
 
 function Register() {
@@ -112,6 +112,13 @@ function Register() {
                     </Form.Field>
                     <Button type='submit' color='teal'>Register</Button>
                 </Form>
+                <div style={{
+                    marginTop: 10
+                }} >
+                    <h5>Already have an account ?{' '}
+                        <Link to={'/login'}>Sign In</Link>
+                    </h5>
+                </div>
             </div>
         </Fragment>
     )

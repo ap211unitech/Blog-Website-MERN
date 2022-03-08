@@ -43,6 +43,26 @@ export const logout = createAsyncThunk('auth/logout', async (user, thunkAPI) => 
     }
 })
 
+// Forgot Password ( Sends Email )
+export const forgotPassword = createAsyncThunk('/auth/forgotPassword', async (email, thunkAPI) => {
+    try {
+        return await authService.forgotPassword(email);
+    } catch (err) {
+        const message = (err.response && err.response.data && err.response.data.message) || err.message || err.toString();
+        return thunkAPI.rejectWithValue(message);
+    }
+})
+
+// Reset Password
+export const resetPassword = createAsyncThunk('/auth/resetPassword', async ({ newPassword, token }, thunkAPI) => {
+    try {
+        return await authService.resetPassword({ newPassword, token });
+    } catch (err) {
+        const message = (err.response && err.response.data && err.response.data.message) || err.message || err.toString();
+        return thunkAPI.rejectWithValue(message);
+    }
+})
+
 export const authSlice = createSlice({
     name: 'auth',
     initialState,
@@ -114,6 +134,55 @@ export const authSlice = createSlice({
                 state.successMessage = [];
                 state.isLoading = false;
             })
+            .addCase(forgotPassword.pending, (state, action) => {
+                state.user = null;
+                state.isError = false;
+                state.isSuccess = false;
+                state.errorMessage = [];
+                state.successMessage = [];
+                state.isLoading = true;
+            })
+            .addCase(forgotPassword.fulfilled, (state, action) => {
+                state.user = null;
+                state.isError = false;
+                state.isSuccess = true;
+                state.errorMessage = [];
+                state.successMessage = ['Reset Link sent to your email'];
+                state.isLoading = false;
+            })
+            .addCase(forgotPassword.rejected, (state, action) => {
+                state.user = null;
+                state.isError = true;
+                state.isSuccess = false;
+                state.errorMessage = isValidJSON(action.payload) ? Object.values(JSON.parse(action.payload)) : [action.payload];
+                state.successMessage = [];
+                state.isLoading = false;
+            })
+            .addCase(resetPassword.pending, (state, action) => {
+                state.user = null;
+                state.isError = false;
+                state.isSuccess = false;
+                state.errorMessage = [];
+                state.successMessage = [];
+                state.isLoading = true;
+            })
+            .addCase(resetPassword.fulfilled, (state, action) => {
+                state.user = null;
+                state.isError = false;
+                state.isSuccess = true;
+                state.errorMessage = [];
+                state.successMessage = [action.payload.msg];
+                state.isLoading = false;
+            })
+            .addCase(resetPassword.rejected, (state, action) => {
+                state.user = null;
+                state.isError = true;
+                state.isSuccess = false;
+                state.errorMessage = isValidJSON(action.payload) ? Object.values(JSON.parse(action.payload)) : [action.payload];
+                state.successMessage = [];
+                state.isLoading = false;
+            })
+
     }
 })
 

@@ -26,9 +26,22 @@ const logout = async () => {
     localStorage.removeItem('user');
 }
 
+// Forgot Password ( Sends Email )
+const forgotPassword = async (email) => {
+    const res = await axios.post(`${URL}/auth/forgotpassword`, { email });
+    return res.data;
+}
+
+// Reset Password
+const resetPassword = async ({ newPassword, token }) => {
+    const res = await axios.post(`${URL}/auth/resetpassword/${token}`, { newPassword });
+    return res.data;
+}
 
 export default {
     registerUserForm,
     loginUserForm,
-    logout
+    logout,
+    forgotPassword,
+    resetPassword
 }

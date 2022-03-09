@@ -46,7 +46,17 @@ const activateAccount = async ({ token, authToken }) => {
         }
     }
     const res = await axios.get(`${URL}/auth/activate/${token}`, config);
-    console.log(res.data)
+    return res.data;
+}
+
+// Send Activation Mail Again
+const sendActivationMail = async ({ authToken }) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${authToken}`
+        }
+    }
+    const res = await axios.get(`${URL}/auth/send-activation-link`, config);
     return res.data;
 }
 
@@ -56,5 +66,6 @@ export default {
     logout,
     forgotPassword,
     resetPassword,
-    activateAccount
+    activateAccount,
+    sendActivationMail
 }

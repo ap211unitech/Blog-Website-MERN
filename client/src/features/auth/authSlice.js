@@ -74,6 +74,18 @@ export const activateAccount = createAsyncThunk('/auth/activateAccount', async (
     }
 })
 
+// Send Activation Mail again
+export const sendActivationMail = createAsyncThunk('/auth/sendActivationMail', async (_, thunkAPI) => {
+    try {
+        const authToken = thunkAPI.getState().auth.user.token;
+        return await authService.sendActivationMail({ authToken });
+    } catch (err) {
+        const message = (err.response && err.response.data && err.response.data.message) || err.message || err.toString();
+        return thunkAPI.rejectWithValue(message);
+    }
+})
+
+
 export const authSlice = createSlice({
     name: 'auth',
     initialState,
@@ -208,6 +220,27 @@ export const authSlice = createSlice({
                 state.isLoading = false;
             })
             .addCase(activateAccount.rejected, (state, action) => {
+                state.isError = true;
+                state.isSuccess = false;
+                state.errorMessage = isValidJSON(action.payload) ? Object.values(JSON.parse(action.payload)) : [action.payload];
+                state.successMessage = [];
+                state.isLoading = false;
+            })
+            .addCase(sendActivationMail.pending, (state, action) => {
+                state.isError = false;
+                state.isSuccess = false;
+                state.errorMessage = [];
+                state.successMessage = [];
+                state.isLoading = true;
+            })
+            .addCase(sendActivationMail.fulfilled, (state, action) => {
+                state.isError = false;
+                state.isSuccess = true;
+                state.errorMessage = [];
+                state.successMessage = [action.payload.msg];
+                state.isLoading = false;
+            })
+            .addCase(sendActivationMail.rejected, (state, action) => {
                 state.isError = true;
                 state.isSuccess = false;
                 state.errorMessage = isValidJSON(action.payload) ? Object.values(JSON.parse(action.payload)) : [action.payload];

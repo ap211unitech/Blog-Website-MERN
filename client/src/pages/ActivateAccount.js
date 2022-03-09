@@ -1,10 +1,9 @@
 import React, { useEffect, Fragment } from 'react';
 import { useParams } from 'react-router-dom';
-import { toast } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { authReset, activateAccount } from '../features/auth/authSlice';
-import { profileReset, getMyProfile } from '../features/profile/profileSlice';
+import { activateAccount } from '../features/auth/authSlice';
+import { getMyProfile } from '../features/profile/profileSlice';
 import { Message } from 'semantic-ui-react'
 
 function ActivateAccount() {
@@ -13,36 +12,32 @@ function ActivateAccount() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
-    const { user, isError, isSuccess, errorMessage, successMessage } = useSelector(state => state.auth);
-    const { profile } = useSelector(state => state.profile);
+    const { user, isError, errorMessage, successMessage } = useSelector(state => state.auth);
 
     useEffect(() => {
-        dispatch(getMyProfile());
-    }, [dispatch])
 
-    useEffect(() => {
-        if (profile && !profile.isActivated) {
+        if (user && user.token) {
+            dispatch(getMyProfile());
             dispatch(activateAccount({ token }));
         }
-        else if (profile && profile.isActivated) {
-            toast.error('User account already activated');
+        else {
+            navigate('/');
         }
 
-        if (isError) {
-            errorMessage.map(msg => toast.error(msg));
-            return;
-        }
-
-        if (isSuccess) {
-            successMessage.map(msg => toast.success(msg));
-            return;
-        }
-
-    }, [user, profile, isSuccess, navigate, dispatch])
+    }, [user, navigate, dispatch])
 
     return (
         <Fragment>
-
+            {successMessage.map(msg =>
+                <Message success>
+                    {msg}
+                </Message>
+            )}
+            {isError && errorMessage.map(msg =>
+                <Message error>
+                    {msg}
+                </Message>
+            )}
         </Fragment>
     )
 }

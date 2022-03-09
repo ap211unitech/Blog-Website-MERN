@@ -216,7 +216,7 @@ const sendActivationLink = asyncHandler(async (req, res) => {
     const token = generateToken(req.user._id);
     activationEmail({ to: userExists.email, token })
 
-    res.status(200).json({ msg: 'Activation Link Sent' });
+    res.status(200).json({ msg: 'Activation Link Sent to your email' });
 
 })
 

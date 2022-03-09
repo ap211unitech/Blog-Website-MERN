@@ -21,7 +21,7 @@ import ActivateAccount from './pages/ActivateAccount';
 function App() {
   return (
     <Fragment>
-      <ToastContainer autoClose={2000} />
+      <ToastContainer autoClose={3000} />
       <BrowserRouter>
         <Container>
           <Navbar />

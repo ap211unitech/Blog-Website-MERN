@@ -38,14 +38,6 @@ export const profileSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(getMyProfile.pending, (state, action) => {
-                state.profile = null;
-                state.isError = false;
-                state.isSuccess = false;
-                state.errorMessage = [];
-                state.successMessage = [];
-                state.isLoading = true;
-            })
             .addCase(getMyProfile.fulfilled, (state, action) => {
                 state.profile = action.payload;
                 state.isError = false;

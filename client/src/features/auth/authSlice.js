@@ -85,6 +85,16 @@ export const sendActivationMail = createAsyncThunk('/auth/sendActivationMail', a
     }
 })
 
+// Google SignIn Authentication
+export const googleSignInAuthentication = createAsyncThunk('/auth/googleSignIn', async (idToken, thunkAPI) => {
+    try {
+        return await authService.googleSignInAuthentication({ idToken });
+    } catch (err) {
+        const message = (err.response && err.response.data && err.response.data.message) || err.message || err.toString();
+        return thunkAPI.rejectWithValue(message);
+    }
+})
+
 
 export const authSlice = createSlice({
     name: 'auth',
@@ -247,8 +257,30 @@ export const authSlice = createSlice({
                 state.successMessage = [];
                 state.isLoading = false;
             })
-
-
+            .addCase(googleSignInAuthentication.pending, (state, action) => {
+                state.user = null;
+                state.isError = false;
+                state.isSuccess = false;
+                state.errorMessage = [];
+                state.successMessage = [];
+                state.isLoading = true;
+            })
+            .addCase(googleSignInAuthentication.fulfilled, (state, action) => {
+                state.user = action.payload;
+                state.isError = false;
+                state.isSuccess = true;
+                state.errorMessage = [];
+                state.successMessage = [];
+                state.isLoading = false;
+            })
+            .addCase(googleSignInAuthentication.rejected, (state, action) => {
+                state.user = null;
+                state.isError = true;
+                state.isSuccess = false;
+                state.errorMessage = isValidJSON(action.payload) ? Object.values(JSON.parse(action.payload)) : [action.payload];
+                state.successMessage = [];
+                state.isLoading = false;
+            })
     }
 })
 

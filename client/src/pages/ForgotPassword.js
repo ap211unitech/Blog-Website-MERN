@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import { authReset, forgotPassword } from '../features/auth/authSlice';
+import { profileReset } from '../features/profile/profileSlice';
 
 function ForgotPassword() {
 
@@ -22,6 +23,7 @@ function ForgotPassword() {
         }
         else {
             dispatch(authReset());
+            dispatch(profileReset());
         }
 
         if (isError) {

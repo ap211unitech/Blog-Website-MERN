@@ -1,12 +1,16 @@
 const asyncHandler = require("express-async-handler");
 const { validateRegisterInput } = require("../utils/validators");
 const bcryptjs = require("bcryptjs");
+const { OAuth2Client } = require("google-auth-library");
 const { isValidJSON } = require("../utils/helpers");
 const { activationEmail, forgotPasswordEmail } = require("../utils/mail");
 const jwt = require("jsonwebtoken");
+const { v4: uuidv4 } = require('uuid');
 
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY
 const JWT_RESET_KEY = process.env.JWT_RESET_KEY
+const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID
+
 
 const User = require("../models/User");
 const Profile = require("../models/Profile");
@@ -92,6 +96,70 @@ const login = asyncHandler(async (req, res) => {
         email: userExists.email,
         token: generateToken(userExists._id)
     });
+})
+
+// @Desc    Google Sign In / Sign Up
+// @Route   /auth/googlesignin
+// @Access  Public
+const googleSignIn = asyncHandler(async (req, res) => {
+    const googleClient = new OAuth2Client(GOOGLE_CLIENT_ID);
+
+    // Google Token
+    const { idToken } = req.body;
+
+    const response = await googleClient.verifyIdToken({
+        idToken,
+        audience: GOOGLE_CLIENT_ID
+    });
+
+    const { name, email, picture, email_verified } = response.getPayload();
+
+    if (email_verified) {
+        // Find Email in User Model
+        const userExists = await User.findOne({ email });
+
+        if (userExists) {
+            res.status(200).json({
+                _id: userExists._id,
+                name: userExists.name,
+                email: userExists.email,
+                token: generateToken(userExists._id)
+            })
+        }
+        else {
+            const randomPassword = uuidv4();
+
+            // Hash Password
+            const salt = await bcryptjs.genSalt(10);
+            const hashedPassword = await bcryptjs.hash(randomPassword, salt);
+
+            const newUser = new User({
+                name,
+                email,
+                password: hashedPassword
+            })
+
+            await newUser.save();
+
+            // Create profile for user
+            const profile = new Profile({
+                user: newUser._id,
+                profileUrl: picture
+            })
+            await profile.save();
+
+            res.status(200).json({
+                _id: newUser._id,
+                name: newUser.name,
+                email: newUser.email,
+                token: generateToken(newUser._id)
+            })
+        }
+    }
+    else {
+        res.status(400)
+        throw new Error('Your email is not verified according to google');
+    }
 })
 
 // @Desc    Activate User Account
@@ -220,7 +288,6 @@ const sendActivationLink = asyncHandler(async (req, res) => {
 
 })
 
-
 // Generate Token
 const generateToken = (id) => {
     const payload = { id };
@@ -230,6 +297,7 @@ const generateToken = (id) => {
 module.exports = {
     register,
     login,
+    googleSignIn,
     activateAccount,
     sendActivationLink,
     forgotPassword,

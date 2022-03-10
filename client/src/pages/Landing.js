@@ -15,6 +15,14 @@ function Landing() {
 
     useEffect(() => {
 
+        if (user && user.token) {
+            dispatch(getMyProfile());
+        }
+        else {
+            dispatch(authReset());
+            dispatch(profileReset());
+        }
+
         if (isError) {
             errorMessage.map(msg => toast.error(msg));
             return;
@@ -23,14 +31,6 @@ function Landing() {
         if (isSuccess) {
             successMessage.map(msg => toast.success(msg));
             return;
-        }
-
-        if (user && user.token) {
-            dispatch(getMyProfile());
-        }
-        else {
-            dispatch(authReset());
-            dispatch(profileReset());
         }
 
     }, [user, isError, isSuccess, navigate, dispatch])
@@ -53,11 +53,12 @@ function Landing() {
                             </span>
                         </p>
                     </Message> :
-                    <Message success className='activation-message' >
-                        <p>Your Account is verified.</p>
-                    </Message>
+                    profile && profile.isActivated ?
+                        <Message success className='activation-message' >
+                            <p>Your Account is verified.</p>
+                        </Message> : null
                 :
-                <div>ee</div>
+                <div>Login First</div>
             }
         </Fragment>
     )

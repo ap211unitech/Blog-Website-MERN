@@ -16,3 +16,21 @@
 .activation-message {
     font-size: 15px !important;
 }
+
+hr {
+    border: none;
+    border-top: 2px solid grey;
+    color: gray;
+    overflow: visible;
+    text-align: center;
+    height: 5px;
+    margin-top: 25px;
+}
+
+hr:after {
+    background: #fff;
+    content: 'or you can sign in with';
+    padding: 0 10px;
+    position: relative;
+    top: -13px;
+}

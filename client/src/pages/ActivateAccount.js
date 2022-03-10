@@ -3,7 +3,6 @@ import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { activateAccount } from '../features/auth/authSlice';
-import { getMyProfile } from '../features/profile/profileSlice';
 import { Message } from 'semantic-ui-react'
 
 function ActivateAccount() {
@@ -17,7 +16,6 @@ function ActivateAccount() {
     useEffect(() => {
 
         if (user && user.token) {
-            dispatch(getMyProfile());
             dispatch(activateAccount({ token }));
         }
         else {

@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { registerUserForm, authReset } from '../features/auth/authSlice';
+import { profileReset } from '../features/profile/profileSlice';
 
 function Register() {
 
@@ -18,6 +19,7 @@ function Register() {
         }
         else {
             dispatch(authReset());
+            dispatch(profileReset());
         }
 
         if (isError) {

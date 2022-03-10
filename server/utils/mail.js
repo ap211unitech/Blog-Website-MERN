@@ -20,7 +20,7 @@ const activationEmail = async ({ to, token }) => {
             name: 'Activation Link',
             email: SENDER_EMAIL
         },
-        subject: 'Test mail',
+        subject: 'Activate your account',
         html: activationTemplate(URL, token)
     }
     try {
@@ -39,7 +39,7 @@ const forgotPasswordEmail = async ({ to, token }) => {
             name: 'Reset Password',
             email: SENDER_EMAIL
         },
-        subject: 'Test mail',
+        subject: 'Reset Password',
         html: forgotPasswordTemplate(URL, token)
     }
     try {

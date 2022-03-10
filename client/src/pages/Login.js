@@ -4,6 +4,8 @@ import { toast } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import { authReset, loginUserForm } from '../features/auth/authSlice';
+import { profileReset } from '../features/profile/profileSlice';
+import GoogleSignInBtn from '../components/GoogleSignInBtn';
 
 function Login() {
 
@@ -23,6 +25,7 @@ function Login() {
         }
         else {
             dispatch(authReset());
+            dispatch(profileReset());
         }
 
         if (isError) {
@@ -97,11 +100,13 @@ function Login() {
                     <div>
                         <h5 >
                             <Link to={'/forgotpassword'}>
-                                Forgot Password
+                                Forgot Password ?
                             </Link>
                         </h5>
                     </div>
                 </div>
+                <hr />
+                <GoogleSignInBtn />
             </div>
         </Fragment>
     )

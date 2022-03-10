@@ -5,6 +5,7 @@ const { authMiddleware } = require("../middleware/authMiddleware");
 // Register/Login through form
 router.post('/auth/register', authController.register);
 router.post('/auth/login', authController.login);
+router.post('/auth/googlesignin', authController.googleSignIn);
 
 // Activate Account
 router.get('/auth/activate/:token', authMiddleware, authController.activateAccount);

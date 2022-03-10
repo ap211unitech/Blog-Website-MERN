@@ -60,6 +60,15 @@ const sendActivationMail = async ({ authToken }) => {
     return res.data;
 }
 
+// Google SignIn Authentication
+const googleSignInAuthentication = async ({ idToken }) => {
+    const res = await axios.post(`${URL}/auth/googlesignin`, { idToken });
+    if (res.data) {
+        localStorage.setItem('user', JSON.stringify(res.data))
+    }
+    return res.data;
+}
+
 export default {
     registerUserForm,
     loginUserForm,
@@ -67,5 +76,6 @@ export default {
     forgotPassword,
     resetPassword,
     activateAccount,
-    sendActivationMail
+    sendActivationMail,
+    googleSignInAuthentication
 }

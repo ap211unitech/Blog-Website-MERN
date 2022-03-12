@@ -52,7 +52,7 @@ const register = asyncHandler(async (req, res) => {
     // Generate Token
     const token = generateToken(user._id);
 
-    // Send Confirmation/Activation Email 
+    // Send Account Confirmation/Activation Email 
     activationEmail({ to: user.email.trim(), token });
 
     res.json({
@@ -148,12 +148,18 @@ const googleSignIn = asyncHandler(async (req, res) => {
             })
             await profile.save();
 
+            const token = generateToken(newUser._id);
+
             res.status(200).json({
                 _id: newUser._id,
                 name: newUser.name,
                 email: newUser.email,
-                token: generateToken(newUser._id)
+                token
             })
+
+            // Send Account Confirmation/Activation Email 
+            activationEmail({ to: newUser.email.trim(), token });
+
         }
     }
     else {

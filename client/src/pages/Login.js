@@ -105,7 +105,7 @@ function Login() {
                         </h5>
                     </div>
                 </div>
-                <hr />
+                <hr className='signin' />
                 <GoogleSignInBtn />
             </div>
         </Fragment>

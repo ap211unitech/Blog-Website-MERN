@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { registerUserForm, authReset } from '../features/auth/authSlice';
 import { profileReset } from '../features/profile/profileSlice';
+import GoogleSignUpBtn from '../components/GoogleSignUpBtn';
 
 function Register() {
 
@@ -121,6 +122,8 @@ function Register() {
                         <Link to={'/login'}>Sign In</Link>
                     </h5>
                 </div>
+                <hr className='signup' />
+                <GoogleSignUpBtn />
             </div>
         </Fragment>
     )

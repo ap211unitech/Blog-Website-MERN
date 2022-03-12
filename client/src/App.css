@@ -27,9 +27,18 @@ hr {
     margin-top: 25px;
 }
 
-hr:after {
+.signin:after {
     background: #fff;
     content: 'or you can sign in with';
+    padding: 0 10px;
+    position: relative;
+    top: -13px;
+}
+
+
+.signup:after {
+    background: #fff;
+    content: 'or you can sign up with';
     padding: 0 10px;
     position: relative;
     top: -13px;

@@ -6,7 +6,7 @@ import { googleSignInAuthentication } from '../features/auth/authSlice'
 import { useDispatch } from 'react-redux'
 import { toast } from 'react-toastify';
 
-function GoogleSignInBtn() {
+function GoogleSignUpBtn() {
 
     const dispatch = useDispatch();
 
@@ -28,7 +28,7 @@ function GoogleSignInBtn() {
                 <GoogleLogin
                     clientId={GOOGLE_CLIENT_ID}
                     render={renderProps => (
-                        <Button onClick={renderProps.onClick} disabled={renderProps.disabled} color='teal' fluid>Sign In with Google</Button>
+                        <Button onClick={renderProps.onClick} disabled={renderProps.disabled} color='teal' fluid>Sign Up with Google</Button>
                     )}
                     onSuccess={onSuccessResponseGoogle}
                     onFailure={onFailureResponseGoogle}
@@ -39,4 +39,4 @@ function GoogleSignInBtn() {
     )
 }
 
-export default GoogleSignInBtn
+export default GoogleSignUpBtn

@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const userSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: [true, 'Name must1 not be empty'],
+        required: [true, 'Name can not be empty'],
         trim: true
     },
     email: {

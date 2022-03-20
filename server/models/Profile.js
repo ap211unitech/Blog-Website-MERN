@@ -8,7 +8,8 @@ const ProfileSchema = new mongoose.Schema({
     bio: {
         type: String,
         default: "",
-        trim: true
+        trim: true,
+        maxlength: 100
     },
     profileUrl: {
         type: String,
@@ -67,6 +68,6 @@ const ProfileSchema = new mongoose.Schema({
             type: String
         }
     },
-})
+}, { timestamps: true })
 
 module.exports = mongoose.model('profile', ProfileSchema);

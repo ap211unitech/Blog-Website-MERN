@@ -17,6 +17,7 @@ app.use(cors());
 // Routes
 app.use('/', require('./routes/auth'));
 app.use('/', require('./routes/profile'));
+app.use('/', require('./routes/category'));
 
 app.use(errHandler)
 

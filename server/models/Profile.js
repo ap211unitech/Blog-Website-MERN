@@ -29,25 +29,37 @@ const ProfileSchema = new mongoose.Schema({
     },
     followers: [
         {
-            id: {
+            user: {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: 'users'
+                ref: 'user'
+            },
+            profile: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'profile'
             }
         }
     ],
     following: [
         {
-            id: {
+            user: {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: 'users'
+                ref: 'user'
+            },
+            profile: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'profile'
             }
         }
     ],
     viewedBy: [
         {
-            id: {
+            user: {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: 'users'
+                ref: 'user'
+            },
+            profile: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'profile'
             }
         }
     ],

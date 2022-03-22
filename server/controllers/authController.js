@@ -90,6 +90,13 @@ const login = asyncHandler(async (req, res) => {
         throw new Error(JSON.stringify({ err: 'Incorrect Password' }))
     }
 
+    // Check if user is not blocked
+    const profile = await Profile.findOne({ user: userExists._id });
+    if (profile.isBlocked) {
+        res.status(400)
+        throw new Error('You have been blocked.')
+    }
+
     res.json({
         _id: userExists._id,
         name: userExists.name,
@@ -119,6 +126,14 @@ const googleSignIn = asyncHandler(async (req, res) => {
         const userExists = await User.findOne({ email });
 
         if (userExists) {
+
+            // Check if user is not blocked
+            const profile = await Profile.findOne({ user: userExists._id });
+            if (profile.isBlocked) {
+                res.status(400)
+                throw new Error('You have been blocked.')
+            }
+
             res.status(200).json({
                 _id: userExists._id,
                 name: userExists.name,

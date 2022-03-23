@@ -18,11 +18,12 @@ import NotFound from './pages/NotFound';
 import ResetPassword from './pages/ResetPassword';
 import ActivateAccount from './pages/ActivateAccount';
 import UpdateProfile from './pages/UpdateProfile';
+import ChangePassword from './pages/ChangePassword';
 
 function App() {
   return (
     <Fragment>
-      <ToastContainer autoClose={3000} />
+      <ToastContainer autoClose={2500} />
       <BrowserRouter>
         <Container>
           <Navbar />
@@ -34,6 +35,7 @@ function App() {
             <Route path='/auth/resetpassword/:token' element={<ResetPassword />} />
             <Route path='/auth/activate/:token' element={<ActivateAccount />} />
             <Route path='/update-profile' element={<UpdateProfile />} />
+            <Route path='/change-password' element={<ChangePassword />} />
             <Route path='*' element={<NotFound />} />
           </Routes>
         </Container>

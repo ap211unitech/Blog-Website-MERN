@@ -5,8 +5,8 @@ import { Form, Button, Icon, Grid } from 'semantic-ui-react';
 import { CLOUDINARY_USER_NAME } from "../config/defaults";
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { getMyProfile, editMyProfile } from "../features/profile/profileSlice";
-import { setAuth } from '../features/auth/authSlice';
+import { getMyProfile, editMyProfile, profileReset } from "../features/profile/profileSlice";
+import { authReset, setAuth } from '../features/auth/authSlice';
 
 function UpdateProfile() {
 
@@ -86,6 +86,8 @@ function UpdateProfile() {
     useEffect(() => {
         if (!auth.user) {
             navigate('/');
+            dispatch(authReset());
+            dispatch(profileReset());
         }
         else {
             if (!profile) dispatch(getMyProfile());
@@ -98,12 +100,12 @@ function UpdateProfile() {
                 setFormData({ ...formData, ...data });
 
                 let socialData = {
-                    'github': profile.social.github,
-                    'twitter': profile.social.twitter,
-                    'linkedin': profile.social.linkedin,
-                    'instagram': profile.social.instagram,
-                    'facebook': profile.social.facebook,
-                    'youtube': profile.social.youtube,
+                    'github': profile.social ? profile.social.github : '',
+                    'twitter': profile.social ? profile.social.twitter : '',
+                    'linkedin': profile.social ? profile.social.linkedin : '',
+                    'instagram': profile.social ? profile.social.instagram : '',
+                    'facebook': profile.social ? profile.social.facebook : '',
+                    'youtube': profile.social ? profile.social.youtube : '',
                 }
                 setSocial({ ...social, ...socialData });
             }
@@ -116,6 +118,8 @@ function UpdateProfile() {
         if (isError) {
             errorMessage.map(err => toast.error(err));
         }
+
+        dispatch(profileReset());
 
     }, [isError, isSuccess, dispatch, navigate, profile])
 
@@ -227,37 +231,9 @@ function UpdateProfile() {
                         :
                         null
                     }
-                    {/* <Form.Field>
-                        <label>Old Password</label>
-                        <input
-                            placeholder='Old Password'
-                            name='oldPassword'
-                            type='password'
-                            value={formData.oldPassword}
-                            onChange={onChange}
-                        />
-                    </Form.Field>
-                    <Form.Field>
-                        <label>New Password</label>
-                        <input
-                            placeholder='New Password'
-                            name='newPassword'
-                            type='password'
-                            value={formData.newPassword}
-                            onChange={onChange}
-                        />
-                    </Form.Field>
-                    <Form.Field>
-                        <label>Confirm New Password</label>
-                        <input
-                            placeholder='Confirm Password'
-                            name='confirmNewPassword'
-                            type='password'
-                            value={formData.confirmNewPassword}
-                            onChange={onChange}
-                        />
-                    </Form.Field> */}
                     <Button type='submit' color='teal'>Update Profile</Button>
+                    <br />
+                    <br />
                 </Form>
             </div>
         </Fragment>

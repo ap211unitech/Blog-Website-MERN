@@ -69,6 +69,17 @@ const googleSignInAuthentication = async ({ idToken }) => {
     return res.data;
 }
 
+// Change Password
+const changePassword = async (data, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }
+    const res = await axios.post(`${URL}/auth/change-password`, data, config);
+    return res.data;
+}
+
 export default {
     registerUserForm,
     loginUserForm,
@@ -77,5 +88,6 @@ export default {
     resetPassword,
     activateAccount,
     sendActivationMail,
-    googleSignInAuthentication
+    googleSignInAuthentication,
+    changePassword
 }

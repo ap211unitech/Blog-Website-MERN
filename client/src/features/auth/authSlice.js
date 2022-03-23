@@ -95,6 +95,19 @@ export const googleSignInAuthentication = createAsyncThunk('/auth/googleSignIn',
     }
 })
 
+// Change Password
+export const changePassword = createAsyncThunk('/auth/changePassword', async (data, thunkAPI) => {
+    try {
+        const authToken = thunkAPI.getState().auth.user.token;
+        return await authService.changePassword(data, authToken);
+    } catch (err) {
+        const message = (err.response && err.response.data && err.response.data.message) || err.message || err.toString();
+        return thunkAPI.rejectWithValue(message);
+    }
+})
+
+
+// Set Custom Auth
 export const setAuth = createAsyncThunk('/auth/set', async (user, thunkAPI) => {
     return user;
 })
@@ -104,7 +117,8 @@ export const authSlice = createSlice({
     initialState,
     reducers: {
         authReset: (state) => {
-            state.user = null;
+            let user = JSON.parse(localStorage.getItem('user'));
+            state.user = user ? user : null;
             state.isError = false;
             state.isSuccess = false;
             state.errorMessage = [];
@@ -290,6 +304,28 @@ export const authSlice = createSlice({
                 localStorage.setItem('user', JSON.stringify(obj));
                 state.user = obj;
             })
+            .addCase(changePassword.pending, (state, action) => {
+                state.isError = false;
+                state.isSuccess = false;
+                state.errorMessage = [];
+                state.successMessage = [];
+                state.isLoading = true;
+            })
+            .addCase(changePassword.fulfilled, (state, action) => {
+                state.isError = false;
+                state.isSuccess = true;
+                state.errorMessage = [];
+                state.successMessage = ['Password changed successfully.'];
+                state.isLoading = false;
+            })
+            .addCase(changePassword.rejected, (state, action) => {
+                state.isError = true;
+                state.isSuccess = false;
+                state.errorMessage = isValidJSON(action.payload) ? Object.values(JSON.parse(action.payload)) : [action.payload];
+                state.successMessage = [];
+                state.isLoading = false;
+            })
+
     }
 })
 

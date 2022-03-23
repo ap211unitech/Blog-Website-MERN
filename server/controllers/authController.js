@@ -309,6 +309,44 @@ const sendActivationLink = asyncHandler(async (req, res) => {
 
 })
 
+// @Desc    Change Password
+// @Route   /auth/change-password
+// @Access  Private
+const changePassword = asyncHandler(async (req, res) => {
+
+    const { oldPassword, newPassword } = req.body;
+
+    //Find user if exists
+    const userExists = await User.findById(req.user._id);
+
+    if (!userExists) {
+        res.status(400)
+        throw new Error('No such user exists');
+    }
+
+    if (userExists._id.toString() !== req.user._id.toString()) {
+        res.status(400)
+        throw new Error('You are not authorized to process this request');
+    }
+
+    // Verify Password
+    const isMatch = await bcryptjs.compare(oldPassword, userExists.password);
+    if (!isMatch) {
+        res.status(400)
+        throw new Error(JSON.stringify({ err: 'Old Password is incorrect' }))
+    }
+
+    // Hash Password
+    const salt = await bcryptjs.genSalt(10);
+    const hashedPassword = await bcryptjs.hash(newPassword, salt);
+
+    userExists.password = hashedPassword;
+    await userExists.save();
+
+    res.status(200).json({ msg: 'Password Changed' });
+
+})
+
 // Generate Token
 const generateToken = (id) => {
     const payload = { id };
@@ -322,5 +360,6 @@ module.exports = {
     activateAccount,
     sendActivationLink,
     forgotPassword,
-    resetPassword
+    resetPassword,
+    changePassword
 }

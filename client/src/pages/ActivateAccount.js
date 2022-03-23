@@ -2,8 +2,9 @@ import React, { useEffect, Fragment } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { activateAccount } from '../features/auth/authSlice';
+import { activateAccount, authReset } from '../features/auth/authSlice';
 import { Message } from 'semantic-ui-react'
+import { profileReset } from '../features/profile/profileSlice';
 
 function ActivateAccount() {
 
@@ -20,6 +21,8 @@ function ActivateAccount() {
         }
         else {
             navigate('/');
+            dispatch(authReset());
+            dispatch(profileReset());
         }
 
     }, [user, navigate, dispatch])

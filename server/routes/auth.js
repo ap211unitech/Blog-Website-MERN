@@ -15,4 +15,7 @@ router.get('/auth/send-activation-link', authMiddleware, authController.sendActi
 router.post('/auth/forgotpassword', authController.forgotPassword);
 router.post('/auth/resetpassword/:token', authController.resetPassword);
 
+// Change Password when user is logged in
+router.post('/auth/change-password', authMiddleware, authController.changePassword)
+
 module.exports = router;

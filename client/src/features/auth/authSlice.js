@@ -286,6 +286,8 @@ export const authSlice = createSlice({
             })
             .addCase(setAuth.fulfilled, (state, action) => {
                 const obj = { token: state.user.token, ...action.payload.payload.user }
+                console.log(obj);
+                localStorage.setItem('user', JSON.stringify(obj));
                 state.user = obj;
             })
     }

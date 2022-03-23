@@ -35,11 +35,18 @@ function UpdateProfile() {
 
     const onSubmit = async (e) => {
         e.preventDefault();
-        const profileImage = await profileImageUpload();
+
+        // Check if file size is less than 2MB
+        if (profileImage.size / 1000000 > 2) {
+            toast.error('File too large. File size should be less than 2 MB.');
+            return;
+        }
+
+        const profileUrl = await profileImageUpload();
         const data = {
             name: formData.name,
             bio: formData.bio,
-            profileUrl: profileImage,
+            profileUrl,
             ...social
         }
         const res = await dispatch(editMyProfile(data));
@@ -71,6 +78,11 @@ function UpdateProfile() {
         }
     }
 
+    // When name changes, we need this because of our structure.
+    useEffect(() => {
+        setFormData({ ...formData, 'name': auth.user.name })
+    }, [auth, dispatch, navigate])
+
     useEffect(() => {
         if (!auth.user) {
             navigate('/');
@@ -78,14 +90,14 @@ function UpdateProfile() {
         else {
             if (!profile) dispatch(getMyProfile());
             if (!isLoading && profile) {
-                let formData = {
+                let data = {
                     'name': auth.user.name,
                     'bio': profile.bio,
                     'profileUrl': profile.profileUrl
                 }
-                setFormData({ ...formData });
+                setFormData({ ...formData, ...data });
 
-                let social = {
+                let socialData = {
                     'github': profile.social.github,
                     'twitter': profile.social.twitter,
                     'linkedin': profile.social.linkedin,
@@ -93,7 +105,7 @@ function UpdateProfile() {
                     'facebook': profile.social.facebook,
                     'youtube': profile.social.youtube,
                 }
-                setSocial({ ...social });
+                setSocial({ ...social, ...socialData });
             }
         }
 
@@ -105,8 +117,9 @@ function UpdateProfile() {
             errorMessage.map(err => toast.error(err));
         }
 
-
     }, [isError, isSuccess, dispatch, navigate, profile])
+
+
 
     return (
         <Fragment>

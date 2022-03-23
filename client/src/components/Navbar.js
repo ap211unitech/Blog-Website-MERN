@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, Dropdown } from 'semantic-ui-react';
+import { Menu, Dropdown, Icon } from 'semantic-ui-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { authReset, logout } from '../features/auth/authSlice';
@@ -61,13 +61,16 @@ function Navbar() {
                         </Fragment>
                         :
                         <Fragment>
-                            <Dropdown text={user.name} pointing className='link item'>
+                            <Dropdown text={<Fragment><Icon name='user' />{user.name}</Fragment>} pointing className='link item'>
                                 <Dropdown.Menu>
                                     <Dropdown.Item as={Link} to='/update-profile'>
-                                        Update Profile
+                                        <Icon name='edit' />  Edit Profile
+                                    </Dropdown.Item>
+                                    <Dropdown.Item as={Link} to='/change-password'>
+                                        <Icon name='setting' />  Change Password
                                     </Dropdown.Item>
                                     <Dropdown.Item name='logout' onClick={handleItemClick}>
-                                        Logout
+                                        <Icon name='sign-in' />   Logout
                                     </Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>

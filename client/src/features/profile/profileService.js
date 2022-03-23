@@ -14,6 +14,19 @@ const getMyProfile = async (token) => {
     return res.data;
 }
 
+// Edit my profile
+const editMyProfile = async (token, data) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }
+    const res = await axios.post(`${URL}/profile/update-profile`, data, config);
+    return res.data;
+}
+
+
 export default {
-    getMyProfile
+    getMyProfile,
+    editMyProfile
 }

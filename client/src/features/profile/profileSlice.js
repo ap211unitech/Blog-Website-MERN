@@ -18,6 +18,22 @@ export const getMyProfile = createAsyncThunk('profile/me', async (_, thunkAPI) =
         const token = thunkAPI.getState().auth.user.token;
         return await profileService.getMyProfile(token);
     } catch (err) {
+        console.log(err)
+        const message = (err.response && err.response.data && err.response.data.message) || err.message || err.toString();
+        return thunkAPI.rejectWithValue(message);
+    }
+})
+
+// Edit My Profile
+export const editMyProfile = createAsyncThunk('profile/edit', async (data, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().auth.user.token;
+        const res = await profileService.editMyProfile(token, data);
+        // console.log(res.user)
+        // thunkAPI.getState().auth.user.name=res.user.name;
+        return res
+    } catch (err) {
+        console.log(err.response)
         const message = (err.response && err.response.data && err.response.data.message) || err.message || err.toString();
         return thunkAPI.rejectWithValue(message);
     }
@@ -48,6 +64,28 @@ export const profileSlice = createSlice({
             })
             .addCase(getMyProfile.rejected, (state, action) => {
                 state.profile = null;
+                state.isError = true;
+                state.isSuccess = false;
+                state.errorMessage = isValidJSON(action.payload) ? Object.values(JSON.parse(action.payload)) : [action.payload];
+                state.successMessage = [];
+                state.isLoading = false;
+            })
+            .addCase(editMyProfile.pending, (state, action) => {
+                state.isError = false;
+                state.isSuccess = false;
+                state.errorMessage = [];
+                state.successMessage = [];
+                state.isLoading = true;
+            })
+            .addCase(editMyProfile.fulfilled, (state, action) => {
+                state.profile = action.payload.profile
+                state.isError = false;
+                state.isSuccess = true;
+                state.errorMessage = [];
+                state.successMessage = ['Profile Updated'];
+                state.isLoading = false;
+            })
+            .addCase(editMyProfile.rejected, (state, action) => {
                 state.isError = true;
                 state.isSuccess = false;
                 state.errorMessage = isValidJSON(action.payload) ? Object.values(JSON.parse(action.payload)) : [action.payload];

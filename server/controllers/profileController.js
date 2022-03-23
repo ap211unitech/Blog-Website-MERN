@@ -57,6 +57,43 @@ const getMyProfile = asyncHandler(async (req, res) => {
     res.status(200).json(profile);
 })
 
+// @Desc    Edit my Profile
+// @Route   POST /profile/update-profile
+// @Access  Private
+const editProfile = asyncHandler(async (req, res) => {
+
+    // Check if user exists
+    const user = await User.findById(req.user._id).select('-password');
+    if (!user) {
+        res.status(400)
+        throw new Error(JSON.stringify({ err: 'No such user exists' }));
+    }
+
+    // Check if profile exists
+    const profile = await Profile.findOne({ user: req.user._id });
+    if (!profile) {
+        res.status(400)
+        throw new Error(JSON.stringify({ err: 'No such profile exists' }));
+    }
+
+    const { name, bio, github, youtube, linkedin, instagram, facebook, twitter, profileUrl } = req.body;
+
+    user.name = name;
+    profile.bio = bio;
+    profile.social.github = github;
+    profile.social.youtube = youtube;
+    profile.social.linkedin = linkedin;
+    profile.social.instagram = instagram;
+    profile.social.twitter = twitter;
+    profile.social.facebook = facebook;
+    profile.profileUrl = profileUrl;
+    await profile.save();
+    await user.save()
+
+    res.status(200).json({ profile, user });
+})
+
+
 // @Desc    View any user Profile
 // @Route   POST /profile/view/:id
 // @Access  Public
@@ -178,6 +215,7 @@ const followProfile = asyncHandler(async (req, res) => {
 
 module.exports = {
     getMyProfile,
+    editProfile,
     viewProfile,
     followProfile
 }

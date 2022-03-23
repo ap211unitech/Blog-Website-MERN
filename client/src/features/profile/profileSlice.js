@@ -18,7 +18,6 @@ export const getMyProfile = createAsyncThunk('profile/me', async (_, thunkAPI) =
         const token = thunkAPI.getState().auth.user.token;
         return await profileService.getMyProfile(token);
     } catch (err) {
-        console.log(err)
         const message = (err.response && err.response.data && err.response.data.message) || err.message || err.toString();
         return thunkAPI.rejectWithValue(message);
     }
@@ -28,12 +27,8 @@ export const getMyProfile = createAsyncThunk('profile/me', async (_, thunkAPI) =
 export const editMyProfile = createAsyncThunk('profile/edit', async (data, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token;
-        const res = await profileService.editMyProfile(token, data);
-        // console.log(res.user)
-        // thunkAPI.getState().auth.user.name=res.user.name;
-        return res
+        return await profileService.editMyProfile(token, data);
     } catch (err) {
-        console.log(err.response)
         const message = (err.response && err.response.data && err.response.data.message) || err.message || err.toString();
         return thunkAPI.rejectWithValue(message);
     }

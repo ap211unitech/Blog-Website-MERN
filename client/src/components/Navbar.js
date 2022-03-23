@@ -61,20 +61,16 @@ function Navbar() {
                         </Fragment>
                         :
                         <Fragment>
-                            <Dropdown.Menu>
-                                <Dropdown.Header>{user.name}</Dropdown.Header>
-                                <Menu.Item
-                                    name='update profile'
-                                    active={activeItem === 'update-profile'}
-                                    as={Link}
-                                    to='/update-profile'
-                                />
-                                <Menu.Item
-                                    name='logout'
-                                    active={activeItem === 'logout'}
-                                    onClick={handleItemClick}
-                                />
-                            </Dropdown.Menu>
+                            <Dropdown text={user.name} pointing className='link item'>
+                                <Dropdown.Menu>
+                                    <Dropdown.Item as={Link} to='/update-profile'>
+                                        Update Profile
+                                    </Dropdown.Item>
+                                    <Dropdown.Item name='logout' onClick={handleItemClick}>
+                                        Logout
+                                    </Dropdown.Item>
+                                </Dropdown.Menu>
+                            </Dropdown>
                         </Fragment>
                     }
                 </Menu.Menu>

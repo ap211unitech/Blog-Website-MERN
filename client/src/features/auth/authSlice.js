@@ -95,6 +95,9 @@ export const googleSignInAuthentication = createAsyncThunk('/auth/googleSignIn',
     }
 })
 
+export const setAuth = createAsyncThunk('/auth/set', async (user, thunkAPI) => {
+    return user;
+})
 
 export const authSlice = createSlice({
     name: 'auth',
@@ -280,6 +283,10 @@ export const authSlice = createSlice({
                 state.errorMessage = isValidJSON(action.payload) ? Object.values(JSON.parse(action.payload)) : [action.payload];
                 state.successMessage = [];
                 state.isLoading = false;
+            })
+            .addCase(setAuth.fulfilled, (state, action) => {
+                const obj = { token: state.user.token, ...action.payload.payload.user }
+                state.user = obj;
             })
     }
 })

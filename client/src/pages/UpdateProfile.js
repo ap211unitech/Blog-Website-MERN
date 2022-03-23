@@ -6,6 +6,7 @@ import { CLOUDINARY_USER_NAME } from "../config/defaults";
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { getMyProfile, editMyProfile } from "../features/profile/profileSlice";
+import { setAuth } from '../features/auth/authSlice';
 
 function UpdateProfile() {
 
@@ -41,8 +42,10 @@ function UpdateProfile() {
             profileUrl: profileImage,
             ...social
         }
-        console.log(data)
-        dispatch(editMyProfile(data));
+        const res = await dispatch(editMyProfile(data));
+        if (res.type === 'profile/edit/fulfilled') {
+            dispatch(setAuth(res));
+        }
     }
 
     const onChangeFormData = (e) => {
@@ -63,7 +66,7 @@ function UpdateProfile() {
             const res = await axios.post(`https://api.cloudinary.com/v1_1/${CLOUDINARY_USER_NAME}/image/upload`, data);
             return res.data.url;
         } catch (err) {
-            console.log(err);
+            // console.log(err);
             return profile.profileUrl
         }
     }

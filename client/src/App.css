@@ -132,3 +132,7 @@ hr {
     margin-top: 20px;
     white-space: pre-wrap;
 }
+
+.peopleWhoViewedYourProfileList {
+    margin-bottom: 10px;
+}

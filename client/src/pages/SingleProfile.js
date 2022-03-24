@@ -1,9 +1,11 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux'
 import { getAnyUserProfile, customProfileReset } from '../features/profile/profileSlice';
 import { toast } from 'react-toastify';
-import { Button, Grid, Icon, Loader, Message } from 'semantic-ui-react';
+import { Button, Grid, Modal, Icon, Loader, Message, List, Image } from 'semantic-ui-react';
+
+
 
 function SingleProfile() {
 
@@ -14,13 +16,44 @@ function SingleProfile() {
     const auth = useSelector(state => state.auth);
     const { otherProfile, isLoading, isError, errorMessage } = useSelector(state => state.profile);
 
+    const [showPeopleViewedModal, setShowPeopleViewedModal] = useState(false);
+    const peopleViewedClick = () => {
+        setShowPeopleViewedModal(!showPeopleViewedModal);
+    }
+
     useEffect(async () => {
+        setShowPeopleViewedModal(false);
         await dispatch(getAnyUserProfile(profileId));
         dispatch(customProfileReset());
     }, [dispatch, navigate])
 
     return (
         <Fragment>
+            {/* People who viewed profile modal */}
+            <Modal
+                open={showPeopleViewedModal}
+                onClose={peopleViewedClick}
+                size='mini'
+            >
+                <Modal.Header>People who viewed your profile</Modal.Header>
+                <Modal.Content scrolling>
+                    <List verticalAlign='middle'>
+                        {otherProfile && otherProfile.profile && otherProfile.profile.viewedBy ?
+                            otherProfile.profile.viewedBy.map(user => <List.Item key={user._id} className='peopleWhoViewedYourProfileList' >
+                                <List.Content floated='right'>
+                                    <Button basic color='black' as={Link} to={`/profile/${user.profile._id}`}> Visit Profile </Button>
+                                </List.Content>
+                                <Image avatar src={user.profile.profileUrl} alt="Profile Image" />
+                                <List.Content >
+                                    <p style={{ paddingLeft: 5, color: '#2185d0' }}> {user.user.name}</p>
+                                </List.Content>
+                            </List.Item>
+                            )
+                            : null}
+                    </List>
+                </Modal.Content>
+            </Modal>
+
             {isError && !isLoading ?
                 <Fragment>
                     {errorMessage.map(err => { <Message error floating content={err} /> })}
@@ -50,9 +83,11 @@ function SingleProfile() {
                                     }
                                 </div>
                                 <div className='vff'>
-                                    <div className="viewedBy">
-                                        {otherProfile.profile.viewedBy.length}  People viewed your profile
-                                    </div>
+                                    {auth && auth.user && otherProfile.user._id === auth.user._id ?
+                                        <div className="viewedBy" onClick={peopleViewedClick}>
+                                            {otherProfile.profile.viewedBy.length}  People viewed your profile
+                                        </div> : null
+                                    }
                                     <div className="followers">
                                         {otherProfile.profile.followers.length} Followers
                                     </div>

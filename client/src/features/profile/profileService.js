@@ -25,8 +25,16 @@ const editMyProfile = async (token, data) => {
     return res.data;
 }
 
+// Get any user profile
+const getAnyUserProfile = async (profileId) => {
+    const token = JSON.parse(localStorage.getItem('user')) ? JSON.parse(localStorage.getItem('user')).token : null;
+    const res = await axios.post(`${URL}/profile/view/${profileId}`, { token });
+    return res.data;
+}
+
 
 export default {
     getMyProfile,
-    editMyProfile
+    editMyProfile,
+    getAnyUserProfile
 }

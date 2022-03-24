@@ -19,6 +19,7 @@ import ResetPassword from './pages/ResetPassword';
 import ActivateAccount from './pages/ActivateAccount';
 import UpdateProfile from './pages/UpdateProfile';
 import ChangePassword from './pages/ChangePassword';
+import SingleProfile from './pages/SingleProfile';
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
             <Route path='/auth/activate/:token' element={<ActivateAccount />} />
             <Route path='/update-profile' element={<UpdateProfile />} />
             <Route path='/change-password' element={<ChangePassword />} />
+            <Route path='/profile/:profileId' element={<SingleProfile />} />
             <Route path='*' element={<NotFound />} />
           </Routes>
         </Container>

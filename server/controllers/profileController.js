@@ -107,9 +107,9 @@ const viewProfile = asyncHandler(async (req, res) => {
     }
 
     // Find user corresposing to that profile
-    const user = await User.findById(profile.user);
+    const user = await User.findById(profile.user).select('-password');
 
-    if (req.body.token) {
+    if (req.body && req.body.token) {
         // Check if user is logged in
         try {
             const token = req.body.token;
@@ -129,7 +129,11 @@ const viewProfile = asyncHandler(async (req, res) => {
                 await profile.save();
             }
 
-        } catch (err) { console.log(err) }
+        } catch (err) {
+            console.log(err)
+            res.status(400)
+            throw new Error('No such profile exists');
+        }
     }
 
     // Populating required entries

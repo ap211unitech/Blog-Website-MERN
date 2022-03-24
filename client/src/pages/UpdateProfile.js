@@ -1,6 +1,6 @@
 import React, { useEffect, Fragment, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Form, Button, Icon, Grid } from 'semantic-ui-react';
 import { CLOUDINARY_USER_NAME } from "../config/defaults";
 import axios from 'axios';
@@ -80,7 +80,9 @@ function UpdateProfile() {
 
     // When name changes, we need this because of our structure.
     useEffect(() => {
-        setFormData({ ...formData, 'name': auth.user.name })
+        if (auth && auth.user) {
+            setFormData({ ...formData, 'name': auth.user.name })
+        }
     }, [auth, dispatch, navigate])
 
     useEffect(() => {
@@ -119,11 +121,7 @@ function UpdateProfile() {
             errorMessage.map(err => toast.error(err));
         }
 
-        dispatch(profileReset());
-
     }, [isError, isSuccess, dispatch, navigate, profile])
-
-
 
     return (
         <Fragment>
@@ -232,6 +230,9 @@ function UpdateProfile() {
                         null
                     }
                     <Button type='submit' color='teal'>Update Profile</Button>
+                    {profile ?
+                        <Button secondary type='button' as={Link} to={`/profile/${profile._id}`}>View Your Profile</Button> : null
+                    }
                     <br />
                     <br />
                 </Form>

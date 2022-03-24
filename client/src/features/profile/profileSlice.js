@@ -5,6 +5,7 @@ import profileService from './profileService';
 
 const initialState = {
     profile: null,
+    otherProfile: null,
     isError: false,
     isSuccess: false,
     errorMessage: [],
@@ -34,12 +35,32 @@ export const editMyProfile = createAsyncThunk('profile/edit', async (data, thunk
     }
 })
 
+// Get Any user profile
+export const getAnyUserProfile = createAsyncThunk('profile/anyuser', async (profileId, thunkAPI) => {
+    try {
+        return await profileService.getAnyUserProfile(profileId);
+    } catch (err) {
+        const message = (err.response && err.response.data && err.response.data.message) || err.message || err.toString();
+        return thunkAPI.rejectWithValue(message);
+    }
+})
+
+
+
 export const profileSlice = createSlice({
     name: 'profile',
     initialState,
     reducers: {
         profileReset: (state) => {
             state.profile = null;
+            state.otherProfile = null;
+            state.isError = false;
+            state.isSuccess = false;
+            state.errorMessage = [];
+            state.successMessage = [];
+            state.isLoading = false;
+        },
+        customProfileReset: (state) => {
             state.isError = false;
             state.isSuccess = false;
             state.errorMessage = [];
@@ -87,8 +108,33 @@ export const profileSlice = createSlice({
                 state.successMessage = [];
                 state.isLoading = false;
             })
+            .addCase(getAnyUserProfile.pending, (state, action) => {
+                state.otherProfile = null;
+                state.isError = false;
+                state.isSuccess = false;
+                state.errorMessage = [];
+                state.successMessage = [];
+                state.isLoading = true;
+            })
+            .addCase(getAnyUserProfile.fulfilled, (state, action) => {
+                state.otherProfile = { profile: action.payload.profile, user: action.payload.user }
+                state.isError = false;
+                state.isSuccess = true;
+                state.errorMessage = [];
+                state.successMessage = [];
+                state.isLoading = false;
+            })
+            .addCase(getAnyUserProfile.rejected, (state, action) => {
+                state.otherProfile = { profile: null, user: null };
+                state.isError = true;
+                state.isSuccess = false;
+                state.errorMessage = isValidJSON(action.payload) ? Object.values(JSON.parse(action.payload)) : [action.payload];
+                state.successMessage = [];
+                state.isLoading = false;
+            })
+
     }
 })
 
-export const { profileReset } = profileSlice.actions;
+export const { profileReset, customProfileReset } = profileSlice.actions;
 export default profileSlice.reducer;

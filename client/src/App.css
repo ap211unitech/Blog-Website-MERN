@@ -43,3 +43,92 @@ hr {
     position: relative;
     top: -13px;
 }
+
+/* Profile Page Styling */
+.profile {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    /* margin-left: 30px; */
+}
+
+.profileImage img {
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+}
+
+
+.profileTitle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 50px;
+}
+
+.profileTitle .button {
+    margin-bottom: 15px;
+}
+
+
+.profileData .vff {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 15px;
+    margin-left: 50px;
+    color: rgb(66, 73, 175);
+}
+
+.profileData .vff .viewedBy {
+    margin-right: 10px;
+}
+
+.profileData .vff .viewedBy:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.profileData .vff .followers {
+    margin-right: 10px;
+}
+
+.profileData .vff .followers:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.profileData .vff .following {
+    margin-right: 10px;
+}
+
+.profileData .vff .following:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+
+.profileData .social {
+    display: flex;
+    align-items: center;
+    margin-left: 40px;
+    margin-top: 15px;
+}
+
+
+.profileData .social a {
+    color: black;
+    margin: 5px;
+}
+
+
+.profileData .social a:hover {
+    color: rgb(66, 73, 175)
+}
+
+.profileData .bio {
+    font-size: 15px;
+    margin-left: 50px;
+    margin-top: 20px;
+    white-space: pre-wrap;
+}

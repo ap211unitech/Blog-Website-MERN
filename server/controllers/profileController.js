@@ -214,7 +214,45 @@ const followProfile = asyncHandler(async (req, res) => {
         throw new Error('You already followed this profile')
     }
 
-    res.status(200).json({ profile });
+    // Populating required entries
+    const newProfile = await Profile.findById(req.params.id).populate({
+        path: 'following',
+        populate: {
+            path: 'user',
+        }
+    })
+        .populate({
+            path: 'following',
+            populate: {
+                path: 'profile',
+            }
+        })
+        .populate({
+            path: 'followers',
+            populate: {
+                path: 'user',
+            }
+        })
+        .populate({
+            path: 'followers',
+            populate: {
+                path: 'profile',
+            }
+        })
+        .populate({
+            path: 'viewedBy',
+            populate: {
+                path: 'user',
+            }
+        })
+        .populate({
+            path: 'viewedBy',
+            populate: {
+                path: 'profile',
+            }
+        });
+
+    res.status(200).json({ profile: newProfile });
 })
 
 module.exports = {

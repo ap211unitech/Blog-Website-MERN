@@ -63,7 +63,17 @@ hr {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
     margin-left: 50px;
+}
+
+/* Media Query for Profile  Title */
+@media screen and (max-width: 680px) {
+    .profileTitle {
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+    }
 }
 
 .profileTitle .button {
@@ -73,7 +83,6 @@ hr {
 
 .profileData .vff {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     font-size: 15px;
     margin-left: 50px;

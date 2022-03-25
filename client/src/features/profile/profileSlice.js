@@ -45,6 +45,17 @@ export const getAnyUserProfile = createAsyncThunk('profile/anyuser', async (prof
     }
 })
 
+// Follow Any user profile
+export const followAnyUserProfile = createAsyncThunk('profile/follow', async (profileId, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().auth.user.token;
+        return await profileService.followAnyUserProfile(profileId, token);
+    } catch (err) {
+        const message = (err.response && err.response.data && err.response.data.message) || err.message || err.toString();
+        return thunkAPI.rejectWithValue(message);
+    }
+})
+
 
 
 export const profileSlice = createSlice({
@@ -132,7 +143,22 @@ export const profileSlice = createSlice({
                 state.successMessage = [];
                 state.isLoading = false;
             })
-
+            .addCase(followAnyUserProfile.fulfilled, (state, action) => {
+                state.otherProfile = { ...state.otherProfile, profile: action.payload.profile }
+                state.isError = false;
+                state.isSuccess = true;
+                state.errorMessage = [];
+                state.successMessage = [];
+                state.isLoading = false;
+            })
+            .addCase(followAnyUserProfile.rejected, (state, action) => {
+                // state.otherProfile = { profile: null, user: null };
+                state.isError = true;
+                state.isSuccess = false;
+                state.errorMessage = isValidJSON(action.payload) ? Object.values(JSON.parse(action.payload)) : [action.payload];
+                state.successMessage = [];
+                state.isLoading = false;
+            })
     }
 })
 

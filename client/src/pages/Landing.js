@@ -1,10 +1,10 @@
 import React, { Fragment, useEffect } from 'react'
 import { toast } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { authReset, sendActivationMail } from '../features/auth/authSlice';
 import { profileReset, getMyProfile } from '../features/profile/profileSlice';
-import { Button, Message } from 'semantic-ui-react'
+import { Message } from 'semantic-ui-react'
 
 function Landing() {
 
@@ -59,14 +59,6 @@ function Landing() {
                         </Message> : null
                 :
                 <div>Login First</div>
-            }
-            {user && user.token ?
-                profile ?
-                    <Fragment>
-                        <Button as={Link} to={`/profile/${profile._id}`}>Your profile</Button>
-                    </Fragment> :
-                    null :
-                null
             }
         </Fragment>
     )

@@ -32,9 +32,20 @@ const getAnyUserProfile = async (profileId) => {
     return res.data;
 }
 
+// Follow any user profile
+const followAnyUserProfile = async (profileId, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }
+    const res = await axios.get(`${URL}/profile/follow/${profileId}`, config);
+    return res.data;
+}
 
 export default {
     getMyProfile,
     editMyProfile,
-    getAnyUserProfile
+    getAnyUserProfile,
+    followAnyUserProfile
 }

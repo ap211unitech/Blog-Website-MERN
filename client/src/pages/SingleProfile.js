@@ -3,7 +3,7 @@ import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux'
 import { getAnyUserProfile, customProfileReset, followAnyUserProfile, getMyProfile } from '../features/profile/profileSlice';
 import { toast } from 'react-toastify';
-import { Button, Modal, Icon, Loader, Message, List, Image } from 'semantic-ui-react';
+import { Button, Modal, Icon, Loader, Message, List, Image, Label } from 'semantic-ui-react';
 
 function SingleProfile() {
 
@@ -151,6 +151,20 @@ function SingleProfile() {
                             <div className="profileData">
                                 <div className="profileTitle">
                                     <h2> {otherProfile.user.name}</h2>
+                                    <div style={{ marginBottom: 10 }}>
+                                        {otherProfile.profile.isActivated ?
+                                            <Label.Group>
+                                                <Label size='medium' as='a' tag color='green'>
+                                                    Verified Account
+                                                </Label>
+                                            </Label.Group> :
+                                            <Label.Group>
+                                                <Label size='medium' as='a' tag color='red'>
+                                                    Unverified Account
+                                                </Label>
+                                            </Label.Group>
+                                        }
+                                    </div>
                                     {auth && auth.user && otherProfile.user._id === auth.user._id
                                         ?
                                         <Button secondary as={Link} to='/update-profile'>
@@ -170,8 +184,11 @@ function SingleProfile() {
                                         :
                                         <div></div>
                                     }
+
                                 </div>
+
                                 <div className='vff'>
+
                                     {auth && auth.user && otherProfile.user._id === auth.user._id ?
                                         <div className="viewedBy" onClick={peopleViewedClick}>
                                             {otherProfile.profile.viewedBy.length}  People viewed your profile

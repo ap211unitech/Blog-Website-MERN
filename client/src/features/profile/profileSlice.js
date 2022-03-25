@@ -45,7 +45,7 @@ export const getAnyUserProfile = createAsyncThunk('profile/anyuser', async (prof
     }
 })
 
-// Follow Any user profile
+// Follow/Unfollow any user profile
 export const followAnyUserProfile = createAsyncThunk('profile/follow', async (profileId, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth.user.token;

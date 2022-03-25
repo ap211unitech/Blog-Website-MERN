@@ -14,9 +14,9 @@ function SingleProfile() {
     const auth = useSelector(state => state.auth);
     const { otherProfile, isLoading, isError, errorMessage } = useSelector(state => state.profile);
 
-    const [followProfileLoading, setFollowProfileLoading] = useState(false);
-    const followProfileClick = async () => {
-        setFollowProfileLoading(true);
+    const [toggleFollowProfileLoading, settoggleFollowProfileLoading] = useState(false);
+    const toggleFollowProfileClick = async () => {
+        settoggleFollowProfileLoading(true);
         const res = await dispatch(followAnyUserProfile(profileId));
         if (res.type === 'profile/follow/rejected') {
             toast.error(res.payload);
@@ -24,7 +24,7 @@ function SingleProfile() {
         else if (res.type === 'profile/follow/fulfilled') {
 
         }
-        setFollowProfileLoading(false);
+        settoggleFollowProfileLoading(false);
         dispatch(customProfileReset());
     }
 
@@ -70,7 +70,7 @@ function SingleProfile() {
                                 </List.Content>
                                 <Image avatar src={user.profile.profileUrl} alt="Profile Image" />
                                 <List.Content >
-                                    <p style={{ paddingLeft: 5, color: '#2185d0' }}> {user.user.name}</p>
+                                    <p style={{ paddingLeft: 5, color: 'rgb(66, 73, 175)' }}> {user.user.name}</p>
                                 </List.Content>
                             </List.Item>
                             )
@@ -96,7 +96,7 @@ function SingleProfile() {
                                 </List.Content>
                                 <Image avatar src={user.profile.profileUrl} alt="Profile Image" />
                                 <List.Content >
-                                    <p style={{ paddingLeft: 5, color: '#2185d0' }}> {user.user.name}</p>
+                                    <p style={{ paddingLeft: 5, color: 'rgb(66, 73, 175)' }}> {user.user.name}</p>
                                 </List.Content>
                             </List.Item>
                             )
@@ -122,7 +122,7 @@ function SingleProfile() {
                                 </List.Content>
                                 <Image avatar src={user.profile.profileUrl} alt="Profile Image" />
                                 <List.Content >
-                                    <p style={{ paddingLeft: 5, color: '#2185d0' }}> {user.user.name}</p>
+                                    <p style={{ paddingLeft: 5, color: 'rgb(66, 73, 175)' }}> {user.user.name}</p>
                                 </List.Content>
                             </List.Item>
                             )
@@ -161,10 +161,10 @@ function SingleProfile() {
                                     {auth && auth.user && otherProfile.user._id !== auth.user._id ?
                                         otherProfile.profile.followers.find(user => user.user._id === auth.user._id)
                                             ?
-                                            <Button secondary basic onClick={followProfileClick}>
+                                            <Button secondary basic loading={toggleFollowProfileLoading} onClick={toggleFollowProfileClick}>
                                                 Unfollow
                                             </Button> :
-                                            <Button secondary loading={followProfileLoading} onClick={followProfileClick}>
+                                            <Button secondary loading={toggleFollowProfileLoading} onClick={toggleFollowProfileClick}>
                                                 Follow
                                             </Button>
                                         :

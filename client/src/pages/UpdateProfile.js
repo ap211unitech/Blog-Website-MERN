@@ -64,16 +64,20 @@ function UpdateProfile() {
         setSocial({ ...social, [e.target.name]: e.target.value });
     }
 
+    const [cloudinaryUploadLoading, setCloudinaryUploadLoading] = useState(false);
     const profileImageUpload = async () => {
+        setCloudinaryUploadLoading(true);
         let data = new FormData();
         data.append("file", profileImage);
         data.append("upload_preset", "mern-blog");
         data.append("cloud_name", CLOUDINARY_USER_NAME);
         try {
             const res = await axios.post(`https://api.cloudinary.com/v1_1/${CLOUDINARY_USER_NAME}/image/upload`, data);
+            setCloudinaryUploadLoading(false);
             return res.data.url;
         } catch (err) {
             // console.log(err);
+            setCloudinaryUploadLoading(false);
             return profile.profileUrl
         }
     }
@@ -137,7 +141,7 @@ function UpdateProfile() {
                 Edit your profile here
             </h2>
             <div className="form-control">
-                <Form onSubmit={onSubmit} className={isLoading ? 'loading' : ''}>
+                <Form onSubmit={onSubmit} className={isLoading || cloudinaryUploadLoading ? 'loading' : ''}>
                     <Form.Field>
                         <label>Name</label>
                         <input

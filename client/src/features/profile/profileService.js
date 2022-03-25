@@ -32,7 +32,7 @@ const getAnyUserProfile = async (profileId) => {
     return res.data;
 }
 
-// Follow any user profile
+// Follow/Unfollow any user profile
 const followAnyUserProfile = async (profileId, token) => {
     const config = {
         headers: {

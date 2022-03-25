@@ -79,6 +79,9 @@ function Navbar() {
                         <Fragment>
                             <Dropdown text={<Fragment><Icon name='user' />{user.name}</Fragment>} pointing className='link item'>
                                 <Dropdown.Menu>
+                                    <Dropdown.Item as={Link} to='/account'>
+                                        <Icon name='setting' />  Your Account
+                                    </Dropdown.Item>
                                     {profile ?
                                         <Dropdown.Item as={Link} to={`/profile/${profileId}`}>
                                             <Icon name='user' />  Your Profile
@@ -88,7 +91,7 @@ function Navbar() {
                                         <Icon name='edit' />  Edit Profile
                                     </Dropdown.Item>
                                     <Dropdown.Item as={Link} to='/change-password'>
-                                        <Icon name='setting' />  Change Password
+                                        <Icon name='key' />  Change Password
                                     </Dropdown.Item>
                                     <Dropdown.Item name='logout' onClick={handleItemClick}>
                                         <Icon name='sign-in' />   Logout

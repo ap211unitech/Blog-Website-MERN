@@ -122,11 +122,13 @@ const viewProfile = asyncHandler(async (req, res) => {
 
                 const loggedInUserProfile = await Profile.findOne({ user: decoded.id });
 
-                profile.viewedBy.unshift({
-                    user: decoded.id.toString(),
-                    profile: loggedInUserProfile._id
-                });
-                await profile.save();
+                if (loggedInUserProfile.user.toString() !== profile.user.toString()) {
+                    profile.viewedBy.unshift({
+                        user: decoded.id.toString(),
+                        profile: loggedInUserProfile._id
+                    });
+                    await profile.save();
+                }
             }
 
         } catch (err) {
@@ -177,7 +179,7 @@ const viewProfile = asyncHandler(async (req, res) => {
     res.status(200).json({ profile: newProfile, user });
 })
 
-// @Desc    Follow any user Profile
+// @Desc    Toggle Follow any user Profile
 // @Route   POST /profile/follow/:id
 // @Access  Private
 const followProfile = asyncHandler(async (req, res) => {
@@ -206,12 +208,17 @@ const followProfile = asyncHandler(async (req, res) => {
             user: profile.user.toString(),
             profile: req.params.id
         })
+
         await profile.save();
         await loggedInUserProfile.save();
     }
     else {
-        res.status(400)
-        throw new Error('You already followed this profile')
+        const loggedInUserProfile = await Profile.findOne({ user: req.user._id });
+        profile.followers.splice(flag, 1);
+        loggedInUserProfile.following.splice(flag, 1);
+
+        await profile.save();
+        await loggedInUserProfile.save();
     }
 
     // Populating required entries

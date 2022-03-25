@@ -20,6 +20,7 @@ import ActivateAccount from './pages/ActivateAccount';
 import UpdateProfile from './pages/UpdateProfile';
 import ChangePassword from './pages/ChangePassword';
 import SingleProfile from './pages/SingleProfile';
+import Account from './pages/Account';
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
             <Route path='/update-profile' element={<UpdateProfile />} />
             <Route path='/change-password' element={<ChangePassword />} />
             <Route path='/profile/:profileId' element={<SingleProfile />} />
+            <Route path='/account' element={<Account />} />
             <Route path='*' element={<NotFound />} />
           </Routes>
         </Container>

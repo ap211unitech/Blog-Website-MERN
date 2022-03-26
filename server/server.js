@@ -18,6 +18,7 @@ app.use(cors());
 app.use('/', require('./routes/auth'));
 app.use('/', require('./routes/profile'));
 app.use('/', require('./routes/category'));
+app.use('/', require('./routes/blog'));
 app.use('/admin', require('./routes/admin'));
 
 app.use(errHandler)

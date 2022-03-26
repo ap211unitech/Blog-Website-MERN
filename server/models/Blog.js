@@ -12,22 +12,38 @@ const BlogSchema = new mongoose.Schema({
     title: {
         type: String,
         required: true,
-        maxlength: 50
+        maxlength: 170
     },
     desc: {
         type: String,
         required: true,
-        minlength: 50
     },
-    photo: {
-        type: String
+    coverPhoto: {
+        type: String,
+        required: true
     },
+    content: [
+        {
+            image: {
+                type: String,
+                required: true
+            },
+            desc: {
+                type: String,
+                required: true,
+            }
+        }
+    ],
     viewedBy: [
         {
             user: {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'user'
-            }
+            },
+            profile: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'profile'
+            },
         }
     ],
     likes: [
@@ -54,7 +70,7 @@ const BlogSchema = new mongoose.Schema({
             },
             profile: {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: 'user'
+                ref: 'profile'
             },
             text: {
                 type: String,

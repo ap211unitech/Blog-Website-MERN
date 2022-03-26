@@ -59,6 +59,8 @@ const register = asyncHandler(async (req, res) => {
         _id: user._id,
         name: user.name,
         email: user.email,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
         token
     });
 
@@ -101,6 +103,8 @@ const login = asyncHandler(async (req, res) => {
         _id: userExists._id,
         name: userExists.name,
         email: userExists.email,
+        createdAt: userExists.createdAt,
+        updatedAt: userExists.updatedAt,
         token: generateToken(userExists._id)
     });
 })
@@ -138,6 +142,8 @@ const googleSignIn = asyncHandler(async (req, res) => {
                 _id: userExists._id,
                 name: userExists.name,
                 email: userExists.email,
+                createdAt: userExists.createdAt,
+                updatedAt: userExists.updatedAt,
                 token: generateToken(userExists._id)
             })
         }
@@ -169,6 +175,8 @@ const googleSignIn = asyncHandler(async (req, res) => {
                 _id: newUser._id,
                 name: newUser.name,
                 email: newUser.email,
+                createdAt: newUser.createdAt,
+                updatedAt: newUser.updatedAt,
                 token
             })
 

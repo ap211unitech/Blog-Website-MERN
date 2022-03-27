@@ -7,13 +7,13 @@ const Blog = require("../models/Blog");
 // @Route   GET /blog/latest
 // @Access  Public
 const getLatestBlogs = asyncHandler(async (req, res) => {
-    const blogs = await Blog.find().sort({ 'updatedAt': -1 }).limit(10);
+    const blogs = await Blog.find().populate('user').populate('profile').sort({ 'updatedAt': -1 }).limit(10);
     res.status(200).json(blogs);
 })
 
 
 // @Desc    Get blogs of a user
-// @Route   GET /blog
+// @Route   GET /blog/:userId
 // @Access  Private
 const getBlog = asyncHandler(async (req, res) => {
     const blogs = await Blog.find({ user: req.params.userId });

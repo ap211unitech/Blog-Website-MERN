@@ -21,6 +21,7 @@ import UpdateProfile from './pages/UpdateProfile';
 import ChangePassword from './pages/ChangePassword';
 import SingleProfile from './pages/SingleProfile';
 import Account from './pages/Account';
+import WriteBlog from './pages/WriteBlog';
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
             <Route path='/change-password' element={<ChangePassword />} />
             <Route path='/profile/:profileId' element={<SingleProfile />} />
             <Route path='/account' element={<Account />} />
+            <Route path='/write' element={<WriteBlog />} />
             <Route path='*' element={<NotFound />} />
           </Routes>
         </Container>

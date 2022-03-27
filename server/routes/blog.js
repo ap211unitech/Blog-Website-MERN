@@ -3,7 +3,7 @@ const { authMiddleware } = require("../middleware/authMiddleware");
 const blogController = require("../controllers/blogController");
 
 // Get Latest Blogs
-router.get('/blog/popular', blogController.getLatestBlogs);
+router.get('/blog/latest', blogController.getLatestBlogs);
 
 // Get Blog of a user
 router.get('/blog/:userId', blogController.getBlog);

@@ -57,6 +57,15 @@ function Navbar() {
                     as={Link}
                     to='/'
                 />
+                {user ?
+                    <Menu.Item
+                        name='write'
+                        active={activeItem === 'write'}
+                        onClick={handleItemClick}
+                        as={Link}
+                        to='/write'
+                    /> : null
+                }
                 <Menu.Menu position='right'>
                     {!user ?
                         <Fragment>

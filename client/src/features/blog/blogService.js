@@ -9,6 +9,14 @@ const getLatestBlogs = async () => {
     return res.data;
 }
 
+// Get Blog by blogID
+const getBlogByBlogID = async (blogId) => {
+    const token = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).token : null;
+    const res = await axios.get(`${URL}/blog/single/${blogId}`, { token });
+    return res.data;
+}
+
 export default {
-    getLatestBlogs
+    getLatestBlogs,
+    getBlogByBlogID
 }

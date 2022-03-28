@@ -3,11 +3,13 @@ const mongoose = require("mongoose");
 const BlogSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'user'
+        ref: 'user',
+        required: true
     },
     profile: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'profile'
+        ref: 'profile',
+        required: true
     },
     title: {
         type: String,
@@ -20,6 +22,11 @@ const BlogSchema = new mongoose.Schema({
     },
     coverPhoto: {
         type: String,
+        required: true
+    },
+    category: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'category',
         required: true
     },
     content: [
@@ -38,11 +45,13 @@ const BlogSchema = new mongoose.Schema({
         {
             user: {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: 'user'
+                ref: 'user',
+                required: true
             },
             profile: {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: 'profile'
+                ref: 'profile',
+                required: true
             },
         }
     ],
@@ -50,7 +59,8 @@ const BlogSchema = new mongoose.Schema({
         {
             user: {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: 'user'
+                ref: 'user',
+                required: true
             }
         }
     ],
@@ -58,7 +68,8 @@ const BlogSchema = new mongoose.Schema({
         {
             user: {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: 'user'
+                ref: 'user',
+                required: true
             }
         }
     ],
@@ -66,11 +77,13 @@ const BlogSchema = new mongoose.Schema({
         {
             user: {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: 'user'
+                ref: 'user',
+                required: true
             },
             profile: {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: 'profile'
+                ref: 'profile',
+                required: true
             },
             text: {
                 type: String,

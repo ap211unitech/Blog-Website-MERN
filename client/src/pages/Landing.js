@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import { authReset, sendActivationMail } from '../features/auth/authSlice';
 import { profileReset, getMyProfile } from '../features/profile/profileSlice';
-import { Grid, Message, Icon } from 'semantic-ui-react'
+import { Grid, Message, Icon, Label } from 'semantic-ui-react'
 import { blogReset, getLatestBlogs } from '../features/blog/blogSlice';
 
 function Landing() {
@@ -78,7 +78,7 @@ function Landing() {
                                         {' '}  {blog.user.name}
                                     </Link>
                                     <span style={{ color: 'grey', marginLeft: 5 }}>
-                                        Created on {new Date(blog.updatedAt).toLocaleDateString()}
+                                        Last updated on {new Date(blog.updatedAt).toLocaleDateString()}
                                     </span>
                                 </div>
                                 <h2 style={{ margin: '20px 0px 0px 0px', padding: 0 }} > {blog.title}</h2>
@@ -86,9 +86,28 @@ function Landing() {
                                     {blog.desc.substr(0, 160)}...........
                                     <Link to={`/blog/${blog._id}`}>Read more</Link>
                                 </p>
+                                <Label >{blog.category.name}</Label>
+                                <div className='latestBlogLDC' >
+                                    <p>
+                                        <Icon name='eye' />
+                                        {blog.viewedBy.length}
+                                    </p>
+                                    <p>
+                                        <Icon name='thumbs up' />
+                                        {blog.likes.length}
+                                    </p>
+                                    <p>
+                                        <Icon name='thumbs down' />
+                                        {blog.dislikes.length}
+                                    </p>
+                                    <p>
+                                        <Icon name='comments' />
+                                        {blog.comments.length}
+                                    </p>
+                                </div>
                             </Grid.Column>
                             <Grid.Column width={3}>
-                                <img height={'80%'} alt='Blog Image' src={blog.coverPhoto} />
+                                <img height={'70%'} alt='Blog Image' src={blog.coverPhoto} />
                             </Grid.Column>
                         </Grid.Row>
                     ))

@@ -22,6 +22,7 @@ import ChangePassword from './pages/ChangePassword';
 import SingleProfile from './pages/SingleProfile';
 import Account from './pages/Account';
 import WriteBlog from './pages/WriteBlog';
+import SingleBlog from './pages/SingleBlog';
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
             <Route path='/profile/:profileId' element={<SingleProfile />} />
             <Route path='/account' element={<Account />} />
             <Route path='/write' element={<WriteBlog />} />
+            <Route path='/blog/:blogId' element={<SingleBlog />} />
             <Route path='*' element={<NotFound />} />
           </Routes>
         </Container>

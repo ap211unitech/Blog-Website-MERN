@@ -23,6 +23,16 @@ export const getLatestBlogs = createAsyncThunk('/blog/latest', async (thunkAPI) 
     }
 })
 
+// Get Blog by blogID
+export const getBlogByBlogID = createAsyncThunk('/blog/single', async (blogId, thunkAPI) => {
+    try {
+        return await blogService.getBlogByBlogID(blogId);
+    } catch (err) {
+        const message = (err.response && err.response.data && err.response.data.message) || err.message || err.toString();
+        return thunkAPI.rejectWithValue(message);
+    }
+})
+
 const blogSlice = createSlice({
     name: 'blog',
     initialState,
@@ -73,6 +83,40 @@ const blogSlice = createSlice({
                 state.successMessage = [];
                 state.errorMessage = isValidJSON(action.payload) ? Object.values(JSON.parse(action.payload)) : [action.payload];;
             })
+
+
+            .addCase(getBlogByBlogID.pending, (state, action) => {
+                state.singleBlog = null;
+                state.isLoading = true;
+                state.isSuccess = false;
+                state.isError = false;
+                state.successMessage = [];
+                state.errorMessage = [];
+            })
+            .addCase(getBlogByBlogID.fulfilled, (state, action) => {
+                if (action.payload.message) {
+                    state.singleBlog = null;
+                }
+                else {
+                    state.singleBlog = action.payload;
+                }
+                state.isLoading = false;
+                state.isSuccess = false;
+                state.isError = false;
+                state.successMessage = [];
+                state.errorMessage = [];
+            })
+            .addCase(getBlogByBlogID.rejected, (state, action) => {
+                state.singleBlog = null;
+                state.isLoading = false;
+                state.isSuccess = false;
+                state.isError = true;
+                state.successMessage = [];
+                state.errorMessage = isValidJSON(action.payload) ? Object.values(JSON.parse(action.payload)) : [action.payload];
+            })
+
+
+
     }
 })
 

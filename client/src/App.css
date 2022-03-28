@@ -146,9 +146,17 @@ hr {
     margin-bottom: 10px;
 }
 
-/* .latestBlogAuthor { */
-    /* display: flex; */
-    /* flex-direction: row; */
-    /* justify-content: center; */
-    /* align-items: center; */
-/* } */
+.latestBlogLDC {
+    display: flex;
+    color: #4183c4;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.latestBlogLDC p {
+    margin-right: 14px;
+}
+
+.latestBlogLDC p:hover {
+    cursor: pointer;
+}

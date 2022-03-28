@@ -160,3 +160,38 @@ hr {
 .latestBlogLDC p:hover {
     cursor: pointer;
 }
+
+.single-blog-author {
+    display: flex;
+    align-items: center;
+}
+
+.single-blog-header img {
+    /* display: block; */
+    /* margin: auto; */
+    width: 60%;
+    height: 400px;
+}
+
+.single-blog-content img {
+    /* display: block;
+    margin: auto; */
+    width: 60%;
+    height: 300px;
+}
+
+.author-data {
+    display: flex;
+    flex-direction: column;
+    margin-left: 16px;
+}
+
+.single-blog-vldc {
+    display: flex;
+    font-size: medium;
+    color: #4183c4;
+}
+
+.single-blog-vldc p {
+    margin-right: 16px;
+}

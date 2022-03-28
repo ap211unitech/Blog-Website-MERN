@@ -25,7 +25,7 @@ const getBlog = asyncHandler(async (req, res) => {
 // @Route   GET /blog/single/:blogId
 // @Access  Public
 const getBlogByBlogID = asyncHandler(async (req, res) => {
-    const blog = await Blog.findById(req.params.blogId);
+    const blog = await Blog.findById(req.params.blogId).populate('user').populate('profile');
     if (!blog) {
         res.status(400)
         throw new Error('No such blog found')

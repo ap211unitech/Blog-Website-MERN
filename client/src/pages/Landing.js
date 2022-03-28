@@ -66,7 +66,7 @@ function Landing() {
                 <div></div>
             }
 
-            <h1>Latest Blogs</h1>
+            {/* <h1>Latest Blogs</h1> */}
             <Grid>
                 {blog.latestBlogs ?
                     blog.latestBlogs.map(blog => (

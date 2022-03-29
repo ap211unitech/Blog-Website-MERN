@@ -77,7 +77,7 @@ const likeBlogByBlogID = asyncHandler(async (req, res) => {
     const alreadyLiked = blog.likes.find(e => e.user.toString() === req.user._id.toString());
 
     if (alreadyLiked) {
-        blog.likes.pop(alreadyLiked);
+        blog.likes.splice(alreadyLiked, 1);
         await blog.save();
     }
     else {
@@ -104,7 +104,7 @@ const dislikeBlogByBlogID = asyncHandler(async (req, res) => {
     const alreadydisLiked = blog.dislikes.find(e => e.user.toString() === req.user._id.toString());
 
     if (alreadydisLiked) {
-        blog.dislikes.pop(alreadydisLiked);
+        blog.dislikes.splice(alreadydisLiked, 1);
         await blog.save();
     }
     else {

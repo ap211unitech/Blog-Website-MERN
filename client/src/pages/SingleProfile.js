@@ -167,9 +167,15 @@ function SingleProfile() {
                                     </div>
                                     {auth && auth.user && otherProfile.user._id === auth.user._id
                                         ?
-                                        <Button secondary as={Link} to='/update-profile'>
-                                            Edit Profile
-                                        </Button> :
+                                        <Fragment>
+
+                                            <Button secondary as={Link} to='/update-profile'>
+                                                Edit Profile
+                                            </Button>
+                                            <Button as='a' href={`mailto:${auth.user.email}`} icon='mail' label='Send Message' />
+                                        </Fragment>
+
+                                        :
                                         <div></div>
                                     }
                                     {auth && auth.user && otherProfile.user._id !== auth.user._id ?
@@ -185,6 +191,10 @@ function SingleProfile() {
                                         <div></div>
                                     }
 
+                                </div>
+
+                                <div style={{ marginLeft: 50, marginBottom: 16, marginTop: -10, fontSize: 16 }} >
+                                    Joined at {new Date(otherProfile.profile.createdAt).toLocaleDateString()}
                                 </div>
 
                                 <div className='vff'>

@@ -166,17 +166,21 @@ hr {
     align-items: center;
 }
 
+.single-blog-header {
+    margin-top: 10px;
+}
+
 .single-blog-header img {
     /* display: block; */
     /* margin: auto; */
-    width: 60%;
+    width: 100%;
     height: 400px;
 }
 
 .single-blog-content img {
     /* display: block;
     margin: auto; */
-    width: 60%;
+    width: 100%;
     height: 300px;
 }
 
@@ -188,10 +192,15 @@ hr {
 
 .single-blog-vldc {
     display: flex;
-    font-size: medium;
+    font-size: 17px;
     color: #4183c4;
 }
 
 .single-blog-vldc p {
     margin-right: 16px;
+}
+
+.single-blog-vldc p .icon:hover {
+    text-decoration: underline;
+    cursor: pointer;
 }

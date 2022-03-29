@@ -9,7 +9,13 @@ router.get('/blog/latest', blogController.getLatestBlogs);
 router.get('/blog/:userId', blogController.getBlog);
 
 // Get Blog of a BlogID
-router.get('/blog/single/:blogId', blogController.getBlogByBlogID);
+router.post('/blog/single/:blogId', blogController.getBlogByBlogID);
+
+// Like a Blog 
+router.post('/blog/like/:blogId', authMiddleware, blogController.likeBlogByBlogID);
+
+// DisLike a Blog 
+router.post('/blog/dislike/:blogId', authMiddleware, blogController.dislikeBlogByBlogID);
 
 // Write blog
 router.post('/blog/write', authMiddleware, blogController.writeBlog);

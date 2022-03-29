@@ -115,7 +115,7 @@ const viewProfile = asyncHandler(async (req, res) => {
             const token = req.body.token;
             const decoded = await jwt.verify(token, JWT_SECRET_KEY);
 
-            // Check if already followed
+            // Check if already viewed
             const flag = profile.viewedBy.find(e => e.user.toString() === decoded.id)
 
             if (!flag) {

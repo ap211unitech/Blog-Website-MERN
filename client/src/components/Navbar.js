@@ -22,7 +22,7 @@ function Navbar() {
         if (profile) setProfileId(profile._id);
         else {
             const paths = ['/', '/update-profile']
-            if (!paths.includes(location.pathname)) {
+            if (user && user.token && !paths.includes(location.pathname)) {
                 dispatch(getMyProfile());
             }
         }

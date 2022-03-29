@@ -33,6 +33,28 @@ export const getBlogByBlogID = createAsyncThunk('/blog/single', async (blogId, t
     }
 })
 
+// Like a blog by it's blogId
+export const likeBlogByBlogID = createAsyncThunk('/blog/like', async (blogId, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().auth.user.token;
+        return await blogService.likeBlogByBlogID(blogId, token);
+    } catch (err) {
+        const message = (err.response && err.response.data && err.response.data.message) || err.message || err.toString();
+        return thunkAPI.rejectWithValue(message);
+    }
+})
+
+// Dis-Like a blog by it's blogId
+export const dislikeBlogByBlogID = createAsyncThunk('/blog/dislike', async (blogId, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().auth.user.token;
+        return await blogService.dislikeBlogByBlogID(blogId, token);
+    } catch (err) {
+        const message = (err.response && err.response.data && err.response.data.message) || err.message || err.toString();
+        return thunkAPI.rejectWithValue(message);
+    }
+})
+
 const blogSlice = createSlice({
     name: 'blog',
     initialState,
@@ -115,6 +137,24 @@ const blogSlice = createSlice({
                 state.errorMessage = isValidJSON(action.payload) ? Object.values(JSON.parse(action.payload)) : [action.payload];
             })
 
+            .addCase(likeBlogByBlogID.fulfilled, (state, action) => {
+                state.singleBlog = action.payload;
+                state.isLoading = false;
+                state.isSuccess = false;
+                state.isError = true;
+                state.successMessage = [];
+                state.errorMessage = []
+            })
+
+
+            .addCase(dislikeBlogByBlogID.fulfilled, (state, action) => {
+                state.singleBlog = action.payload;
+                state.isLoading = false;
+                state.isSuccess = false;
+                state.isError = true;
+                state.successMessage = [];
+                state.errorMessage = []
+            })
 
 
     }

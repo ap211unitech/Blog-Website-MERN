@@ -1,4 +1,6 @@
 const asyncHandler = require("express-async-handler");
+const jwt = require("jsonwebtoken");
+const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY
 
 const Profile = require("../models/Profile");
 const Blog = require("../models/Blog");
@@ -22,15 +24,98 @@ const getBlog = asyncHandler(async (req, res) => {
 })
 
 // @Desc    Get blog of blogId
-// @Route   GET /blog/single/:blogId
+// @Route   POST /blog/single/:blogId
 // @Access  Public
 const getBlogByBlogID = asyncHandler(async (req, res) => {
-    const blog = await Blog.findById(req.params.blogId).populate('user').populate('profile');
+    const blog = await Blog.findById(req.params.blogId).populate('user').populate('profile').populate('category');
+
     if (!blog) {
         res.status(400)
         throw new Error('No such blog found')
     }
+
+    if (req.body && req.body.token) {
+        // Check if user is logged in
+        try {
+            const token = req.body.token;
+            const decoded = await jwt.verify(token, JWT_SECRET_KEY);
+
+            // Check if already followed
+            const flag = blog.viewedBy.find(e => e.user.toString() === decoded.id)
+
+            if (!flag) {
+                const loggedInUserProfile = await Profile.findOne({ user: decoded.id });
+
+                blog.viewedBy.unshift({
+                    user: decoded.id,
+                    profile: loggedInUserProfile._id
+                })
+
+                await blog.save();
+            }
+        } catch (err) {
+            console.log(err)
+            res.status(400)
+            throw new Error('No such profile exists');
+        }
+    }
+
     res.status(200).json(blog);
+})
+
+
+// @Desc    Like a single blog
+// @Route   POST /blog/like/:blogId
+// @Access  Private
+const likeBlogByBlogID = asyncHandler(async (req, res) => {
+    const blog = await Blog.findById(req.params.blogId).populate('user').populate('profile').populate('category');
+    if (!blog) {
+        throw new Error('No such blog exists');
+    }
+
+    // Check if already liked
+    const alreadyLiked = blog.likes.find(e => e.user.toString() === req.user._id.toString());
+
+    if (alreadyLiked) {
+        blog.likes.pop(alreadyLiked);
+        await blog.save();
+    }
+    else {
+        blog.likes.unshift({
+            user: req.user._id
+        })
+        await blog.save();
+    }
+
+    res.status(200).json(blog);
+
+})
+
+// @Desc    DisLike a single blog
+// @Route   POST /blog/dislike/:blogId
+// @Access  Private
+const dislikeBlogByBlogID = asyncHandler(async (req, res) => {
+    const blog = await Blog.findById(req.params.blogId).populate('user').populate('profile').populate('category');
+    if (!blog) {
+        throw new Error('No such blog exists');
+    }
+
+    // Check if already liked
+    const alreadydisLiked = blog.dislikes.find(e => e.user.toString() === req.user._id.toString());
+
+    if (alreadydisLiked) {
+        blog.dislikes.pop(alreadydisLiked);
+        await blog.save();
+    }
+    else {
+        blog.dislikes.unshift({
+            user: req.user._id
+        })
+        await blog.save();
+    }
+
+    res.status(200).json(blog);
+
 })
 
 // @Desc    Write a new blog
@@ -109,5 +194,7 @@ module.exports = {
     getBlogByBlogID,
     writeBlog,
     editBlog,
-    getLatestBlogs
+    getLatestBlogs,
+    likeBlogByBlogID,
+    dislikeBlogByBlogID
 }

@@ -12,11 +12,35 @@ const getLatestBlogs = async () => {
 // Get Blog by blogID
 const getBlogByBlogID = async (blogId) => {
     const token = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')).token : null;
-    const res = await axios.get(`${URL}/blog/single/${blogId}`, { token });
+    const res = await axios.post(`${URL}/blog/single/${blogId}`, { token });
+    return res.data;
+}
+
+// Like a blog
+const likeBlogByBlogID = async (blogId, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }
+    const res = await axios.post(`${URL}/blog/like/${blogId}`, {}, config);
+    return res.data;
+}
+
+// DisLike a blog
+const dislikeBlogByBlogID = async (blogId, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }
+    const res = await axios.post(`${URL}/blog/dislike/${blogId}`, {}, config);
     return res.data;
 }
 
 export default {
     getLatestBlogs,
-    getBlogByBlogID
+    getBlogByBlogID,
+    likeBlogByBlogID,
+    dislikeBlogByBlogID
 }

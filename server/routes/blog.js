@@ -17,6 +17,9 @@ router.post('/blog/like/:blogId', authMiddleware, blogController.likeBlogByBlogI
 // DisLike a Blog 
 router.post('/blog/dislike/:blogId', authMiddleware, blogController.dislikeBlogByBlogID);
 
+// Comment on a Blog 
+router.post('/blog/comment/:blogId', authMiddleware, blogController.commentBlogByBlogID);
+
 // Write blog
 router.post('/blog/write', authMiddleware, blogController.writeBlog);
 

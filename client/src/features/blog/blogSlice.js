@@ -55,6 +55,18 @@ export const dislikeBlogByBlogID = createAsyncThunk('/blog/dislike', async (blog
     }
 })
 
+// Comment a blog by it's blogId
+export const commentBlogByBlogID = createAsyncThunk('/blog/comment', async (data, thunkAPI) => {
+    try {
+        const { blogId, text } = data;
+        const token = thunkAPI.getState().auth.user.token;
+        return await blogService.commentBlogByBlogID(blogId, text, token);
+    } catch (err) {
+        const message = (err.response && err.response.data && err.response.data.message) || err.message || err.toString();
+        return thunkAPI.rejectWithValue(message);
+    }
+})
+
 const blogSlice = createSlice({
     name: 'blog',
     initialState,
@@ -136,7 +148,6 @@ const blogSlice = createSlice({
                 state.successMessage = [];
                 state.errorMessage = isValidJSON(action.payload) ? Object.values(JSON.parse(action.payload)) : [action.payload];
             })
-
             .addCase(likeBlogByBlogID.fulfilled, (state, action) => {
                 state.singleBlog = action.payload;
                 state.isLoading = false;
@@ -145,8 +156,6 @@ const blogSlice = createSlice({
                 state.successMessage = [];
                 state.errorMessage = []
             })
-
-
             .addCase(dislikeBlogByBlogID.fulfilled, (state, action) => {
                 state.singleBlog = action.payload;
                 state.isLoading = false;
@@ -155,8 +164,22 @@ const blogSlice = createSlice({
                 state.successMessage = [];
                 state.errorMessage = []
             })
-
-
+            .addCase(commentBlogByBlogID.fulfilled, (state, action) => {
+                state.singleBlog = action.payload;
+                state.isLoading = false;
+                state.isSuccess = false;
+                state.isError = true;
+                state.successMessage = [];
+                state.errorMessage = []
+            })
+            .addCase(commentBlogByBlogID.rejected, (state, action) => {
+                state.singleBlog = null;
+                state.isLoading = false;
+                state.isSuccess = false;
+                state.isError = true;
+                state.successMessage = [];
+                state.errorMessage = [action.payload]
+            })
     }
 })
 

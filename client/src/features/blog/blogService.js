@@ -38,9 +38,21 @@ const dislikeBlogByBlogID = async (blogId, token) => {
     return res.data;
 }
 
+// Comment on a blog
+const commentBlogByBlogID = async (blogId, text, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }
+    const res = await axios.post(`${URL}/blog/comment/${blogId}`, { text }, config);
+    return res.data;
+}
+
 export default {
     getLatestBlogs,
     getBlogByBlogID,
     likeBlogByBlogID,
-    dislikeBlogByBlogID
+    dislikeBlogByBlogID,
+    commentBlogByBlogID
 }

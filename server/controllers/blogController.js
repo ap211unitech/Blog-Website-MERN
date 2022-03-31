@@ -27,7 +27,17 @@ const getBlog = asyncHandler(async (req, res) => {
 // @Route   POST /blog/single/:blogId
 // @Access  Public
 const getBlogByBlogID = asyncHandler(async (req, res) => {
-    const blog = await Blog.findById(req.params.blogId).populate('user').populate('profile').populate('category');
+    const blog = await Blog.findById(req.params.blogId).populate('user').populate('profile').populate('category').populate({
+        path: 'comments',
+        populate: {
+            path: 'profile',
+        }
+    }).populate({
+        path: 'comments',
+        populate: {
+            path: 'user',
+        }
+    });
 
     if (!blog) {
         res.status(400)
@@ -68,7 +78,17 @@ const getBlogByBlogID = asyncHandler(async (req, res) => {
 // @Route   POST /blog/like/:blogId
 // @Access  Private
 const likeBlogByBlogID = asyncHandler(async (req, res) => {
-    const blog = await Blog.findById(req.params.blogId).populate('user').populate('profile').populate('category');
+    const blog = await Blog.findById(req.params.blogId).populate('user').populate('profile').populate('category').populate({
+        path: 'comments',
+        populate: {
+            path: 'profile',
+        }
+    }).populate({
+        path: 'comments',
+        populate: {
+            path: 'user',
+        }
+    });
     if (!blog) {
         throw new Error('No such blog exists');
     }
@@ -95,8 +115,19 @@ const likeBlogByBlogID = asyncHandler(async (req, res) => {
 // @Route   POST /blog/dislike/:blogId
 // @Access  Private
 const dislikeBlogByBlogID = asyncHandler(async (req, res) => {
-    const blog = await Blog.findById(req.params.blogId).populate('user').populate('profile').populate('category');
+    const blog = await Blog.findById(req.params.blogId).populate('user').populate('profile').populate('category').populate({
+        path: 'comments',
+        populate: {
+            path: 'profile',
+        }
+    }).populate({
+        path: 'comments',
+        populate: {
+            path: 'user',
+        }
+    });
     if (!blog) {
+        res.status(400)
         throw new Error('No such blog exists');
     }
 
@@ -115,6 +146,64 @@ const dislikeBlogByBlogID = asyncHandler(async (req, res) => {
     }
 
     res.status(200).json(blog);
+
+})
+
+// @Desc    Comment on a single blog
+// @Route   POST /blog/comment/:blogId
+// @Access  Private
+const commentBlogByBlogID = asyncHandler(async (req, res) => {
+
+    if (!req.body.text || req.body.text.trim().length == 0) {
+        res.status(400)
+        throw new Error('Comment should not be empty');
+    }
+
+    let blog = await Blog.findById(req.params.blogId).populate('user').populate('profile').populate('category').populate({
+        path: 'comments',
+        populate: {
+            path: 'profile',
+        }
+    }).populate({
+        path: 'comments',
+        populate: {
+            path: 'user',
+        }
+    });
+
+    if (!blog) {
+        res.status(400)
+        throw new Error('No such blog exists');
+    }
+
+    //  Find Profile
+    const profile = await Profile.findOne({ user: req.user._id });
+    if (!profile) {
+        res.status(400)
+        throw new Error('No such profile exists');
+    }
+
+    blog.comments.unshift({
+        text: req.body.text,
+        user: req.user._id,
+        profile: profile._id
+    })
+
+    await blog.save();
+
+    const newBlog = await Blog.findById(req.params.blogId).populate('user').populate('profile').populate('category').populate({
+        path: 'comments',
+        populate: {
+            path: 'profile',
+        }
+    }).populate({
+        path: 'comments',
+        populate: {
+            path: 'user',
+        }
+    });
+
+    res.status(200).json(newBlog);
 
 })
 
@@ -196,5 +285,6 @@ module.exports = {
     editBlog,
     getLatestBlogs,
     likeBlogByBlogID,
-    dislikeBlogByBlogID
+    dislikeBlogByBlogID,
+    commentBlogByBlogID
 }

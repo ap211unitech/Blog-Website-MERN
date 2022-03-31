@@ -157,10 +157,6 @@ hr {
     margin-right: 14px;
 }
 
-.latestBlogLDC p:hover {
-    cursor: pointer;
-}
-
 .single-blog-author {
     display: flex;
     align-items: center;
@@ -203,4 +199,17 @@ hr {
 .single-blog-vldc p .icon:hover {
     text-decoration: underline;
     cursor: pointer;
+}
+
+/* Comments on blog */
+
+.single-blog-comment {
+    display: flex;
+    align-items: center;
+}
+
+.comment-data {
+    display: flex;
+    flex-direction: column;
+    margin-left: 16px;
 }

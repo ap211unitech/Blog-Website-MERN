@@ -1,9 +1,9 @@
-import React, { Fragment, useEffect } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Grid, Image, Loader, Message, Icon, Container, Label, Form, Button } from 'semantic-ui-react';
-import { dislikeBlogByBlogID, getBlogByBlogID, likeBlogByBlogID } from '../features/blog/blogSlice';
+import { commentBlogByBlogID, dislikeBlogByBlogID, getBlogByBlogID, likeBlogByBlogID } from '../features/blog/blogSlice';
 
 function SingleBlog() {
 
@@ -30,6 +30,18 @@ function SingleBlog() {
         }
         else {
             toast.error('Please login to like the blog');
+        }
+    }
+
+    const [commentText, setCommentText] = useState('');
+    const commentOnSubmit = async () => {
+        if (commentText.trim().length === 0) {
+            toast.error('Comment text should not be empty');
+            return
+        }
+        else {
+            await dispatch(commentBlogByBlogID({ blogId, text: commentText }));
+            setCommentText('');
         }
     }
 
@@ -108,11 +120,37 @@ function SingleBlog() {
                                     </p>
                                 </div>
 
+                                {/* Total Comments */}
+                                <h2>Comments</h2>
+
+                                {singleBlog.comments.length ?
+
+                                    singleBlog.comments.map(comment => (
+                                        <div className='single-blog-comment' key={comment._id}>
+                                            <div className="comment-logo">
+                                                <Link to={`/profile/${singleBlog.profile._id}`} >
+                                                    <img width={60} height={60} style={{ borderRadius: '50%' }} src={singleBlog.profile.profileUrl} alt="Profile" />
+                                                </Link>
+                                            </div>
+                                            <div className="comment-data">
+                                                <Link to={`/profile/${singleBlog.profile._id}`}>
+                                                    <h4  >{comment.user.name}</h4>
+                                                </Link>
+                                                <div style={{ fontSize: 18 }} >
+                                                    {comment.text}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))
+                                    :
+                                    <p>No comments yet</p>
+                                }
+
                                 {/* Comments Section */}
                                 <h2>Write a comment....</h2>
-                                <Form>
+                                <Form onSubmit={commentOnSubmit}>
                                     <Form.Field>
-                                        <input placeholder='Write your comment here' />
+                                        <input placeholder='Write your comment here' value={commentText} onChange={(e) => setCommentText(e.target.value)} />
                                     </Form.Field>
                                     <Button type='submit' secondary>Post comment</Button>
                                 </Form>

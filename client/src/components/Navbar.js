@@ -89,7 +89,7 @@ function Navbar() {
                             <Dropdown text={<Fragment><Icon name='user' />{user.name}</Fragment>} pointing className='link item'>
                                 <Dropdown.Menu>
                                     <Dropdown.Item as={Link} to='/account'>
-                                        <Icon name='setting' />  Your Account
+                                        <Icon name='setting' /> Account Details
                                     </Dropdown.Item>
                                     {profile ?
                                         <Dropdown.Item as={Link} to={`/profile/${profileId}`}>

@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Grid, Image, Loader, Message, Icon, Container, Label, Form, Button } from 'semantic-ui-react';
+import { formatDate } from '../app/helpers';
 import { commentBlogByBlogID, deleteCommentBlogByBlogID, dislikeBlogByBlogID, getBlogByBlogID, likeBlogByBlogID } from '../features/blog/blogSlice';
 
 function SingleBlog() {
@@ -89,7 +90,7 @@ function SingleBlog() {
                                         </Link>
                                         <div>
                                             <p style={{ color: 'grey' }}>
-                                                Last updated on  {new Date(singleBlog.updatedAt).toLocaleDateString()}
+                                                Last updated on  {formatDate(singleBlog.updatedAt)}
                                             </p>
                                         </div>
                                     </div>
@@ -151,7 +152,7 @@ function SingleBlog() {
                                                 </div>
                                             </div>
                                             {auth?.user?._id.toString() === comment.user._id.toString() ?
-                                                <p style={{ position: 'absolute', marginLeft: '400px', maxWidth: '500px' }} ><Icon name='delete' onClick={() => handleCommentDelete(comment._id)} /></p>
+                                                <p className='deleteComment' title='Delete Comment' ><Icon color='red' name='delete' onClick={() => handleCommentDelete(comment._id)} /></p>
                                                 : null
                                             }
                                         </div>
@@ -164,7 +165,7 @@ function SingleBlog() {
                                 <h2>Write a comment....</h2>
                                 <Form onSubmit={commentOnSubmit}>
                                     <Form.Field>
-                                        <input placeholder='Write your comment here' value={commentText} onChange={(e) => setCommentText(e.target.value)} />
+                                        <textarea rows={3} placeholder='Write your comment here' value={commentText} onChange={(e) => setCommentText(e.target.value)} />
                                     </Form.Field>
                                     <Button type='submit' secondary>Post comment</Button>
                                 </Form>

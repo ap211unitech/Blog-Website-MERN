@@ -3,9 +3,10 @@ import { toast } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import { authReset, sendActivationMail } from '../features/auth/authSlice';
-import { profileReset, getMyProfile } from '../features/profile/profileSlice';
+import { profileReset, getMyProfile, customProfileReset } from '../features/profile/profileSlice';
 import { Grid, Message, Icon, Label } from 'semantic-ui-react'
 import { blogReset, getLatestBlogs } from '../features/blog/blogSlice';
+import { formatDate } from '../app/helpers';
 
 function Landing() {
 
@@ -40,8 +41,10 @@ function Landing() {
 
     }, [user, isError, isSuccess, navigate, dispatch])
 
-    const sendActivationMailAgain = () => {
-        dispatch(sendActivationMail());
+    const sendActivationMailAgain = async () => {
+        await dispatch(sendActivationMail());
+        dispatch(customProfileReset());
+        dispatch(authReset());
     }
 
     return (
@@ -78,13 +81,13 @@ function Landing() {
                                         {' '}  {blog.user.name}
                                     </Link>
                                     <span style={{ color: 'grey', marginLeft: 5 }}>
-                                        Last updated on {new Date(blog.updatedAt).toLocaleDateString()}
+                                        Last updated on {formatDate(blog.updatedAt)}
                                     </span>
                                 </div>
                                 <h2 style={{ margin: '20px 0px 0px 0px', padding: 0 }} > {blog.title}</h2>
                                 <p style={{ fontSize: 16, paddingTop: 5 }} >
                                     {blog.desc.substr(0, 160)}...........
-                                    <Link to={`/blog/${blog._id}`}>Read more</Link>
+                                    <Link to={`/blog/${blog._id}`} className='blog-read-more-button' >Read more</Link>
                                 </p>
                                 <Label >{blog.category.name}</Label>
                                 <div className='latestBlogLDC' >

@@ -20,6 +20,9 @@ router.post('/blog/dislike/:blogId', authMiddleware, blogController.dislikeBlogB
 // Comment on a Blog 
 router.post('/blog/comment/:blogId', authMiddleware, blogController.commentBlogByBlogID);
 
+// Delete Comment on a Blog 
+router.delete('/blog/comment/:blogId/:commentId', authMiddleware, blogController.deleteCommentBlogByBlogID);
+
 // Write blog
 router.post('/blog/write', authMiddleware, blogController.writeBlog);
 

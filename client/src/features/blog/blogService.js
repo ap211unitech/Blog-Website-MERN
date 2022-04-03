@@ -49,10 +49,22 @@ const commentBlogByBlogID = async (blogId, text, token) => {
     return res.data;
 }
 
+// Delete comment on a blog
+const deleteCommentBlogByBlogID = async (blogId, commentId, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }
+    const res = await axios.delete(`${URL}/blog/comment/${blogId}/${commentId}`, config);
+    return res.data;
+}
+
 export default {
     getLatestBlogs,
     getBlogByBlogID,
     likeBlogByBlogID,
     dislikeBlogByBlogID,
-    commentBlogByBlogID
+    commentBlogByBlogID,
+    deleteCommentBlogByBlogID
 }

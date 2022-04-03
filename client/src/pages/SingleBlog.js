@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Grid, Image, Loader, Message, Icon, Container, Label, Form, Button } from 'semantic-ui-react';
-import { commentBlogByBlogID, dislikeBlogByBlogID, getBlogByBlogID, likeBlogByBlogID } from '../features/blog/blogSlice';
+import { commentBlogByBlogID, deleteCommentBlogByBlogID, dislikeBlogByBlogID, getBlogByBlogID, likeBlogByBlogID } from '../features/blog/blogSlice';
 
 function SingleBlog() {
 
@@ -40,8 +40,18 @@ function SingleBlog() {
             return
         }
         else {
-            await dispatch(commentBlogByBlogID({ blogId, text: commentText }));
-            setCommentText('');
+            const res = await dispatch(commentBlogByBlogID({ blogId, text: commentText }));
+            if (res.type === '/blog/comment/fulfilled') {
+                toast.success('Comment Posted');
+                setCommentText('');
+            }
+        }
+    }
+
+    const handleCommentDelete = async (commentId) => {
+        const res = await dispatch(deleteCommentBlogByBlogID({ blogId, commentId }))
+        if (res.type === '/blog/comment/delete/rejected') {
+            toast.error(res.payload);
         }
     }
 
@@ -140,6 +150,10 @@ function SingleBlog() {
                                                     {comment.text}
                                                 </div>
                                             </div>
+                                            {auth?.user?._id.toString() === comment.user._id.toString() ?
+                                                <p style={{ position: 'absolute', marginLeft: '400px', maxWidth: '500px' }} ><Icon name='delete' onClick={() => handleCommentDelete(comment._id)} /></p>
+                                                : null
+                                            }
                                         </div>
                                     ))
                                     :

@@ -36,7 +36,7 @@ export const getBlogByBlogID = createAsyncThunk('/blog/single', async (blogId, t
 // Like a blog by it's blogId
 export const likeBlogByBlogID = createAsyncThunk('/blog/like', async (blogId, thunkAPI) => {
     try {
-        const token = thunkAPI.getState().auth.user.token;
+        const token =  thunkAPI.getState().auth?.user?.token;
         return await blogService.likeBlogByBlogID(blogId, token);
     } catch (err) {
         const message = (err.response && err.response.data && err.response.data.message) || err.message || err.toString();
@@ -47,7 +47,7 @@ export const likeBlogByBlogID = createAsyncThunk('/blog/like', async (blogId, th
 // Dis-Like a blog by it's blogId
 export const dislikeBlogByBlogID = createAsyncThunk('/blog/dislike', async (blogId, thunkAPI) => {
     try {
-        const token = thunkAPI.getState().auth.user.token;
+        const token =  thunkAPI.getState().auth?.user?.token;
         return await blogService.dislikeBlogByBlogID(blogId, token);
     } catch (err) {
         const message = (err.response && err.response.data && err.response.data.message) || err.message || err.toString();
@@ -59,8 +59,20 @@ export const dislikeBlogByBlogID = createAsyncThunk('/blog/dislike', async (blog
 export const commentBlogByBlogID = createAsyncThunk('/blog/comment', async (data, thunkAPI) => {
     try {
         const { blogId, text } = data;
-        const token = thunkAPI.getState().auth.user.token;
+        const token =  thunkAPI.getState().auth?.user?.token;
         return await blogService.commentBlogByBlogID(blogId, text, token);
+    } catch (err) {
+        const message = (err.response && err.response.data && err.response.data.message) || err.message || err.toString();
+        return thunkAPI.rejectWithValue(message);
+    }
+})
+
+// Delete Comment on a blog by it's blogId and comment Id
+export const deleteCommentBlogByBlogID = createAsyncThunk('/blog/comment/delete', async (data, thunkAPI) => {
+    try {
+        const { blogId, commentId } = data;
+        const token = thunkAPI.getState().auth?.user?.token;
+        return await blogService.deleteCommentBlogByBlogID(blogId, commentId, token);
     } catch (err) {
         const message = (err.response && err.response.data && err.response.data.message) || err.message || err.toString();
         return thunkAPI.rejectWithValue(message);
@@ -174,6 +186,21 @@ const blogSlice = createSlice({
             })
             .addCase(commentBlogByBlogID.rejected, (state, action) => {
                 state.singleBlog = null;
+                state.isLoading = false;
+                state.isSuccess = false;
+                state.isError = true;
+                state.successMessage = [];
+                state.errorMessage = [action.payload]
+            })
+            .addCase(deleteCommentBlogByBlogID.fulfilled, (state, action) => {
+                state.singleBlog = action.payload;
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.isError = false;
+                state.successMessage = [];
+                state.errorMessage = []
+            })
+            .addCase(deleteCommentBlogByBlogID.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isSuccess = false;
                 state.isError = true;

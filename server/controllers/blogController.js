@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const jwt = require("jsonwebtoken");
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY
+const mongoose = require("mongoose");
 
 const Profile = require("../models/Profile");
 const Blog = require("../models/Blog");
@@ -207,6 +208,61 @@ const commentBlogByBlogID = asyncHandler(async (req, res) => {
 
 })
 
+// @Desc    Delete a Comment on a single blog
+// @Route   DELETE /blog/comment/:blogId/:commentId
+// @Access  Private
+const deleteCommentBlogByBlogID = asyncHandler(async (req, res) => {
+
+    let blog = await Blog.findById(req.params.blogId).populate('user').populate('profile').populate('category').populate({
+        path: 'comments',
+        populate: {
+            path: 'profile',
+        }
+    }).populate({
+        path: 'comments',
+        populate: {
+            path: 'user',
+        }
+    });
+
+    if (!blog) {
+        res.status(400)
+        throw new Error('No such blog exists');
+    }
+
+    // Check if comment exists
+    const flag = blog.comments.find(comment => comment._id.toString() === req.params.commentId);
+    if (!flag) {
+        res.status(400)
+        throw new Error('No such comment exists');
+    }
+
+    // Check if user ( who wrote the comment ) and loggedInUser are same
+    if (flag.user._id.toString() !== req.user._id.toString()) {
+        res.status(400)
+        throw new Error('Not authorized to delete comment');
+    }
+
+    blog.comments.remove({ user: req.user._id, profile: flag.profile._id, text: flag.text, _id: req.params.commentId });
+
+    await blog.save();
+
+    const newBlog = await Blog.findById(req.params.blogId).populate('user').populate('profile').populate('category').populate({
+        path: 'comments',
+        populate: {
+            path: 'profile',
+        }
+    }).populate({
+        path: 'comments',
+        populate: {
+            path: 'user',
+        }
+    });
+
+    res.status(200).json(newBlog);
+
+})
+
 // @Desc    Write a new blog
 // @Route   POST /blog/write
 // @Access  Private
@@ -286,5 +342,6 @@ module.exports = {
     getLatestBlogs,
     likeBlogByBlogID,
     dislikeBlogByBlogID,
-    commentBlogByBlogID
+    commentBlogByBlogID,
+    deleteCommentBlogByBlogID
 }

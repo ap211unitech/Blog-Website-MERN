@@ -66,7 +66,7 @@ export const resetPassword = createAsyncThunk('/auth/resetPassword', async ({ ne
 // Activate Account
 export const activateAccount = createAsyncThunk('/auth/activateAccount', async ({ token }, thunkAPI) => {
     try {
-        const authToken = thunkAPI.getState().auth.user.token;
+        const authToken =  thunkAPI.getState().auth?.user?.token;
         return await authService.activateAccount({ token, authToken });
     } catch (err) {
         const message = (err.response && err.response.data && err.response.data.message) || err.message || err.toString();
@@ -77,7 +77,7 @@ export const activateAccount = createAsyncThunk('/auth/activateAccount', async (
 // Send Activation Mail again
 export const sendActivationMail = createAsyncThunk('/auth/sendActivationMail', async (_, thunkAPI) => {
     try {
-        const authToken = thunkAPI.getState().auth.user.token;
+        const authToken =  thunkAPI.getState().auth?.user?.token;
         return await authService.sendActivationMail({ authToken });
     } catch (err) {
         const message = (err.response && err.response.data && err.response.data.message) || err.message || err.toString();
@@ -98,7 +98,7 @@ export const googleSignInAuthentication = createAsyncThunk('/auth/googleSignIn',
 // Change Password
 export const changePassword = createAsyncThunk('/auth/changePassword', async (data, thunkAPI) => {
     try {
-        const authToken = thunkAPI.getState().auth.user.token;
+        const authToken =  thunkAPI.getState().auth?.user?.token;
         return await authService.changePassword(data, authToken);
     } catch (err) {
         const message = (err.response && err.response.data && err.response.data.message) || err.message || err.toString();

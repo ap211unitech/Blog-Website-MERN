@@ -30,7 +30,7 @@ function SingleBlog() {
             dispatch(dislikeBlogByBlogID(blogId));
         }
         else {
-            toast.error('Please login to like the blog');
+            toast.error('Please login to dislike the blog');
         }
     }
 
@@ -140,7 +140,7 @@ function SingleBlog() {
                                         <div className='single-blog-comment' key={comment._id}>
                                             <div className="comment-logo">
                                                 <Link to={`/profile/${singleBlog.profile._id}`} >
-                                                    <img width={60} height={60} style={{ borderRadius: '50%' }} src={singleBlog.profile.profileUrl} alt="Profile" />
+                                                    <img width={60} height={60} style={{ borderRadius: '50%' }} src={comment.profile.profileUrl} alt="Profile" />
                                                 </Link>
                                             </div>
                                             <div className="comment-data">
@@ -158,18 +158,26 @@ function SingleBlog() {
                                         </div>
                                     ))
                                     :
-                                    <p>No comments yet</p>
+                                    <div>
+                                        <p>No comments yet</p>
+                                        <br />
+                                    </div>
                                 }
 
                                 {/* Comments Section */}
-                                <h2>Write a comment....</h2>
-                                <Form onSubmit={commentOnSubmit}>
-                                    <Form.Field>
-                                        <textarea rows={3} placeholder='Write your comment here' value={commentText} onChange={(e) => setCommentText(e.target.value)} />
-                                    </Form.Field>
-                                    <Button type='submit' secondary>Post comment</Button>
-                                </Form>
-                                <br />
+                                {auth?.user?.token ?
+                                    <Fragment>
+                                        <h2>Write a comment....</h2>
+                                        <Form onSubmit={commentOnSubmit}>
+                                            <Form.Field>
+                                                <textarea rows={3} placeholder='Write your comment here' value={commentText} onChange={(e) => setCommentText(e.target.value)} />
+                                            </Form.Field>
+                                            <Button type='submit' secondary>Post comment</Button>
+                                        </Form>
+                                        <br />
+                                    </Fragment>
+                                    : null
+                                }
                             </Container>
                         </Fragment>
             }

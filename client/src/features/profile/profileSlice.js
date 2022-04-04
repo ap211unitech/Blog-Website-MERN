@@ -128,7 +128,7 @@ export const profileSlice = createSlice({
                 state.isLoading = true;
             })
             .addCase(getAnyUserProfile.fulfilled, (state, action) => {
-                state.otherProfile = { profile: action.payload.profile, user: action.payload.user }
+                state.otherProfile = { profile: action.payload.profile, user: action.payload.user, blogs: action.payload.blogs }
                 state.isError = false;
                 state.isSuccess = true;
                 state.errorMessage = [];
@@ -136,7 +136,7 @@ export const profileSlice = createSlice({
                 state.isLoading = false;
             })
             .addCase(getAnyUserProfile.rejected, (state, action) => {
-                state.otherProfile = { profile: null, user: null };
+                state.otherProfile = { profile: null, user: null, blog: null };
                 state.isError = true;
                 state.isSuccess = false;
                 state.errorMessage = isValidJSON(action.payload) ? Object.values(JSON.parse(action.payload)) : [action.payload];

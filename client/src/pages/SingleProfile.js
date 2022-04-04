@@ -3,7 +3,8 @@ import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux'
 import { getAnyUserProfile, customProfileReset, followAnyUserProfile, getMyProfile } from '../features/profile/profileSlice';
 import { toast } from 'react-toastify';
-import { Button, Modal, Icon, Loader, Message, List, Image, Label } from 'semantic-ui-react';
+import { Button, Modal, Icon, Loader, Message, List, Image, Label, Grid } from 'semantic-ui-react';
+import { formatDate } from '../app/helpers';
 
 function SingleProfile() {
 
@@ -172,12 +173,12 @@ function SingleProfile() {
                                             <Button secondary as={Link} to='/update-profile'>
                                                 Edit Profile
                                             </Button>
-                                            <Button as='a' href={`mailto:${auth.user.email}`} icon='mail' label='Send Message' />
                                         </Fragment>
 
                                         :
                                         <div></div>
                                     }
+
                                     {auth && auth.user && otherProfile.user._id !== auth.user._id ?
                                         otherProfile.profile.followers.find(user => user.user._id === auth.user._id)
                                             ?
@@ -191,10 +192,16 @@ function SingleProfile() {
                                         <div></div>
                                     }
 
+                                    {auth && auth.user && otherProfile.user._id !== auth.user._id ?
+                                        <Button as='a' href={`mailto:${auth.user.email}`} icon='mail' label='Send Message' />
+                                        :
+                                        <div></div>
+                                    }
+
                                 </div>
 
                                 <div style={{ marginLeft: 50, marginBottom: 16, marginTop: -10, fontSize: 16 }} >
-                                    Joined at {new Date(otherProfile.profile.createdAt).toLocaleDateString()}
+                                    Joined at {formatDate(otherProfile.profile.createdAt)}
                                 </div>
 
                                 <div className='vff'>
@@ -252,6 +259,61 @@ function SingleProfile() {
                                     {otherProfile.profile.bio}
                                 </div>
                             </div>
+                        </div>
+
+                        {/* Blogs of current profile */}
+                        <div className="user-blogs">
+                            {otherProfile.blogs.length ?
+                                <Fragment>
+                                    <Message floating header={`Blogs by ${otherProfile.user.name.split(' ')[0]}`} />
+                                    <Grid>
+                                        {otherProfile.blogs.map(blog => (
+                                            <Grid.Row key={blog._id} >
+                                                <Grid.Column width={13} verticalAlign='middle' >
+                                                    <div className='latestBlogAuthor'>
+                                                        <Link to={`/profile/${blog.profile._id}`} >
+                                                            <img style={{ borderRadius: '50%', margin: 'auto 6px -11px auto' }} src={blog.profile.profileUrl} width={35} height={35} alt="Profile Image" />
+                                                            {' '}  {blog.user.name}
+                                                        </Link>
+                                                        <span style={{ color: 'grey', marginLeft: 5 }}>
+                                                            Last updated on {formatDate(blog.updatedAt)}
+                                                        </span>
+                                                    </div>
+                                                    <h2 style={{ margin: '20px 0px 0px 0px', padding: 0 }} > {blog.title}</h2>
+                                                    <p style={{ fontSize: 16, paddingTop: 5 }} >
+                                                        {blog.desc.substr(0, 160)}...........
+                                                        <Link to={`/blog/${blog._id}`} className='blog-read-more-button' >Read more</Link>
+                                                    </p>
+                                                    <Label >{blog.category.name}</Label>
+                                                    <div className='latestBlogLDC' >
+                                                        <p>
+                                                            <Icon name='eye' />
+                                                            {blog.viewedBy.length}
+                                                        </p>
+                                                        <p>
+                                                            <Icon name='thumbs up' />
+                                                            {blog.likes.length}
+                                                        </p>
+                                                        <p>
+                                                            <Icon name='thumbs down' />
+                                                            {blog.dislikes.length}
+                                                        </p>
+                                                        <p>
+                                                            <Icon name='comments' />
+                                                            {blog.comments.length}
+                                                        </p>
+                                                    </div>
+                                                </Grid.Column>
+                                                <Grid.Column width={3}>
+                                                    <img height={'70%'} alt='Blog Image' src={blog.coverPhoto} />
+                                                </Grid.Column>
+                                            </Grid.Row>
+                                        ))}
+                                    </Grid>
+                                </Fragment>
+                                : null
+                            }
+
                         </div>
                     </Fragment>
                     :

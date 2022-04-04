@@ -38,54 +38,59 @@ function Account() {
 
     return (
         <Fragment>
-            <Grid centered>
-                <Grid.Row >
-                    <Icon name='setting' size='huge' />
-                    <h1 style={{ marginLeft: 8, position: 'relative', bottom: '12px' }}>
-                        Your Account
-                    </h1>
-                </Grid.Row>
-            </Grid>
-            <h2 style={{ textAlign: 'center', color: 'gray' }}>
-                Some Account Details are here
-            </h2>
-            <div className="form-control">
-                <Form>
-                    <Form.Field>
-                        <label>Name</label>
-                        <input
-                            readOnly
-                            type='text'
-                            value={user.name}
-                        />
-                    </Form.Field>
-                    <Form.Field>
-                        <label>Email</label>
-                        <input
-                            readOnly
-                            type='text'
-                            value={user.email}
-                        />
-                    </Form.Field>
-                    <Form.Field>
-                        <label>Account Created at</label>
-                        <input
-                            readOnly
-                            type='text'
-                            value={formatDate(user.createdAt)}
-                        />
-                    </Form.Field>
-                    <Form.Field>
-                        <label>Last Updated at</label>
-                        <input
-                            readOnly
-                            type='text'
-                            value={formatDate(user.updatedAt)}
-                        />
-                    </Form.Field>
-                    <Button secondary fluid as={Link} to='/change-password'> Change Password </Button>
-                </Form>
-            </div>
+            {user ?
+                <Fragment>
+                    <Grid centered>
+                        <Grid.Row >
+                            <Icon name='setting' size='huge' />
+                            <h1 style={{ marginLeft: 8, position: 'relative', bottom: '12px' }}>
+                                Your Account
+                            </h1>
+                        </Grid.Row>
+                    </Grid>
+                    <h2 style={{ textAlign: 'center', color: 'gray' }}>
+                        Some Account Details are here
+                    </h2>
+                    <div className="form-control">
+                        <Form>
+                            <Form.Field>
+                                <label>Name</label>
+                                <input
+                                    readOnly
+                                    type='text'
+                                    value={user.name}
+                                />
+                            </Form.Field>
+                            <Form.Field>
+                                <label>Email</label>
+                                <input
+                                    readOnly
+                                    type='text'
+                                    value={user.email}
+                                />
+                            </Form.Field>
+                            <Form.Field>
+                                <label>Account Created at</label>
+                                <input
+                                    readOnly
+                                    type='text'
+                                    value={formatDate(user.createdAt)}
+                                />
+                            </Form.Field>
+                            <Form.Field>
+                                <label>Last Updated at</label>
+                                <input
+                                    readOnly
+                                    type='text'
+                                    value={formatDate(user.updatedAt)}
+                                />
+                            </Form.Field>
+                            <Button secondary fluid as={Link} to='/change-password'> Change Password </Button>
+                        </Form>
+                    </div>
+                </Fragment>
+                : null
+            }
         </Fragment>
     )
 }

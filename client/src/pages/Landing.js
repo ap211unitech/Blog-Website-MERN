@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import { authReset, sendActivationMail } from '../features/auth/authSlice';
 import { profileReset, getMyProfile, customProfileReset } from '../features/profile/profileSlice';
-import { Grid, Message, Icon, Label } from 'semantic-ui-react'
+import { Grid, Message, Icon, Label, Loader } from 'semantic-ui-react'
 import { blogReset, getLatestBlogs } from '../features/blog/blogSlice';
 import { formatDate } from '../app/helpers';
 
@@ -114,8 +114,7 @@ function Landing() {
                             </Grid.Column>
                         </Grid.Row>
                     ))
-                    : null
-
+                    : <Loader active content='Loading Latest Blogs' />
                 }
             </Grid>
 

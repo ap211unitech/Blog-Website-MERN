@@ -6,6 +6,7 @@ const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY
 
 const User = require("../models/User");
 const Profile = require("../models/Profile");
+const Blog = require("../models/Blog");
 
 
 // @Desc    Get my Profile
@@ -176,7 +177,10 @@ const viewProfile = asyncHandler(async (req, res) => {
             }
         });
 
-    res.status(200).json({ profile: newProfile, user });
+    // Find blogs of user
+    const blogs = await Blog.find({ profile: req.params.id }).populate('user').populate('profile').populate('category');
+
+    res.status(200).json({ profile: newProfile, user, blogs });
 })
 
 // @Desc    Toggle Follow any user Profile

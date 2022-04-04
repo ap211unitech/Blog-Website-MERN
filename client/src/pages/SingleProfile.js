@@ -265,7 +265,7 @@ function SingleProfile() {
                         <div className="user-blogs">
                             {otherProfile.blogs.length ?
                                 <Fragment>
-                                    <Message floating header={`Blogs by ${otherProfile.user.name.split(' ')[0]}`} />
+                                    {/* <Message floating header={`Blogs by ${otherProfile.user.name.split(' ')[0]}`} /> */}
                                     <Grid>
                                         {otherProfile.blogs.map(blog => (
                                             <Grid.Row key={blog._id} >

@@ -175,6 +175,8 @@ hr {
 
 .single-blog-header {
     margin-top: 10px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
 }
 
 .single-blog-header img {
@@ -234,4 +236,76 @@ hr {
 
 .deleteComment:hover {
     cursor: pointer;
+}
+
+
+/* Write Blog CSS */
+.write {
+    padding-top: 50px;
+}
+
+.writeImg {
+    width: 70vw;
+    height: 250px;
+    border-radius: 10px;
+    object-fit: cover;
+    margin-bottom: 20px;
+}
+
+.writeForm {
+    position: relative;
+}
+
+.writeFormGroup {
+    display: flex;
+    align-items: center;
+}
+
+.writeIcon {
+    width: 25px;
+    height: 25px;
+    font-size: 20px;
+    color: rgb(129, 125, 125);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.writeInput {
+    font-size: 30px;
+    border: none;
+    padding: 20px;
+    width: 60vw;
+}
+
+.writeInput::placeholder {
+    color: rgb(189, 185, 185);
+    font-weight: 400;
+}
+
+.writeInput:focus {
+    outline-style: none;
+}
+
+.writeText {
+    width: 70vw;
+    height: 100vh;
+    font-family: inherit;
+    font-size: 20px;
+}
+
+.writeSubmit {
+    position: absolute;
+    top: 20px;
+    right: 0px;
+    color: white;
+    background-color: teal;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
 }

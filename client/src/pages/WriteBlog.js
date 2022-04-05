@@ -1,19 +1,34 @@
-import React, { Fragment, useEffect } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { Grid, Icon } from 'semantic-ui-react';
+import { Grid, Icon, Loader, Select } from 'semantic-ui-react';
+import { CLOUDINARY_USER_NAME } from '../config/defaults';
+import axios from 'axios';
+import { toast } from 'react-toastify';
+import { writeNewBlog } from '../features/blog/blogSlice';
+import { getAllCategory } from '../features/category/categorySlice';
 
 const WriteBlog = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const auth = useSelector(state => state.auth);
+    const [allCategories, setAllCategories] = useState([]);
 
-    useEffect(() => {
+    const auth = useSelector(state => state.auth);
+    const category = useSelector(state => state.category);
+
+    useEffect(async () => {
 
         if (auth.user && auth.user.token) {
-
+            const res = await dispatch(getAllCategory());
+            if (res.type === '/category/get/rejected') {
+                toast.error(res.payload);
+                return;
+            }
+            const data = []
+            res.payload.map(e => data.push({ text: e.name, key: e._id, value: e._id }))
+            setAllCategories(data);
         }
         else {
             navigate('/');
@@ -21,6 +36,67 @@ const WriteBlog = () => {
 
     }, [auth, dispatch, navigate])
 
+    const [title, setTitle] = useState('');
+    const [content, setContent] = useState('');
+    const [image, setImage] = useState('');
+    const [selectCategory, setSelectCategory] = useState(null);
+
+    const createBlog = async (e) => {
+        e.preventDefault();
+
+        if (!title || !content || !image) {
+            toast.error('All fields must be filled')
+            return;
+        }
+
+        if (title.length > 170) {
+            toast.error('Title is too large. Make it little small.')
+            return
+        }
+
+        // Check if file size is less than 2MB
+        if (image.size / 1000000 > 2) {
+            toast.error('File too large. File size should be less than 2 MB.');
+            return;
+        }
+
+        const coverPhoto = await ImageUpload();
+        const data = {
+            title,
+            desc: content,
+            coverPhoto,
+            category: selectCategory
+        }
+
+        const res = await dispatch(writeNewBlog(data));
+        if (res.type === '/blog/write/rejected') {
+            toast.error(res.payload);
+            return
+        }
+        toast.success('Blog Published successfully');
+        setTitle('');
+        setContent('');
+        setImage('');
+        setSelectCategory(null);
+    }
+
+    const [cloudinaryUploadLoading, setCloudinaryUploadLoading] = useState(false);
+    const ImageUpload = async () => {
+        setCloudinaryUploadLoading(true);
+        let data = new FormData();
+        data.append("file", image);
+        data.append("upload_preset", "mern-blog");
+        data.append("cloud_name", CLOUDINARY_USER_NAME);
+        try {
+            const res = await axios.post(`https://api.cloudinary.com/v1_1/${CLOUDINARY_USER_NAME}/image/upload`, data);
+            setCloudinaryUploadLoading(false);
+            return res.data.url;
+        } catch (err) {
+            // console.log(err);
+            setCloudinaryUploadLoading(false);
+            return null
+        }
+    }
 
     return (
         <Fragment>
@@ -36,6 +112,68 @@ const WriteBlog = () => {
                 Create a new blog and share your knowledge
             </h2>
 
+            <Grid centered>
+                <div className="write">
+
+                    {cloudinaryUploadLoading ?
+                        <Loader active content='Posting Blog...' /> :
+                        <Fragment>
+                            {
+                                image &&
+                                <img
+                                    className="writeImg"
+                                    src={URL.createObjectURL(image)}
+                                    alt="image"
+                                />
+                            }
+                            {category?.categories &&
+                                <div style={{ marginTop: 0, fontWeight: 'bold' }}>
+                                    <Select
+                                        fluid
+                                        search
+                                        selection
+                                        placeholder='Select category'
+                                        options={allCategories}
+                                        value={selectCategory}
+                                        onChange={(e, { value }) => setSelectCategory(value)}
+                                    />
+                                </div>
+                            }
+                            <form className="writeForm" onSubmit={createBlog}>
+                                <div className="writeFormGroup">
+                                    <label htmlFor="fileInput">
+                                        <div className="writeIcon">
+                                            <Icon name='plus' size='large'></Icon>
+                                        </div>
+                                    </label>
+                                    <input id="fileInput" type="file" style={{ display: "none" }} onChange={e => setImage(e.target.files[0])} />
+                                    <input
+                                        className="writeInput"
+                                        placeholder="Title"
+                                        type="text"
+                                        value={title}
+                                        onChange={(e) => setTitle(e.target.value)}
+                                        autoFocus={true}
+                                    />
+                                </div>
+                                <div className="writeFormGroup">
+                                    <textarea
+                                        className="writeInput writeText"
+                                        placeholder="Tell your story..."
+                                        type="text"
+                                        value={content}
+                                        onChange={(e) => setContent(e.target.value)}
+                                        autoFocus={true}
+                                    />
+                                </div>
+                                <button className="writeSubmit" type="submit">
+                                    Publish
+                                </button>
+                            </form>
+                        </Fragment>
+                    }
+                </div>
+            </Grid>
         </Fragment>
     )
 }

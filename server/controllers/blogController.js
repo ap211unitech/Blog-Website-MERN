@@ -291,7 +291,7 @@ const writeBlog = asyncHandler(async (req, res) => {
     const newBlog = new Blog({
         user: req.user._id,
         profile: profile._id,
-        title,
+        title: title.trim(),
         desc,
         category,
         coverPhoto,

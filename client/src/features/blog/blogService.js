@@ -60,11 +60,25 @@ const deleteCommentBlogByBlogID = async (blogId, commentId, token) => {
     return res.data;
 }
 
+// Write a new blog
+const writeNewBlog = async (data, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }
+    console.log("HERE")
+    const res = await axios.post(`${URL}/blog/write`, data, config);
+    console.log(res.data)
+    return res.data;
+}
+
 export default {
     getLatestBlogs,
     getBlogByBlogID,
     likeBlogByBlogID,
     dislikeBlogByBlogID,
     commentBlogByBlogID,
-    deleteCommentBlogByBlogID
+    deleteCommentBlogByBlogID,
+    writeNewBlog
 }

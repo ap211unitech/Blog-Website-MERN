@@ -84,8 +84,8 @@ function Landing() {
                                         Last updated on {formatDate(blog.updatedAt)}
                                     </span>
                                 </div>
-                                <h2 style={{ margin: '20px 0px 0px 0px', padding: 0 }} > {blog.title}</h2>
-                                <p style={{ fontSize: 16, paddingTop: 5 }} >
+                                <h2 style={{ margin: '20px 0px 0px 0px', padding: 0, wordWrap: 'break-word' }} > {blog.title}</h2>
+                                <p style={{ fontSize: 16, paddingTop: 5, wordWrap: 'break-word' }} >
                                     {blog.desc.substr(0, 160)}...........
                                     <Link to={`/blog/${blog._id}`} className='blog-read-more-button' >Read more</Link>
                                 </p>

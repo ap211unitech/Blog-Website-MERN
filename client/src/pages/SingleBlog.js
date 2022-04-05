@@ -98,10 +98,11 @@ function SingleBlog() {
 
 
 
+                                <div style={{ marginTop: 10 }}>
+                                    <Label>{singleBlog.category.name}</Label>
+                                </div>
 
-                                <Label>{singleBlog.category.name}</Label>
-
-                                <div className='single-blog-header' >
+                                <div className='single-blog-header'>
                                     <h1>{singleBlog.title}</h1>
                                     <img src={singleBlog.coverPhoto} alt="Blog Cover Photo" />
                                     <p style={{ fontSize: 16 }}>{singleBlog.desc}</p>
@@ -160,7 +161,6 @@ function SingleBlog() {
                                     :
                                     <div>
                                         <p>No comments yet</p>
-                                        <br />
                                     </div>
                                 }
 

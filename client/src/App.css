@@ -182,14 +182,14 @@ hr {
 .single-blog-header img {
     display: block;
     margin: auto;
-    width: 70%;
+    width: 100%;
     height: 400px;
 }
 
 .single-blog-desc img {
     display: block;
     margin: auto;
-    width: 70% !important;
+    width: 100% !important;
 }
 
 .single-blog-content img {

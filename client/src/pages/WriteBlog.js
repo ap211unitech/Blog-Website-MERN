@@ -7,6 +7,12 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { writeNewBlog } from '../features/blog/blogSlice';
 import { getAllCategory } from '../features/category/categorySlice';
+import TextEditor from '../components/TextEditor';
+import { EditorState } from 'draft-js';
+import { convertToRaw } from 'draft-js';
+import { Editor } from 'react-draft-wysiwyg';
+import draftToHtml from 'draftjs-to-html';
+
 
 const WriteBlog = () => {
 
@@ -37,9 +43,11 @@ const WriteBlog = () => {
     }, [auth, dispatch, navigate])
 
     const [title, setTitle] = useState('');
-    const [content, setContent] = useState('');
+    const [content, setContent] = useState(EditorState.createEmpty());
     const [image, setImage] = useState('');
     const [selectCategory, setSelectCategory] = useState(null);
+
+    // console.log(draftToHtml(convertToRaw(content.getCurrentContent())))
 
     const createBlog = async (e) => {
         e.preventDefault();
@@ -63,10 +71,13 @@ const WriteBlog = () => {
         const coverPhoto = await ImageUpload();
         const data = {
             title,
-            desc: content,
+            desc: draftToHtml(convertToRaw(content.getCurrentContent())),
             coverPhoto,
             category: selectCategory
         }
+
+        console.log(data)
+        // return
 
         const res = await dispatch(writeNewBlog(data));
         if (res.type === '/blog/write/rejected') {
@@ -75,7 +86,7 @@ const WriteBlog = () => {
         }
         toast.success('Blog Published successfully');
         setTitle('');
-        setContent('');
+        setContent(EditorState.createEmpty());
         setImage('');
         setSelectCategory(null);
     }
@@ -111,6 +122,7 @@ const WriteBlog = () => {
             <h2 style={{ textAlign: 'center', color: 'gray' }}>
                 Create a new blog and share your knowledge
             </h2>
+
 
             <Grid centered>
                 <div className="write">
@@ -157,14 +169,16 @@ const WriteBlog = () => {
                                     />
                                 </div>
                                 <div className="writeFormGroup">
-                                    <textarea
+                                    <TextEditor content={content} setContent={setContent} />
+
+                                    {/* <textarea
                                         className="writeInput writeText"
                                         placeholder="Tell your story..."
                                         type="text"
                                         value={content}
                                         onChange={(e) => setContent(e.target.value)}
                                         autoFocus={true}
-                                    />
+                                    /> */}
                                 </div>
                                 <button className="writeSubmit" type="submit">
                                     Publish

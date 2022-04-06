@@ -40,8 +40,6 @@ const getBlogByBlogID = asyncHandler(async (req, res) => {
         }
     });
 
-    console.log(blog)
-
     if (!blog) {
         res.status(400)
         throw new Error('No such blog found')

@@ -22,3 +22,24 @@ export const formatDate = (iso) => {
 
     return date
 }
+
+export const extractDescriptionFromHTML = (txt, space = false) => {
+    var parser = new DOMParser();
+    var htmlDoc = parser.parseFromString(txt, 'text/html');
+    return htmlDoc.documentElement.textContent;
+
+    var span = document.createElement('span');
+    span.innerHTML = htmlDoc;
+    if (space) {
+        var children = span.querySelectorAll('*');
+        for (var i = 0; i < children.length; i++) {
+            if (children[i].textContent)
+                children[i].textContent += ' ';
+            else
+                children[i].innerText += ' ';
+        }
+    }
+    console.log(span.innerText)
+    return [span.textContent || span.innerText].toString().replace(/ +/g, ' ');
+
+}

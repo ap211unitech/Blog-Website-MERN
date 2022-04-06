@@ -6,7 +6,7 @@ import { authReset, sendActivationMail } from '../features/auth/authSlice';
 import { profileReset, getMyProfile, customProfileReset } from '../features/profile/profileSlice';
 import { Grid, Message, Icon, Label, Loader } from 'semantic-ui-react'
 import { blogReset, getLatestBlogs } from '../features/blog/blogSlice';
-import { formatDate } from '../app/helpers';
+import { extractDescriptionFromHTML, formatDate } from '../app/helpers';
 
 function Landing() {
 
@@ -86,7 +86,7 @@ function Landing() {
                                 </div>
                                 <h2 style={{ margin: '20px 0px 0px 0px', padding: 0, wordWrap: 'break-word' }} > {blog.title}</h2>
                                 <p style={{ fontSize: 16, paddingTop: 5, wordWrap: 'break-word' }} >
-                                    {blog.desc.substr(0, 160)}...........
+                                    {extractDescriptionFromHTML(blog.desc).substr(0, 160)}...........
                                     <Link to={`/blog/${blog._id}`} className='blog-read-more-button' >Read more</Link>
                                 </p>
                                 <Label >{blog.category.name}</Label>

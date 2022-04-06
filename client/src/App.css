@@ -180,16 +180,20 @@ hr {
 }
 
 .single-blog-header img {
-    /* display: block; */
-    /* margin: auto; */
-    width: 100%;
+    display: block;
+    margin: auto;
+    width: 70%;
     height: 400px;
 }
 
+.single-blog-desc img {
+    display: block;
+    margin: auto;
+    width: 70% !important;
+}
+
 .single-blog-content img {
-    /* display: block;
-    margin: auto; */
-    width: 100%;
+    width: 60%;
     height: 300px;
 }
 

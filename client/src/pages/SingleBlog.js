@@ -75,7 +75,7 @@ function SingleBlog() {
                     !singleBlog ? <Message error floating content={'No such blog found'} />
                         :
                         <Fragment>
-                            <Container text>
+                            <div style={{ maxWidth: '75%', margin: 'auto' }}>
 
                                 <div className='single-blog-author' >
                                     <div className="author-logo">
@@ -105,7 +105,9 @@ function SingleBlog() {
                                 <div className='single-blog-header'>
                                     <h1>{singleBlog.title}</h1>
                                     <img src={singleBlog.coverPhoto} alt="Blog Cover Photo" />
-                                    <p style={{ fontSize: 16 }}>{singleBlog.desc}</p>
+                                    <div>
+                                        <div className='single-blog-desc' dangerouslySetInnerHTML={{ __html: singleBlog.desc }}></div>
+                                    </div>
                                 </div>
                                 <div className="single-blog-content">
                                     {singleBlog.content.map(content => (
@@ -120,7 +122,7 @@ function SingleBlog() {
                                 <div className="single-blog-vldc">
                                     <p>
                                         <Icon name='eye' />
-                                        {singleBlog.viewedBy.length}
+                                        {singleBlog.viewedBy.length} people viewed this blog
                                     </p>
                                     <p onClick={likeBlog} >
                                         <Icon name='thumbs up' />
@@ -148,7 +150,7 @@ function SingleBlog() {
                                                 <Link to={`/profile/${singleBlog.profile._id}`}>
                                                     <h4  >{comment.user.name}</h4>
                                                 </Link>
-                                                <div style={{ fontSize: 18 }} >
+                                                <div style={{ fontSize: 18, marginTop: 5 }} >
                                                     {comment.text}
                                                 </div>
                                             </div>
@@ -178,7 +180,7 @@ function SingleBlog() {
                                     </Fragment>
                                     : null
                                 }
-                            </Container>
+                            </div>
                         </Fragment>
             }
         </Fragment>

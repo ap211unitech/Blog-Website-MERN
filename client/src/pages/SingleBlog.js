@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { Grid, Image, Loader, Message, Icon, Container, Label, Form, Button } from 'semantic-ui-react';
+import { Loader, Message, Icon, Label, Form, Button } from 'semantic-ui-react';
 import { formatDate } from '../app/helpers';
 import { commentBlogByBlogID, deleteBlog, deleteCommentBlogByBlogID, dislikeBlogByBlogID, getBlogByBlogID, likeBlogByBlogID } from '../features/blog/blogSlice';
 
@@ -167,6 +167,10 @@ function SingleBlog() {
                                     <p onClick={dislikeBlog} >
                                         <Icon name='thumbs down' />
                                         {singleBlog.dislikes.length}
+                                    </p>
+                                    <p>
+                                        <Icon name='comments' />
+                                        {singleBlog.comments.length}
                                     </p>
                                 </div>
 

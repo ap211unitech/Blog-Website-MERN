@@ -67,9 +67,18 @@ const writeNewBlog = async (data, token) => {
             Authorization: `Bearer ${token}`
         }
     }
-    console.log("HERE")
     const res = await axios.post(`${URL}/blog/write`, data, config);
-    console.log(res.data)
+    return res.data;
+}
+
+// Delete a Blog
+const deleteBlog = async ({ id }, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }
+    const res = await axios.delete(`${URL}/blog/delete/${id}`, config);
     return res.data;
 }
 
@@ -80,5 +89,6 @@ export default {
     dislikeBlogByBlogID,
     commentBlogByBlogID,
     deleteCommentBlogByBlogID,
-    writeNewBlog
+    writeNewBlog,
+    deleteBlog
 }

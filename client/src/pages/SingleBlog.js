@@ -4,7 +4,7 @@ import { useNavigate, useParams, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { Grid, Image, Loader, Message, Icon, Container, Label, Form, Button } from 'semantic-ui-react';
 import { formatDate } from '../app/helpers';
-import { commentBlogByBlogID, deleteCommentBlogByBlogID, dislikeBlogByBlogID, getBlogByBlogID, likeBlogByBlogID } from '../features/blog/blogSlice';
+import { commentBlogByBlogID, deleteBlog, deleteCommentBlogByBlogID, dislikeBlogByBlogID, getBlogByBlogID, likeBlogByBlogID } from '../features/blog/blogSlice';
 
 function SingleBlog() {
 
@@ -53,6 +53,21 @@ function SingleBlog() {
         const res = await dispatch(deleteCommentBlogByBlogID({ blogId, commentId }))
         if (res.type === '/blog/comment/delete/rejected') {
             toast.error(res.payload);
+            return;
+        }
+    }
+
+    const handleDeleteBlog = async () => {
+        if (window.confirm('Do you surely want to delete your blog?')) {
+            const res = await dispatch(deleteBlog({ id: blogId }));
+            if (res.type === '/blog/delete/rejected') {
+                toast.error(res.payload);
+                return;
+            }
+            else if (res.type === '/blog/delete/fulfilled') {
+                toast.success('Blog deleted successfully')
+                navigate('/');
+            }
         }
     }
 
@@ -87,7 +102,7 @@ function SingleBlog() {
                                         </div>
 
                                         <div style={{ marginLeft: 10 }}>
-                                            <Button color='red' basic type='button' >
+                                            <Button color='red' basic type='button' onClick={handleDeleteBlog} >
                                                 Delete Blog
                                             </Button>
                                         </div>

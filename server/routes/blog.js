@@ -29,4 +29,7 @@ router.post('/blog/write', authMiddleware, blogController.writeBlog);
 // Edit blog
 router.post('/blog/edit/:id', authMiddleware, blogController.editBlog);
 
+// Delete blog
+router.delete('/blog/delete/:id', authMiddleware, blogController.deleteBlog);
+
 module.exports = router;

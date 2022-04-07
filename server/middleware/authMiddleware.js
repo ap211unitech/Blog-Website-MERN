@@ -13,7 +13,7 @@ const authMiddleware = asyncHandler(async (req, res, next) => {
             next();
         } catch (err) {
             res.status(401);
-            throw new Error('Please login to continue');
+            throw new Error('Not Authorized');
         }
     }
     else {

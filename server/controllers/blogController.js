@@ -334,11 +334,34 @@ const editBlog = asyncHandler(async (req, res) => {
 
 })
 
+// @Desc    Delete a blog
+// @Route   DELETE /blog/delete/:id
+// @Access  Private
+const deleteBlog = asyncHandler(async (req, res) => {
+    // Find blog
+    const blogExists = await Blog.findById(req.params.id);
+    if (!blogExists) {
+        res.status(400)
+        throw new Error('No such blog exists')
+    }
+
+    // Check if who created the blog and loggedIn user are same
+    if (req.user._id.toString() !== blogExists.user.toString()) {
+        res.status(400)
+        throw new Error('Not authorized to process this request')
+    }
+
+    await Blog.findByIdAndDelete(req.params.id);
+    res.status(200).json({ msg: 'Blog deleted' });
+
+})
+
 module.exports = {
     getBlog,
     getBlogByBlogID,
     writeBlog,
     editBlog,
+    deleteBlog,
     getLatestBlogs,
     likeBlogByBlogID,
     dislikeBlogByBlogID,

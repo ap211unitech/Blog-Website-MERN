@@ -90,6 +90,17 @@ export const writeNewBlog = createAsyncThunk('/blog/write', async (data, thunkAP
     }
 })
 
+// Delete a blog
+export const deleteBlog = createAsyncThunk('/blog/delete', async (data, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().auth?.user?.token;
+        return await blogService.deleteBlog(data, token);
+    } catch (err) {
+        const message = (err.response && err.response.data && err.response.data.message) || err.message || err.toString();
+        return thunkAPI.rejectWithValue(message);
+    }
+})
+
 const blogSlice = createSlice({
     name: 'blog',
     initialState,

@@ -75,7 +75,25 @@ function SingleBlog() {
                     !singleBlog ? <Message error floating content={'No such blog found'} />
                         :
                         <Fragment>
+
                             <div style={{ maxWidth: '75%', margin: 'auto' }}>
+
+                                {auth?.user?.token && auth.user._id === singleBlog.user._id ?
+                                    <div style={{ display: 'flex', margin: '8px auto 13px auto' }}>
+                                        <div style={{}}>
+                                            <Button secondary type='button' >
+                                                Edit Blog
+                                            </Button>
+                                        </div>
+
+                                        <div style={{ marginLeft: 10 }}>
+                                            <Button color='red' basic type='button' >
+                                                Delete Blog
+                                            </Button>
+                                        </div>
+                                    </div>
+                                    : null
+                                }
 
                                 <div className='single-blog-author' >
                                     <div className="author-logo">
@@ -105,18 +123,21 @@ function SingleBlog() {
                                 <div className='single-blog-header'>
                                     <h1>{singleBlog.title}</h1>
                                     <img src={singleBlog.coverPhoto} alt="Blog Cover Photo" />
+                                    <br />
                                     <div>
                                         <div className='single-blog-desc' dangerouslySetInnerHTML={{ __html: singleBlog.desc }}></div>
                                     </div>
                                 </div>
-                                <div className="single-blog-content">
+
+                                {/* No use of this section now */}
+                                {/* <div className="single-blog-content">
                                     {singleBlog.content.map(content => (
                                         <Fragment key={content._id}>
                                             <img src={content.image} alt="Photo" />
                                             <p style={{ fontWeight: 'bold' }}>{content.desc.substr(0, 8)} <span style={{ fontWeight: 'normal', marginLeft: -2 }} >{content.desc.substr(8)}</span> </p>
                                         </Fragment>
                                     ))}
-                                </div>
+                                </div> */}
 
                                 <br />
                                 <div className="single-blog-vldc">

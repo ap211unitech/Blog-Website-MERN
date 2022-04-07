@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { Grid, Icon, Loader, Select } from 'semantic-ui-react';
+import { Button, Grid, Icon, Loader, Select } from 'semantic-ui-react';
 import { CLOUDINARY_USER_NAME } from '../config/defaults';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -128,7 +128,7 @@ const WriteBlog = () => {
                 <div className="write">
 
                     {cloudinaryUploadLoading ?
-                        <Loader active content='Posting Blog...' /> :
+                        <Loader active content='Publishing Blog...' /> :
                         <Fragment>
                             {
                                 image &&
@@ -170,19 +170,10 @@ const WriteBlog = () => {
                                 </div>
                                 <div className="writeFormGroup">
                                     <TextEditor content={content} setContent={setContent} />
-
-                                    {/* <textarea
-                                        className="writeInput writeText"
-                                        placeholder="Tell your story..."
-                                        type="text"
-                                        value={content}
-                                        onChange={(e) => setContent(e.target.value)}
-                                        autoFocus={true}
-                                    /> */}
                                 </div>
-                                <button className="writeSubmit" type="submit">
+                                <Button color='teal' className="writeSubmit" type="submit">
                                     Publish
-                                </button>
+                                </Button>
                             </form>
                         </Fragment>
                     }

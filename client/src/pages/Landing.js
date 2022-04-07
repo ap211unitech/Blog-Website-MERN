@@ -86,10 +86,10 @@ function Landing() {
                                 </div>
                                 <h2 style={{ margin: '20px 0px 0px 0px', padding: 0, wordWrap: 'break-word' }} > {blog.title}</h2>
                                 <p style={{ fontSize: 16, paddingTop: 5, wordWrap: 'break-word' }} >
-                                    {extractDescriptionFromHTML(blog.desc).substr(0, 160)}...........
+                                    {extractDescriptionFromHTML(blog.desc).substr(0, 300)}...........
                                     <Link to={`/blog/${blog._id}`} className='blog-read-more-button' >Read more</Link>
                                 </p>
-                                <Label >{blog.category.name}</Label>
+                                <Label>{blog.category.name}</Label>
                                 <div className='latestBlogLDC' >
                                     <p>
                                         <Icon name='eye' />

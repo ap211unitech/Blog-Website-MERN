@@ -173,6 +173,15 @@ hr {
     align-items: center;
 }
 
+/* Media Query for Profile  Title */
+/* @media screen and (max-width: 680px) {
+    .single-blog-author {
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+    }
+} */
+
 .single-blog-header {
     margin-top: 10px;
     white-space: pre-wrap;
@@ -279,7 +288,7 @@ hr {
     font-size: 30px;
     border: none;
     padding: 20px;
-    width: 60vw;
+    width: 58vw;
 }
 
 .writeInput::placeholder {

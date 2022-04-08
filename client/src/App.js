@@ -23,6 +23,7 @@ import SingleProfile from './pages/SingleProfile';
 import Account from './pages/Account';
 import WriteBlog from './pages/WriteBlog';
 import SingleBlog from './pages/SingleBlog';
+import EditBlog from './pages/EditBlog';
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
             <Route path='/profile/:profileId' element={<SingleProfile />} />
             <Route path='/account' element={<Account />} />
             <Route path='/write' element={<WriteBlog />} />
+            <Route path='/edit' element={<EditBlog />} />
             <Route path='/blog/:blogId' element={<SingleBlog />} />
             <Route path='*' element={<NotFound />} />
           </Routes>

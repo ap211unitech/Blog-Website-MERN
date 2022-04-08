@@ -96,7 +96,7 @@ function SingleBlog() {
                                 {auth?.user?.token && auth.user._id === singleBlog.user._id ?
                                     <div style={{ display: 'flex', margin: '8px auto 13px auto' }}>
                                         <div style={{}}>
-                                            <Button secondary type='button' >
+                                            <Button secondary type='button' as={Link} to={`/edit`} state={{ blog: singleBlog }} >
                                                 Edit Blog
                                             </Button>
                                         </div>
@@ -178,7 +178,6 @@ function SingleBlog() {
                                 <h2>Comments</h2>
 
                                 {singleBlog.comments.length ?
-
                                     singleBlog.comments.map(comment => (
                                         <div className='single-blog-comment' key={comment._id}>
                                             <div className="comment-logo">
@@ -195,7 +194,7 @@ function SingleBlog() {
                                                 </div>
                                             </div>
                                             {auth?.user?._id.toString() === comment.user._id.toString() ?
-                                                <p className='deleteComment' title='Delete Comment' ><Icon color='red' name='delete' onClick={() => handleCommentDelete(comment._id)} /></p>
+                                                <p className='deleteComment' title='Delete Comment' onClick={() => handleCommentDelete(comment._id)} ><Icon color='red' name='delete' /></p>
                                                 : null
                                             }
                                         </div>

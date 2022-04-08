@@ -169,7 +169,7 @@ const blogSlice = createSlice({
                     state.singleBlog = action.payload;
                 }
                 state.isLoading = false;
-                state.isSuccess = false;
+                state.isSuccess = true;
                 state.isError = false;
                 state.successMessage = [];
                 state.errorMessage = [];

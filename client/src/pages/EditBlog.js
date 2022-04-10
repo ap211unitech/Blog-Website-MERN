@@ -9,7 +9,7 @@ import draftToHtml from 'draftjs-to-html';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import TextEditor from '../components/TextEditor';
-import { writeNewBlog } from '../features/blog/blogSlice';
+import { editBlogByBlogId } from '../features/blog/blogSlice';
 import { getAllCategory } from '../features/category/categorySlice';
 
 function EditBlog() {
@@ -32,10 +32,7 @@ function EditBlog() {
     const [selectCategory, setSelectCategory] = useState();
     const [allCategories, setAllCategories] = useState([]);
 
-
-    // console.log(draftToHtml(convertToRaw(content.getCurrentContent())))
-
-    const createBlog = async (e) => {
+    const editBlog = async (e) => {
         e.preventDefault();
 
         if (!title || !content || !image) {
@@ -59,19 +56,21 @@ function EditBlog() {
             title,
             desc: draftToHtml(convertToRaw(content.getCurrentContent())),
             coverPhoto,
-            category: selectCategory
+            category: selectCategory,
+            blogId: location?.state?.blog?._id
         }
 
-        const res = await dispatch(writeNewBlog(data));
-        if (res.type === '/blog/write/rejected') {
+        const res = await dispatch(editBlogByBlogId(data));
+        if (res.type === '/blog/edit/rejected') {
             toast.error(res.payload);
             return
         }
-        toast.success('Blog Published successfully');
+        toast.success('Blog edited successfully');
         setTitle('');
         setContent(EditorState.createEmpty());
         setImage('');
         setSelectCategory(null);
+        navigate(`/blog/${location?.state?.blog?._id}`)
     }
 
     const [cloudinaryUploadLoading, setCloudinaryUploadLoading] = useState(false);
@@ -176,7 +175,7 @@ function EditBlog() {
                                     />
                                 </div>
                             }
-                            <form className="writeForm" onSubmit={createBlog}>
+                            <form className="writeForm" onSubmit={editBlog}>
                                 <div className="writeFormGroup">
                                     <label htmlFor="fileInput">
                                         <div className="writeIcon">
@@ -200,6 +199,7 @@ function EditBlog() {
                                     Edit
                                 </Button>
                             </form>
+                            <hr style={{ marginBottom: 50, width: '70%', display: 'block', margin: 'auto' }} />
                         </Fragment>
                     }
                 </div>

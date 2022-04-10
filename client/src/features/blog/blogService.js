@@ -82,6 +82,17 @@ const deleteBlog = async ({ id }, token) => {
     return res.data;
 }
 
+// Edit a blog
+const editBlog = async (data, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }
+    const res = await axios.post(`${URL}/blog/edit/${data.blogId}`, data, config);
+    return res.data;
+}
+
 export default {
     getLatestBlogs,
     getBlogByBlogID,
@@ -90,5 +101,6 @@ export default {
     commentBlogByBlogID,
     deleteCommentBlogByBlogID,
     writeNewBlog,
-    deleteBlog
+    deleteBlog,
+    editBlog
 }

@@ -307,7 +307,7 @@ const writeBlog = asyncHandler(async (req, res) => {
 // @Access  Private
 const editBlog = asyncHandler(async (req, res) => {
 
-    const { title, desc, coverPhoto, content } = req.body;
+    const { title, desc, coverPhoto, content, category } = req.body;
 
     // Check if blog exists
     const blogExists = await Blog.findById(req.params.id);
@@ -323,10 +323,17 @@ const editBlog = asyncHandler(async (req, res) => {
         throw new Error('Not authorized to edit this blog');
     }
 
+    const categoryExists = await Category.findById(category);
+    if (!categoryExists) {
+        res.status(400)
+        throw new Error('No such category exists')
+    }
+
     blogExists.title = title;
     blogExists.desc = desc;
     blogExists.coverPhoto = coverPhoto;
     blogExists.content = content;
+    blogExists.category = category;
 
     await blogExists.save();
 

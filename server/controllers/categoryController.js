@@ -6,7 +6,7 @@ const Profile = require("../models/Profile");
 // @Route   GET /category
 // @Access  Private
 const getCategory = asyncHandler(async (req, res) => {
-    const categories = await Category.find().populate('user').populate('profile');
+    const categories = await Category.find().populate('user').populate('profile').sort({ 'updatedAt': -1 });
     res.status(200).json(categories);
 })
 
@@ -15,6 +15,11 @@ const getCategory = asyncHandler(async (req, res) => {
 // @Access  Private
 const addCategory = asyncHandler(async (req, res) => {
     const { name } = req.body;
+
+    if (name.trim().length === 0) {
+        res.status(400)
+        throw new Error('Category should not be empty');
+    }
 
     // Chack if category already exists
     const categoryExists = await Category.findOne({ name });
@@ -34,11 +39,12 @@ const addCategory = asyncHandler(async (req, res) => {
     })
 
     await newCategory.save();
-    res.status(200).json(newCategory);
+
+    res.status(200).json({ ...newCategory._doc, profile, user: req.user });
 })
 
 // @Desc    Update a Category
-// @Route   PATCH /category
+// @Route   PATCH /category/:id
 // @Access  Private
 const updateCategory = asyncHandler(async (req, res) => {
     const { name } = req.body;
@@ -63,7 +69,7 @@ const updateCategory = asyncHandler(async (req, res) => {
 })
 
 // @Desc    Delete a Category
-// @Route   DELETE /category
+// @Route   DELETE /category/:id
 // @Access  Private
 const deleteCategory = asyncHandler(async (req, res) => {
 
@@ -81,7 +87,7 @@ const deleteCategory = asyncHandler(async (req, res) => {
     }
 
     await Category.findByIdAndDelete(req.params.id)
-    res.status(200).json({ msg: 'Category Deleted' });
+    res.status(200).json({ category: categoryExists, msg: 'Category Deleted' });
 })
 
 module.exports = {

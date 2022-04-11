@@ -24,6 +24,7 @@ import Account from './pages/Account';
 import WriteBlog from './pages/WriteBlog';
 import SingleBlog from './pages/SingleBlog';
 import EditBlog from './pages/EditBlog';
+import Category from './pages/Category';
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
             <Route path='/write' element={<WriteBlog />} />
             <Route path='/edit' element={<EditBlog />} />
             <Route path='/blog/:blogId' element={<SingleBlog />} />
+            <Route path='/category' element={<Category />} />
             <Route path='*' element={<NotFound />} />
           </Routes>
         </Container>

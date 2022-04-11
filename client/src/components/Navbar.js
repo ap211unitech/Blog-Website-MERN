@@ -21,12 +21,12 @@ function Navbar() {
     useEffect(() => {
         if (profile) setProfileId(profile._id);
         else {
-            const paths = ['/', '/update-profile']
+            const paths = ['/', '/update-profile', '/category']
             if (user && user.token && !paths.includes(location.pathname)) {
                 dispatch(getMyProfile());
             }
         }
-    }, [profile])
+    }, [profile, navigate, dispatch])
 
     const pathName = location.pathname;
     const path = pathName === "/" ? "home" : pathName.substr(1);
@@ -59,11 +59,29 @@ function Navbar() {
                 />
                 {user ?
                     <Menu.Item
-                        name='write'
+                        name='create'
                         active={activeItem === 'write'}
                         onClick={handleItemClick}
                         as={Link}
                         to='/write'
+                    /> : null
+                }
+                {profile?.role === "admin" ?
+                    <Menu.Item
+                        name='category'
+                        active={activeItem === 'category'}
+                        onClick={handleItemClick}
+                        as={Link}
+                        to='/category'
+                    /> : null
+                }
+                {profile?.role === "admin" ?
+                    <Menu.Item
+                        name='Authors'
+                        active={activeItem === 'authors'}
+                        onClick={handleItemClick}
+                        as={Link}
+                        to='/authors'
                     /> : null
                 }
                 <Menu.Menu position='right'>

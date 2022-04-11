@@ -5,9 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "nodemon server.js",
-    "server": "node server.js",
-    "client": "cd.. && cd client && npm start",
-    "dev": "concurrently \"npm run start\" \"npm run client\""
+    "server": "node server.js"
   },
   "author": "Arjun Porwal",
   "license": "ISC",

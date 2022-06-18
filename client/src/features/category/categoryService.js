@@ -3,7 +3,7 @@ import { BACKEND_HOST_URL } from "../../config/defaults";
 
 const URL = BACKEND_HOST_URL;
 
-// Get Latest Blogs
+// Get All Categories
 const getAllCategory = async (token) => {
     const config = {
         headers: {
@@ -38,8 +38,20 @@ const addCategory = async (data, token) => {
     return res.data;
 }
 
+// Edit category
+const editCategory = async (data, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }
+    const res = await axios.patch(`${URL}/category/${data.categoryId}`, data, config);
+    return res.data;
+}
+
 export default {
     getAllCategory,
     addCategory,
-    deleteCategory
+    deleteCategory,
+    editCategory
 }

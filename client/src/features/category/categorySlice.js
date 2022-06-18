@@ -45,6 +45,17 @@ export const addCategory = createAsyncThunk('/category/create', async (data, thu
     }
 })
 
+// Edit category
+export const editCategoryAction = createAsyncThunk('/category/edit', async (data, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().auth?.user?.token;
+        return await categoryService.editCategory(data, token);
+    } catch (err) {
+        const message = (err.response && err.response.data && err.response.data.message) || err.message || err.toString();
+        return thunkAPI.rejectWithValue(message);
+    }
+})
+
 const categorySlice = createSlice({
     name: 'category',
     initialState,
@@ -114,6 +125,23 @@ const categorySlice = createSlice({
                 state.successMessage = [];
                 state.errorMessage = [];
             })
+            .addCase(editCategoryAction.fulfilled, (state, action) => {
+                const result = state.categories.map(cat => cat._id.toString() === action.payload._id.toString() ? { ...cat, name: action.payload.name } : cat);
+                state.categories = result
+                state.isLoading = false;
+                state.isSuccess = false;
+                state.isError = false;
+                state.successMessage = [];
+                state.errorMessage = [];
+            })
+            .addCase(editCategoryAction.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = false;
+                state.isError = true;
+                state.successMessage = [];
+                state.errorMessage = isValidJSON(action.payload) ? Object.values(JSON.parse(action.payload)) : [action.payload];
+            })
+
     }
 })
 

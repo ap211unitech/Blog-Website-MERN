@@ -1,4 +1,5 @@
 const asyncHandler = require("express-async-handler");
+const Blog = require("../models/Blog");
 const Category = require("../models/Category");
 const Profile = require("../models/Profile");
 
@@ -86,8 +87,13 @@ const deleteCategory = asyncHandler(async (req, res) => {
         throw new Error('Not authorized to process this request');
     }
 
-    await Category.findByIdAndDelete(req.params.id)
-    res.status(200).json({ category: categoryExists, msg: 'Category Deleted' });
+    // Delete Category
+    await Category.findByIdAndDelete(req.params.id);
+
+    // Delete blogs that belongs to that category 
+    await Blog.deleteMany({ category: req.params.id });
+
+    res.status(200).json({ category: categoryExists, msg: 'Category and Blogs Deleted' });
 })
 
 module.exports = {

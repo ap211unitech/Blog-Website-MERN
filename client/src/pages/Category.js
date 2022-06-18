@@ -1,9 +1,9 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom';
-import { Form, Icon, Loader, Table } from 'semantic-ui-react';
+import { Button, Form, Icon, Loader, Modal, Table } from 'semantic-ui-react';
 import { formatDate } from '../app/helpers';
-import { addCategory, deleteCategory, getAllCategory } from '../features/category/categorySlice';
+import { addCategory, deleteCategory, editCategoryAction, getAllCategory } from '../features/category/categorySlice';
 import { getMyProfile } from '../features/profile/profileSlice';
 import { toast } from 'react-toastify';
 
@@ -31,12 +31,14 @@ function Category() {
     }, [navigate, dispatch])
 
     const handleCategoryDelete = async (id) => {
-        const res = await dispatch(deleteCategory(id));
-        if (res.type === '/category/delete/rejected') {
-            toast.error(res.payload)
-        }
-        else if (res.type === '/category/delete/fulfilled') {
-            toast.success(res.payload.msg)
+        if (window.confirm('All the blogs belongs to this category would also get delete. Are you sure to delete it ?')) {
+            const res = await dispatch(deleteCategory(id));
+            if (res.type === '/category/delete/rejected') {
+                toast.error(res.payload)
+            }
+            else if (res.type === '/category/delete/fulfilled') {
+                toast.success(res.payload.msg)
+            }
         }
     }
 
@@ -54,8 +56,49 @@ function Category() {
 
     }
 
+    const [editModalOpen, setEditModalOpen] = useState(false);
+    const [editCategory, setEditCategory] = useState({});
+    const handleEditIconClick = (category) => {
+        setEditModalOpen(true);
+        setEditCategory(category);
+    }
+
+    const handleEditCategory = async () => {
+        const payload = { name: editCategory.name, categoryId: editCategory._id }
+        const res = await dispatch(editCategoryAction(payload));
+        if (res.type === '/category/edit/rejected') {
+            toast.error(res.payload);
+        }
+        else if (res.type === '/category/edit/fulfilled') {
+            toast.success('Category Updated');
+        }
+        setEditModalOpen(false);
+    }
+
     return (
         <Fragment>
+            {/* Modal for editing category */}
+            <Modal
+                onClose={() => setEditModalOpen(false)}
+                onOpen={() => setEditModalOpen(true)}
+                open={editModalOpen}
+                header='Edit Category'
+                content={
+                    <Fragment>
+                        <div style={{ margin: 18 }}>
+                            <Form>
+                                <Form.Field>
+                                    <input value={editCategory?.name} onChange={(e) =>
+                                        setEditCategory({ ...editCategory, name: e.target.value })
+                                    } />
+                                </Form.Field>
+                                <Button onClick={handleEditCategory} secondary>Edit</Button>
+                            </Form>
+                        </div>
+                    </Fragment>
+                }
+            />
+
             {isLoading ?
                 <Fragment>
                     <Loader active content='Loading categories...' />
@@ -93,15 +136,20 @@ function Category() {
                                         </Table.Cell>
                                         <Table.Cell>{cat.name}</Table.Cell>
                                         <Table.Cell>{formatDate(cat.updatedAt)}</Table.Cell>
-                                        <Table.Cell>
-                                            <span style={{ cursor: 'pointer' }}>
-                                                <Icon name='edit outline' size='large' color='blue' />
-                                            </span>
-                                            {/* Delete Category (Not in functionality) */}
-                                            {/* <span style={{ cursor: 'pointer' }}>
-                                                <Icon name='delete' size='large' color='red' onClick={() => handleCategoryDelete(cat._id)} />
-                                            </span> */}
-                                        </Table.Cell>
+                                        {cat.user._id === user._id ?
+                                            <Table.Cell>
+                                                {/* Edit Category */}
+                                                <span style={{ cursor: 'pointer', marginRight: 5 }} onClick={() => handleEditIconClick(cat)}>
+                                                    <Icon name='edit outline' size='large' color='blue' />
+                                                </span>
+                                                {/* Delete Category */}
+                                                <span style={{ cursor: 'pointer' }}>
+                                                    <Icon name='delete' size='large' color='red' onClick={() => handleCategoryDelete(cat._id)} />
+                                                </span>
+                                            </Table.Cell>
+                                            :
+                                            <Table.Cell>-------------</Table.Cell>
+                                        }
                                     </Table.Row>
                                 </Fragment>
                             )}

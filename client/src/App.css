@@ -194,13 +194,19 @@ hr {
     width: 100%;
 }
 
+.single-blog-desc ul {
+    margin-left: 10px;
+}
+
 .single-blog-desc pre {
     background-color: #f1f1f1;
+    margin: -20px 0px;
     padding: 20px;
     white-space: pre-wrap;
     line-height: 24px;
     border-radius: 10px;
     font-size: 16px;
+    width: 90%;
 }
 
 .single-blog-desc img {

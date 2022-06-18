@@ -97,9 +97,10 @@ function Category() {
                                             <span style={{ cursor: 'pointer' }}>
                                                 <Icon name='edit outline' size='large' color='blue' />
                                             </span>
-                                            <span style={{ cursor: 'pointer' }}>
+                                            {/* Delete Category (Not in functionality) */}
+                                            {/* <span style={{ cursor: 'pointer' }}>
                                                 <Icon name='delete' size='large' color='red' onClick={() => handleCategoryDelete(cat._id)} />
-                                            </span>
+                                            </span> */}
                                         </Table.Cell>
                                     </Table.Row>
                                 </Fragment>

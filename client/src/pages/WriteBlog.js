@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { Button, Grid, Icon, Loader, Select } from 'semantic-ui-react';
+import { Button, Grid, Icon, Loader, Message, Select } from 'semantic-ui-react';
 import { CLOUDINARY_USER_NAME } from '../config/defaults';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -120,7 +120,11 @@ const WriteBlog = () => {
             <h2 style={{ textAlign: 'center', color: 'gray' }}>
                 Create a new blog and share your knowledge
             </h2>
-
+            <section style={{ margin: 'auto', width: '70%', textAlign: 'center' }}>
+                <Message info size='large'>
+                    <p>Blog may look different from what it will look here. Kindly edit your blog for making it good looking.</p>
+                </Message>
+            </section>
 
             <Grid centered>
                 <div className="write">

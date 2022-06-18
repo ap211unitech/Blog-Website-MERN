@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Grid, Icon, Select, Loader, Button } from 'semantic-ui-react';
+import { Grid, Icon, Select, Loader, Button, Message } from 'semantic-ui-react';
 import { CLOUDINARY_USER_NAME } from '../config/defaults';
 import { EditorState, ContentState, convertToRaw } from 'draft-js';
 import htmlToDraft from 'html-to-draftjs';
@@ -140,7 +140,11 @@ function EditBlog() {
             <h2 style={{ textAlign: 'center', color: 'gray' }}>
                 Edit your blog and make it better
             </h2>
-
+            <section style={{ margin: 'auto', width: '70%', textAlign: 'center' }}>
+                <Message info size='large'>
+                    <p>Blog may look different from what it will look here. Kindly edit your blog for making it good looking.</p>
+                </Message>
+            </section>
 
             <Grid centered>
                 <div className="write">
@@ -204,7 +208,7 @@ function EditBlog() {
                     }
                 </div>
             </Grid>
-        </Fragment>
+        </Fragment >
     )
 }
 

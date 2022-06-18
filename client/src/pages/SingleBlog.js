@@ -6,6 +6,10 @@ import { Loader, Message, Icon, Label, Form, Button } from 'semantic-ui-react';
 import { formatDate } from '../app/helpers';
 import { commentBlogByBlogID, deleteBlog, deleteCommentBlogByBlogID, dislikeBlogByBlogID, getBlogByBlogID, likeBlogByBlogID } from '../features/blog/blogSlice';
 
+const checkIfKeyExists = (arr, loggedInUserId) => {
+    return (arr.filter(elm => elm.user.toString() === loggedInUserId)).length == 0
+}
+
 function SingleBlog() {
 
     const { blogId } = useParams();
@@ -161,11 +165,17 @@ function SingleBlog() {
                                         {singleBlog.viewedBy.length} people viewed this blog
                                     </p>
                                     <p onClick={likeBlog} >
-                                        <Icon name='thumbs up' />
+                                        {checkIfKeyExists(singleBlog.likes, auth.user._id) ?
+                                            <Icon name='thumbs up outline' /> :
+                                            <Icon name='thumbs up' />
+                                        }
                                         {singleBlog.likes.length}
                                     </p>
                                     <p onClick={dislikeBlog} >
-                                        <Icon name='thumbs down' />
+                                        {checkIfKeyExists(singleBlog.dislikes, auth.user._id) ?
+                                            <Icon name='thumbs down outline' /> :
+                                            <Icon name='thumbs down' />
+                                        }
                                         {singleBlog.dislikes.length}
                                     </p>
                                     <p>

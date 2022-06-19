@@ -4,7 +4,9 @@ import { Menu, Dropdown, Icon } from 'semantic-ui-react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { authReset, logout } from '../features/auth/authSlice';
-import { getMyProfile } from '../features/profile/profileSlice';
+import { getMyProfile, profileReset } from '../features/profile/profileSlice';
+import { categoryLogout } from '../features/category/categorySlice';
+import { adminLogout } from '../features/admin/adminSlice';
 
 function Navbar() {
 
@@ -43,6 +45,9 @@ function Navbar() {
         if (name === 'logout') {
             dispatch(logout());
             dispatch(authReset());
+            dispatch(profileReset());
+            dispatch(categoryLogout());
+            dispatch(adminLogout());
             navigate('/');
         }
     }

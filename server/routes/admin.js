@@ -9,4 +9,7 @@ router.post('/toggleRole', authMiddleware, checkAdmin, adminController.toggleRol
 // Toggle isBlocked property
 router.post('/toggleBlock', authMiddleware, checkAdmin, adminController.toggleBlock)
 
+// Get List of all users
+router.get('/getAllUsers', authMiddleware, checkAdmin, adminController.getAllUsers);
+
 module.exports = router;

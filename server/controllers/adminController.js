@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 
 const Profile = require("../models/Profile");
 const User = require("../models/User");
+const Blog = require("../models/Blog");
 
 // @Desc    Convert a user to admin or admin to user
 // @Route   POST /admin/toggleRole
@@ -66,7 +67,25 @@ const toggleBlock = asyncHandler(async (req, res) => {
 
 })
 
+// @Desc    Get All users list
+// @Route   POST /admin/getAllUsers
+// @Access  Private
+const getAllUsers = asyncHandler(async (req, res) => {
+    const users = await User.find().select('-password');
+    let responseArr = [];
+
+    for (let i = 0; i < users.length; i++) {
+        let currUser = { ...users[i]._doc };
+        currUser['profile'] = await Profile.findOne({ user: users[i]._id });
+        currUser['blogs'] = await Blog.find({ user: users[i]._id });
+        responseArr.push(currUser);
+    }
+    res.status(200).json(responseArr);
+
+})
+
 module.exports = {
     toggleRole,
-    toggleBlock
+    toggleBlock,
+    getAllUsers
 };

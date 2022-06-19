@@ -25,6 +25,7 @@ import WriteBlog from './pages/WriteBlog';
 import SingleBlog from './pages/SingleBlog';
 import EditBlog from './pages/EditBlog';
 import Category from './pages/Category';
+import Authors from './pages/Authors';
 
 function App() {
   return (
@@ -48,6 +49,7 @@ function App() {
             <Route path='/edit' element={<EditBlog />} />
             <Route path='/blog/:blogId' element={<SingleBlog />} />
             <Route path='/category' element={<Category />} />
+            <Route path='/authors' element={<Authors />} />
             <Route path='*' element={<NotFound />} />
           </Routes>
         </Container>

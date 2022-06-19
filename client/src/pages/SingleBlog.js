@@ -165,14 +165,14 @@ function SingleBlog() {
                                         {singleBlog.viewedBy.length} people viewed this blog
                                     </p>
                                     <p onClick={likeBlog} >
-                                        {checkIfKeyExists(singleBlog.likes, auth.user._id) ?
+                                        {checkIfKeyExists(singleBlog.likes, auth?.user?._id) ?
                                             <Icon name='thumbs up outline' /> :
                                             <Icon name='thumbs up' />
                                         }
                                         {singleBlog.likes.length}
                                     </p>
                                     <p onClick={dislikeBlog} >
-                                        {checkIfKeyExists(singleBlog.dislikes, auth.user._id) ?
+                                        {checkIfKeyExists(singleBlog.dislikes, auth?.user?._id) ?
                                             <Icon name='thumbs down outline' /> :
                                             <Icon name='thumbs down' />
                                         }
@@ -229,6 +229,7 @@ function SingleBlog() {
                                     </Fragment>
                                     : null
                                 }
+                                <br />
                             </div>
                         </Fragment>
             }

@@ -43,9 +43,10 @@ function Category() {
     }
 
     const [addCategoryValue, setAddCategoryValue] = useState('');
+    const [addCategoryBtnLoading, setAddCategoryBtnLoading] = useState(false);
     const handleAddCategory = async (e) => {
         e.preventDefault();
-
+        setAddCategoryBtnLoading(true);
         const res = await dispatch(addCategory({ name: addCategoryValue }));
         if (res.type === "/category/create/rejected") {
             toast.error(res.payload);
@@ -53,7 +54,7 @@ function Category() {
         else if (res.type === "/category/create/fulfilled") {
             toast.success('Category created')
         }
-
+        setAddCategoryBtnLoading(false);
     }
 
     const [editModalOpen, setEditModalOpen] = useState(false);
@@ -111,7 +112,7 @@ function Category() {
                                 <Form.Input placeholder='Category' width={13}>
                                     <input type="text" value={addCategoryValue} onChange={(e) => setAddCategoryValue(e.target.value)} />
                                 </Form.Input>
-                                <Form.Button fluid type='button' content='Add Category' secondary width={3} onClick={handleAddCategory} />
+                                <Form.Button fluid type='button' loading={addCategoryBtnLoading} content='Add Category' secondary width={3} onClick={handleAddCategory} />
                             </Form.Group>
                         </Form>
                     </div>

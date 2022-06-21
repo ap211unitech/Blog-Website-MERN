@@ -1,11 +1,13 @@
-import { Fragment } from 'react';
+import { Fragment, useEffect } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import jwtDecode from 'jwt-decode';
 
 /**************** SEMANTIC UI ****************/
 import { Container } from 'semantic-ui-react';
 
 /**************** REACT TOASTIFY ****************/
-import { ToastContainer } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 /**************** PAGES ****************/
@@ -28,6 +30,42 @@ import Category from './pages/Category';
 import Authors from './pages/Authors';
 
 function App() {
+
+  const { user } = useSelector(state => state.auth);
+
+  // Logout If token expires
+  useEffect(() => {
+    try {
+      const token = JSON.parse(localStorage.getItem('user')).token;
+      const decodedToken = jwtDecode(token);
+      let currentDate = new Date();
+      // JWT exp is in seconds
+      if (decodedToken.exp * 1000 > currentDate.getTime()) {
+        setTimeout(() => {
+          localStorage.removeItem('user');
+          window.location.replace('/login');
+          localStorage.setItem('showAutoLogoutToast', true);
+        }, decodedToken.exp * 1000 - currentDate.getTime());
+      }
+      else {
+        setTimeout(() => {
+          localStorage.removeItem('user');
+          window.location.replace('/login');
+          localStorage.setItem('showAutoLogoutToast', true);
+        }, 10);
+      }
+    }
+    catch (err) { localStorage.removeItem('user'); }
+  }, [user])
+
+  // Show toast message when token expire
+  useEffect(() => {
+    if (localStorage.getItem("showAutoLogoutToast") === "true") {
+      toast.error('Session Expired. Please Login again');
+      localStorage.removeItem("showAutoLogoutToast");
+    }
+  }, [])
+
   return (
     <Fragment>
       <ToastContainer autoClose={2500} />

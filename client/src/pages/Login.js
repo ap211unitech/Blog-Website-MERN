@@ -93,7 +93,7 @@ function Login() {
                     marginTop: 10
                 }} >
                     <div>
-                        <h5>Already have an account ?{' '}
+                        <h5>Don't have an account ?{' '}
                             <Link to={'/register'}>Sign Up</Link>
                         </h5>
                     </div>

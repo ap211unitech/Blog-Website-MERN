@@ -45,10 +45,10 @@ function Authors() {
                 </Fragment>
                 :
                 <Fragment>
-                    <Table singleLine textAlign='center'>
+                    <Table singleLine celled striped padded>
                         <Table.Header>
-                            <Table.Row>
-                                <Table.HeaderCell>Author</Table.HeaderCell>
+                            <Table.Row textAlign='center'>
+                                <Table.HeaderCell collapsing>Author</Table.HeaderCell>
                                 <Table.HeaderCell>Email</Table.HeaderCell>
                                 <Table.HeaderCell>Blogs</Table.HeaderCell>
                                 <Table.HeaderCell>Contact</Table.HeaderCell>
@@ -60,7 +60,7 @@ function Authors() {
                                 <Fragment key={curruser._id}>
                                     <Table.Row textAlign='center'>
                                         <Table.Cell>
-                                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }} onClick={() => navigate(`/profile/${curruser.profile._id}`)} >
+                                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flexStart', cursor: 'pointer' }} onClick={() => navigate(`/profile/${curruser.profile._id}`)} >
                                                 <img src={curruser.profile.profileUrl} style={{ borderRadius: '50%' }} width={50} height={50} alt="profile" />
                                                 <p style={{ marginLeft: 9, fontSize: 16, color: '#4183c4' }} >{curruser.name}</p>
                                             </div>

@@ -116,10 +116,10 @@ function Category() {
                             </Form.Group>
                         </Form>
                     </div>
-                    <Table singleLine textAlign='center'>
+                    <Table singleLine celled striped padded>
                         <Table.Header>
-                            <Table.Row>
-                                <Table.HeaderCell>Author</Table.HeaderCell>
+                            <Table.Row textAlign='center'>
+                                <Table.HeaderCell textAlign='left' collapsing>Author</Table.HeaderCell>
                                 <Table.HeaderCell>Category</Table.HeaderCell>
                                 <Table.HeaderCell>Last Updated at</Table.HeaderCell>
                                 <Table.HeaderCell>Edit/Delete</Table.HeaderCell>
@@ -130,7 +130,7 @@ function Category() {
                                 <Fragment key={cat._id}>
                                     <Table.Row textAlign='center'>
                                         <Table.Cell>
-                                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }} onClick={() => navigate(`/profile/${cat.profile._id}`)} >
+                                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flexStart', cursor: 'pointer' }} onClick={() => navigate(`/profile/${cat.profile._id}`)} >
                                                 <img src={cat.profile.profileUrl} style={{ borderRadius: '50%' }} width={50} height={50} alt="profile" />
                                                 <p style={{ marginLeft: 9, fontSize: 16, color: '#4183c4' }} >{cat.user.name}</p>
                                             </div>

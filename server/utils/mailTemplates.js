@@ -196,7 +196,7 @@ module.exports = {
                                                             </tr>
                                                         </tbody>
                                                     </table>
-                                                    <p>If above button does not work, copy this url in your browser ${url}auth/resetpassword/${token}</p>
+                                                    <p>If above button does not work, copy this url in your browser ${url}auth/activate/${token}</p>
                                                     <h2>See you there 😊😊</h2>
                                                 </td>
                                             </tr>

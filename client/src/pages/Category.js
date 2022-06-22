@@ -119,7 +119,7 @@ function Category() {
                     <Table singleLine celled striped padded>
                         <Table.Header>
                             <Table.Row textAlign='center'>
-                                <Table.HeaderCell textAlign='left' collapsing>Author</Table.HeaderCell>
+                                <Table.HeaderCell collapsing>Author</Table.HeaderCell>
                                 <Table.HeaderCell>Category</Table.HeaderCell>
                                 <Table.HeaderCell>Last Updated at</Table.HeaderCell>
                                 <Table.HeaderCell>Edit/Delete</Table.HeaderCell>

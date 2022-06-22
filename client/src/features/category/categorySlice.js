@@ -61,6 +61,7 @@ const categorySlice = createSlice({
     initialState,
     reducers: {
         categoryReset: (state, action) => {
+            state.categories = null;
             state.isLoading = false;
             state.isSuccess = false;
             state.isError = false;
@@ -89,7 +90,7 @@ const categorySlice = createSlice({
             .addCase(getAllCategory.fulfilled, (state, action) => {
                 state.categories = action.payload;
                 state.isLoading = false;
-                state.isSuccess = false;
+                state.isSuccess = true;
                 state.isError = false;
                 state.successMessage = [];
                 state.errorMessage = [];

@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom';
-import { Button, Form, Icon, Loader, Modal, Segment, Table } from 'semantic-ui-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Button, Form, Icon, Label, Loader, Modal, Segment, Table } from 'semantic-ui-react';
 import { formatDate } from '../app/helpers';
 import { toast } from 'react-toastify';
 import { getAllUsers } from '../features/admin/adminSlice';
@@ -50,7 +50,9 @@ function Authors() {
                             <Table.Row textAlign='center'>
                                 <Table.HeaderCell collapsing>Author</Table.HeaderCell>
                                 <Table.HeaderCell>Email</Table.HeaderCell>
-                                <Table.HeaderCell>Blogs</Table.HeaderCell>
+                                <Table.HeaderCell>User Creation date</Table.HeaderCell>
+                                <Table.HeaderCell>User Role</Table.HeaderCell>
+                                {/* <Table.HeaderCell>Blogs</Table.HeaderCell> */}
                                 <Table.HeaderCell>Contact</Table.HeaderCell>
                                 <Table.HeaderCell>Setting</Table.HeaderCell>
                             </Table.Row>
@@ -69,13 +71,21 @@ function Authors() {
                                             {curruser.email}
                                         </Table.Cell>
                                         <Table.Cell>
-                                            {curruser.blogs.length} blogs written
+                                            {formatDate(curruser.createdAt)}
+                                        </Table.Cell>
+                                        <Table.Cell>
+                                            {curruser.profile.role === 'admin' ?
+                                                <Button color='green' content='Admin' /> :
+                                                curruser.blogs.length > 0 ?
+                                                    <Button color='blue' content='Author' /> :
+                                                    <Button content='Viewer' />
+                                            }
                                         </Table.Cell>
                                         <Table.Cell>
                                             <Button as='a' href={`mailto:${curruser.email}`} icon='mail' label='Send Message' />
                                         </Table.Cell>
                                         <Table.Cell>
-                                            <Button icon='setting' />
+                                            <Button as={Link} to={'/edit/author'} state={{ user: curruser }} icon='setting' label='Edit Details' />
                                         </Table.Cell>
                                     </Table.Row>
                                 </Fragment>

@@ -28,6 +28,7 @@ import SingleBlog from './pages/SingleBlog';
 import EditBlog from './pages/EditBlog';
 import Category from './pages/Category';
 import Authors from './pages/Authors';
+import EditAuthor from './pages/EditAuthor';
 
 function App() {
 
@@ -88,6 +89,7 @@ function App() {
             <Route path='/blog/:blogId' element={<SingleBlog />} />
             <Route path='/category' element={<Category />} />
             <Route path='/authors' element={<Authors />} />
+            <Route path='/edit/author' element={<EditAuthor />} />
             <Route path='*' element={<NotFound />} />
           </Routes>
         </Container>

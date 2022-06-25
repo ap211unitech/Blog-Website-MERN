@@ -23,6 +23,17 @@ export const getLatestBlogs = createAsyncThunk('/blog/latest', async (thunkAPI) 
     }
 })
 
+// Get Blogs of a categoryId
+export const getBlogsByCategoryId = createAsyncThunk('/blog/selectedCategory', async (data, thunkAPI) => {
+    try {
+        return await blogService.getBlogsByCategoryId(data);
+    } catch (err) {
+        const message = (err.response && err.response.data && err.response.data.message) || err.message || err.toString();
+        return thunkAPI.rejectWithValue(message);
+    }
+})
+
+
 // Get Blog by blogID
 export const getBlogByBlogID = createAsyncThunk('/blog/single', async (blogId, thunkAPI) => {
     try {
@@ -163,6 +174,34 @@ const blogSlice = createSlice({
                 state.errorMessage = isValidJSON(action.payload) ? Object.values(JSON.parse(action.payload)) : [action.payload];;
             })
 
+
+            .addCase(getBlogsByCategoryId.pending, (state, action) => {
+                state.latestBlogs = null;
+                state.singleBlog = null;
+                state.isLoading = true;
+                state.isSuccess = false;
+                state.isError = false;
+                state.successMessage = [];
+                state.errorMessage = [];
+            })
+            .addCase(getBlogsByCategoryId.fulfilled, (state, action) => {
+                state.latestBlogs = action.payload;
+                state.singleBlog = null;
+                state.isLoading = false;
+                state.isSuccess = false;
+                state.isError = false;
+                state.successMessage = [];
+                state.errorMessage = [];
+            })
+            .addCase(getBlogsByCategoryId.rejected, (state, action) => {
+                state.latestBlogs = null;
+                state.singleBlog = null;
+                state.isLoading = false;
+                state.isSuccess = false;
+                state.isError = true;
+                state.successMessage = [];
+                state.errorMessage = isValidJSON(action.payload) ? Object.values(JSON.parse(action.payload)) : [action.payload];;
+            })
 
             .addCase(getBlogByBlogID.pending, (state, action) => {
                 state.singleBlog = null;

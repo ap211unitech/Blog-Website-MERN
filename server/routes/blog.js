@@ -5,6 +5,9 @@ const blogController = require("../controllers/blogController");
 // Get Latest Blogs
 router.get('/blog/latest', blogController.getLatestBlogs);
 
+// Get Blogs of a categoryId
+router.get('/blog/:categoryId', blogController.getBlogsByCategoryId);
+
 // Get Blog of a user
 router.get('/blog/:userId', blogController.getBlog);
 

@@ -337,3 +337,7 @@ hr {
     display: flex;
     align-items: center;
 }
+
+.ui .input {
+    width: 100% !important;
+}

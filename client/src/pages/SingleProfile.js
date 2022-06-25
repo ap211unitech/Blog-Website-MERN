@@ -280,7 +280,7 @@ function SingleProfile() {
                                                         </span>
                                                     </div>
                                                     <h2 style={{ margin: '20px 0px 0px 0px', padding: 0 }} > {blog.title}</h2>
-                                                    <p style={{ fontSize: 16, paddingTop: 5, wordWrap: 'break-word' }} >
+                                                    <p style={{ fontSize: 16, paddingTop: 5, wordWrap: 'break-word', marginBottom: 10 }} >
                                                         {extractDescriptionFromHTML(blog.desc).substr(0, 300)}...........
                                                         <Link to={`/blog/${blog._id}`} className='blog-read-more-button' >Read more</Link>
                                                     </p>

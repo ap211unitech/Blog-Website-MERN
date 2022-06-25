@@ -15,6 +15,13 @@ const getLatestBlogs = asyncHandler(async (req, res) => {
     res.status(200).json(blogs);
 })
 
+// @Desc    Get Blogs of a categoryId
+// @Route   GET /blog/:categoryId
+// @Access  Public
+const getBlogsByCategoryId = asyncHandler(async (req, res) => {
+    const blogs = await Blog.find({ category: req.params.categoryId }).populate('user').populate('profile').populate('category').sort({ 'updatedAt': -1 });
+    res.status(200).json(blogs);
+})
 
 // @Desc    Get blogs of a user
 // @Route   GET /blog/:userId
@@ -365,6 +372,7 @@ const deleteBlog = asyncHandler(async (req, res) => {
 
 module.exports = {
     getBlog,
+    getBlogsByCategoryId,
     getBlogByBlogID,
     writeBlog,
     editBlog,

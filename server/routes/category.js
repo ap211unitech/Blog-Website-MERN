@@ -4,7 +4,7 @@ const { checkAdmin } = require("../middleware/adminMiddleware");
 const { authMiddleware } = require("../middleware/authMiddleware");
 
 // Get All Category
-router.get('/category', authMiddleware, categoryController.getCategory);
+router.get('/category', categoryController.getCategory);
 
 // Add New Category
 router.post('/category', authMiddleware, checkAdmin, categoryController.addCategory);

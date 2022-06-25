@@ -22,6 +22,28 @@ export const getAllUsers = createAsyncThunk('/admin/getAllUsers', async (_, thun
     }
 })
 
+// Toggle User Role
+export const toggleUserRole = createAsyncThunk('/admin/toggleRole', async (data, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().auth?.user?.token;
+        return await adminService.toggleRole(token, data);
+    } catch (err) {
+        const message = (err.response && err.response.data && err.response.data.message) || err.message || err.toString();
+        return thunkAPI.rejectWithValue(message);
+    }
+})
+
+// Get user all details by userid 
+export const getUserDetails = createAsyncThunk('/admin/getUserDetails', async (data, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().auth?.user?.token;
+        return await adminService.getUserDetails(token, data);
+    } catch (err) {
+        const message = (err.response && err.response.data && err.response.data.message) || err.message || err.toString();
+        return thunkAPI.rejectWithValue(message);
+    }
+})
+
 const adminSlice = createSlice({
     name: 'admin',
     initialState,

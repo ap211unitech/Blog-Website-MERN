@@ -17,7 +17,7 @@ const toggleRole = asyncHandler(async (req, res) => {
     }
 
     // Check if user exists
-    const userExists = await User.findById(userId);
+    const userExists = await User.findById(userId).select('-password');
 
     if (!userExists) {
         res.status(400)
@@ -34,8 +34,11 @@ const toggleRole = asyncHandler(async (req, res) => {
     }
     await profile.save();
 
-    res.status(200).json({ msg: 'Role Toggled' });
+    let response = { ...userExists._doc };
+    response['profile'] = profile;
+    response['blogs'] = await Blog.find({ user: userId });
 
+    res.status(200).json(response);
 })
 
 // @Desc    Toggle isBlocked property
@@ -51,7 +54,7 @@ const toggleBlock = asyncHandler(async (req, res) => {
     }
 
     // Check if user exists
-    const userExists = await User.findById(userId);
+    const userExists = await User.findById(userId).select('-password');
 
     if (!userExists) {
         res.status(400)
@@ -63,7 +66,11 @@ const toggleBlock = asyncHandler(async (req, res) => {
     profile.isBlocked = !profile.isBlocked;
     await profile.save();
 
-    res.status(200).json({ msg: 'Block property Toggled' });
+    let response = { ...userExists._doc };
+    response['profile'] = profile;
+    response['blogs'] = await Blog.find({ user: userId });
+
+    res.status(200).json(response);
 
 })
 
@@ -84,8 +91,29 @@ const getAllUsers = asyncHandler(async (req, res) => {
 
 })
 
+// @Desc    Get user from userId 
+// @Route   POST /admin/getUserDetailsByUserId
+// @Access  Private
+const getUserDetailsByUserID = asyncHandler(async (req, res) => {
+    const { userId } = req.body;
+
+    const userExists = await User.findById(userId).select('-password');
+
+    if (!userExists) {
+        res.status(400)
+        throw new Error('No such user exists');
+    }
+
+    let response = { ...userExists._doc };
+    response['profile'] = await Profile.findOne({ user: userId });;
+    response['blogs'] = await Blog.find({ user: userId });
+
+    res.status(200).json(response);
+})
+
 module.exports = {
     toggleRole,
     toggleBlock,
-    getAllUsers
+    getAllUsers,
+    getUserDetailsByUserID
 };

@@ -12,4 +12,7 @@ router.post('/toggleBlock', authMiddleware, checkAdmin, adminController.toggleBl
 // Get List of all users
 router.get('/getAllUsers', authMiddleware, checkAdmin, adminController.getAllUsers);
 
+// Get User Details from userid
+router.post('/getUserDetailsByUserId', authMiddleware, checkAdmin, adminController.getUserDetailsByUserID);
+
 module.exports = router;

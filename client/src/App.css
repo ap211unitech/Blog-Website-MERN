@@ -53,9 +53,9 @@ hr {
 }
 
 .profileImage img {
-    border-radius: 50%;
-    width: 150px;
-    height: 150px;
+    border-radius: 50% !important;
+    width: 150px !important;
+    height: 150px !important;
 }
 
 

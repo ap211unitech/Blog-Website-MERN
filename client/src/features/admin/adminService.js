@@ -12,6 +12,30 @@ const getAllUsers = async (authToken) => {
     return res.data;
 }
 
+// Toggle User Role
+const toggleRole = async (authToken, data) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${authToken}`
+        }
+    }
+    const res = await axios.post(`${BACKEND_HOST_URL}/admin/toggleRole`, data, config);
+    return res.data;
+}
+
+// Get user complete  details by user id 
+const getUserDetails = async (authToken, data) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${authToken}`
+        }
+    }
+    const res = await axios.post(`${BACKEND_HOST_URL}/admin/getUserDetailsByUserId`, data, config);
+    return res.data;
+}
+
 export default {
-    getAllUsers
+    getAllUsers,
+    toggleRole,
+    getUserDetails
 }

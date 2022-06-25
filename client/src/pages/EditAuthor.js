@@ -4,9 +4,9 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify';
-import { Button, Form, Grid, Icon, Image, Label, Segment } from 'semantic-ui-react';
+import { Button, Form, Grid, Icon, Image, Label, Loader, Segment } from 'semantic-ui-react';
 import { formatDate } from '../app/helpers';
-import { getUserDetails, toggleUserRole } from '../features/admin/adminSlice';
+import { getUserDetails, toggleUserBlock, toggleUserRole } from '../features/admin/adminSlice';
 
 function EditAuthor() {
 
@@ -17,6 +17,7 @@ function EditAuthor() {
 
     const auth = useSelector(state => state.auth);
     const [user, setUser] = useState({});
+    const [loadingCompleteUserData, setLoadingCompleteUserData] = useState(false);
 
     useEffect(async () => {
         if (!auth || !auth.user || !auth.user.token) {
@@ -28,6 +29,7 @@ function EditAuthor() {
             return
         }
 
+        setLoadingCompleteUserData(true);
         // Get complete user data from userId
         const res = await dispatch(getUserDetails({ userId: location.state.user._id }));
         if (res.type === '/admin/getUserDetails/rejected') {
@@ -36,9 +38,11 @@ function EditAuthor() {
             return;
         }
         setUser(res.payload);
+        setLoadingCompleteUserData(false);
 
     }, [])
 
+    // Toggle User role
     const [toggleRoleLoading, setToggleRoleLoading] = useState(false);
     const toggleRole = async () => {
         await setToggleRoleLoading(true);
@@ -52,8 +56,23 @@ function EditAuthor() {
         await setToggleRoleLoading(false);
     }
 
+    // Block a user
+    const [toggleBlockLoading, setToggleBlockLoading] = useState(false);
+    const toggleBlock = async () => {
+        await setToggleBlockLoading(true);
+        const res = await dispatch(toggleUserBlock({ userId: user._id }));
+        if (res.type === '/admin/toggleBlock/rejected') {
+            toast.error(res.payload);
+        }
+        else if (res.type === '/admin/toggleBlock/fulfilled') {
+            await setUser(res.payload);
+        }
+        await setToggleBlockLoading(false);
+    }
+
     return (
         <Fragment>
+            {loadingCompleteUserData && <Loader content="Loading user data" active />}
             <Grid centered>
                 <Grid.Row >
                     <img src="https://cdn-icons-png.flaticon.com/512/2522/2522138.png" width={80} height={80} alt="" />
@@ -73,7 +92,7 @@ function EditAuthor() {
                             src={user.profile?.profileUrl}
                             label={{
                                 as: 'a',
-                                color: user.profile?.role === 'admin' ? 'green' : user.blogs?.length > 0 ? 'blue' : 'basic',
+                                color: user.profile?.role === 'admin' ? 'green' : user.blogs?.length > 0 ? 'blue' : '#3498db',
                                 content: user.profile?.role === 'admin' ? 'Admin' : user.blogs?.length > 0 ? 'Author' : 'Viewer',
                                 size: 'large',
                                 ribbon: true,
@@ -102,19 +121,28 @@ function EditAuthor() {
                             {/* Admin Should not see toggle Buttons for him  */}
                             {user._id !== auth.user._id ?
                                 <Fragment>
-                                    {/* Make a user admin */}
+                                    {/* Toggle user role */}
                                     <Fragment>
                                         <Button primary onClick={toggleRole} loading={toggleRoleLoading} disabled={toggleRoleLoading}>
                                             Toggle Role
                                         </Button>
                                     </Fragment>
 
-                                    {/* Block user */}
-                                    <Fragment>
-                                        <Button color='red' >
-                                            Block
-                                        </Button>
-                                    </Fragment>
+                                    {/* Toggle Block */}
+                                    {user.profile.isBlocked ?
+                                        <Fragment>
+                                            <Button color='red' basic onClick={toggleBlock} loading={toggleBlockLoading} disabled={toggleBlockLoading}>
+                                                Unblock
+                                            </Button>
+                                        </Fragment>
+                                        :
+                                        <Fragment>
+                                            <Button color='red' onClick={toggleBlock} loading={toggleBlockLoading} disabled={toggleBlockLoading}>
+                                                Block User
+                                            </Button>
+                                        </Fragment>
+                                    }
+
                                 </Fragment> :
                                 null
                             }

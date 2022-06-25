@@ -23,6 +23,17 @@ const toggleRole = async (authToken, data) => {
     return res.data;
 }
 
+// Toggle User Block
+const toggleBlock = async (authToken, data) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${authToken}`
+        }
+    }
+    const res = await axios.post(`${BACKEND_HOST_URL}/admin/toggleBlock`, data, config);
+    return res.data;
+}
+
 // Get user complete  details by user id 
 const getUserDetails = async (authToken, data) => {
     const config = {
@@ -37,5 +48,6 @@ const getUserDetails = async (authToken, data) => {
 export default {
     getAllUsers,
     toggleRole,
+    toggleBlock,
     getUserDetails
 }

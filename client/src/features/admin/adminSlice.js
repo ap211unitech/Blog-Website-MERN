@@ -33,6 +33,17 @@ export const toggleUserRole = createAsyncThunk('/admin/toggleRole', async (data,
     }
 })
 
+// Toggle User Block
+export const toggleUserBlock = createAsyncThunk('/admin/toggleBlock', async (data, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().auth?.user?.token;
+        return await adminService.toggleBlock(token, data);
+    } catch (err) {
+        const message = (err.response && err.response.data && err.response.data.message) || err.message || err.toString();
+        return thunkAPI.rejectWithValue(message);
+    }
+})
+
 // Get user all details by userid 
 export const getUserDetails = createAsyncThunk('/admin/getUserDetails', async (data, thunkAPI) => {
     try {

@@ -6,6 +6,11 @@ import { formatDate } from '../app/helpers';
 import { toast } from 'react-toastify';
 import { getAllUsers } from '../features/admin/adminSlice';
 
+const checkIfPrimeUser = ({ email }) => {
+    let emails = ['porwal.1@iitj.ac.in'];
+    if (emails.includes(email)) return true;
+    return false;
+}
 
 function Authors() {
 
@@ -85,7 +90,13 @@ function Authors() {
                                             <Button as='a' href={`mailto:${curruser.email}`} icon='mail' label='Send Message' />
                                         </Table.Cell>
                                         <Table.Cell>
-                                            <Button as={Link} to={'/edit/author'} state={{ user: curruser }} icon='setting' label='Edit Details' />
+                                            {curruser.profile.role === 'admin' ?
+                                                checkIfPrimeUser(user) ?
+                                                    <Button as={Link} to={'/edit/author'} state={{ user: curruser }} icon='setting' label='Edit Details' /> :
+                                                    <Fragment>-------------</Fragment>
+                                                :
+                                                <Button as={Link} to={'/edit/author'} state={{ user: curruser }} icon='setting' label='Edit Details' />
+                                            }
                                         </Table.Cell>
                                     </Table.Row>
                                 </Fragment>

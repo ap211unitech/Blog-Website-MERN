@@ -341,3 +341,7 @@ hr {
 .ui .input {
     width: 100% !important;
 }
+
+.ui[class*="left icon"].input>input {
+    border-radius: 100px;
+}

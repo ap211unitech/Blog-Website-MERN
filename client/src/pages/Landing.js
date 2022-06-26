@@ -4,10 +4,68 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
 import { authReset, sendActivationMail } from '../features/auth/authSlice';
 import { profileReset, getMyProfile, customProfileReset } from '../features/profile/profileSlice';
-import { Grid, Message, Icon, Label, Loader, Menu, Header, Search, Form, Input } from 'semantic-ui-react'
+import { Grid, Message, Icon, Label, Loader, Menu, Header, Input } from 'semantic-ui-react'
 import { blogReset, getBlogsByCategoryId, getLatestBlogs } from '../features/blog/blogSlice';
-import { extractDescriptionFromHTML, formatDate } from '../app/helpers';
+import { extractDescriptionFromHTML, formatDate, searchBlogs } from '../app/helpers';
 import { getAllCategory } from '../features/category/categorySlice';
+
+const renderBlogsData = (blogs, activeCategory) => {
+    return (
+        <Grid>
+            {blogs ?
+                blogs.length === 0 ?
+                    <h4 style={{ marginTop: 40 }}>
+                        No blogs found
+                    </h4>
+                    :
+                    blogs.map(blog => (
+                        <Grid.Row key={blog._id} >
+                            <Grid.Column width={13} verticalAlign='middle' >
+                                <div className='latestBlogAuthor'>
+                                    <Link to={`/profile/${blog.profile._id}`} >
+                                        <img style={{ borderRadius: '50%', margin: 'auto 6px -11px auto' }} src={blog.profile.profileUrl} width={35} height={35} alt="Profile Image" />
+                                        {' '}  {blog.user.name}
+                                    </Link>
+                                    <span style={{ color: 'grey', marginLeft: 5 }}>
+                                        Last updated on {formatDate(blog.updatedAt)}
+                                    </span>
+                                </div>
+                                <h2 style={{ margin: '20px 0px 0px 0px', padding: 0, wordWrap: 'break-word' }} > {blog.title}</h2>
+                                <p style={{ fontSize: 16, paddingTop: 5, wordWrap: 'break-word', marginBottom: 10 }} >
+                                    {extractDescriptionFromHTML(blog.desc).substr(0, 300)}...........
+                                    <Link to={`/blog/${blog._id}`} className='blog-read-more-button' >Read more</Link>
+                                </p>
+                                <Label>{blog.category.name}</Label>
+                                <div className='latestBlogLDC' >
+                                    <p>
+                                        <Icon name='eye' />
+                                        {blog.viewedBy.length}
+                                    </p>
+                                    <p>
+                                        <Icon name='thumbs up' />
+                                        {blog.likes.length}
+                                    </p>
+                                    <p>
+                                        <Icon name='thumbs down' />
+                                        {blog.dislikes.length}
+                                    </p>
+                                    <p>
+                                        <Icon name='comments' />
+                                        {blog.comments.length}
+                                    </p>
+                                </div>
+                            </Grid.Column>
+                            <Grid.Column width={3}>
+                                <img height={'60%'} alt='Blog Image' src={blog.coverPhoto} />
+                            </Grid.Column>
+                        </Grid.Row>
+                    ))
+                : <Loader active content={activeCategory ? 'Loading blogs of selected category' : 'Loading Latest Blogs'} />
+            }
+        </Grid>
+    )
+}
+
 
 function Landing() {
 
@@ -66,6 +124,13 @@ function Landing() {
     }
 
     const [searchVal, setSearchVal] = useState('');
+    const [searchedBlogsResult, setSearchedBlogsResult] = useState([]);
+    useEffect(() => {
+        if (blog?.latestBlogs) {
+            const searchedBlogs = searchBlogs(blog?.latestBlogs, searchVal);
+            setSearchedBlogsResult(searchedBlogs);
+        }
+    }, [blog, searchVal])
 
     return (
         <Fragment>
@@ -129,63 +194,12 @@ function Landing() {
                 </Grid.Column>
                 <Grid.Column width={12}>
 
+                    {/* Render Blogs */}
+                    {searchVal ?
+                        renderBlogsData(searchedBlogsResult, activeCategory) : // when search val is not null, find blogs from selected category using key and render them
+                        renderBlogsData(blog.latestBlogs, activeCategory) // when search val is null, render blogs of selected category
+                    }
 
-                    {/* <h1>Latest Blogs</h1> */}
-                    <Grid>
-                        {blog.latestBlogs ?
-                            blog.latestBlogs.length === 0 ?
-                                <h4 style={{ marginTop: 40 }}>
-                                    {activeCategory ?
-                                        "No blogs found for selected category" :
-                                        "No blogs found"
-                                    }
-                                </h4>
-                                :
-                                blog.latestBlogs.map(blog => (
-                                    <Grid.Row key={blog._id} >
-                                        <Grid.Column width={13} verticalAlign='middle' >
-                                            <div className='latestBlogAuthor'>
-                                                <Link to={`/profile/${blog.profile._id}`} >
-                                                    <img style={{ borderRadius: '50%', margin: 'auto 6px -11px auto' }} src={blog.profile.profileUrl} width={35} height={35} alt="Profile Image" />
-                                                    {' '}  {blog.user.name}
-                                                </Link>
-                                                <span style={{ color: 'grey', marginLeft: 5 }}>
-                                                    Last updated on {formatDate(blog.updatedAt)}
-                                                </span>
-                                            </div>
-                                            <h2 style={{ margin: '20px 0px 0px 0px', padding: 0, wordWrap: 'break-word' }} > {blog.title}</h2>
-                                            <p style={{ fontSize: 16, paddingTop: 5, wordWrap: 'break-word', marginBottom: 10 }} >
-                                                {extractDescriptionFromHTML(blog.desc).substr(0, 300)}...........
-                                                <Link to={`/blog/${blog._id}`} className='blog-read-more-button' >Read more</Link>
-                                            </p>
-                                            <Label>{blog.category.name}</Label>
-                                            <div className='latestBlogLDC' >
-                                                <p>
-                                                    <Icon name='eye' />
-                                                    {blog.viewedBy.length}
-                                                </p>
-                                                <p>
-                                                    <Icon name='thumbs up' />
-                                                    {blog.likes.length}
-                                                </p>
-                                                <p>
-                                                    <Icon name='thumbs down' />
-                                                    {blog.dislikes.length}
-                                                </p>
-                                                <p>
-                                                    <Icon name='comments' />
-                                                    {blog.comments.length}
-                                                </p>
-                                            </div>
-                                        </Grid.Column>
-                                        <Grid.Column width={3}>
-                                            <img height={'60%'} alt='Blog Image' src={blog.coverPhoto} />
-                                        </Grid.Column>
-                                    </Grid.Row>
-                                ))
-                            : <Loader active content={activeCategory ? 'Loading blogs of selected category' : 'Loading Latest Blogs'} />
-                        }
-                    </Grid>
                 </Grid.Column>
             </Grid>
 

@@ -8,15 +8,16 @@ export const isValidJSON = (str) => {
 }
 
 export const formatDate = (iso) => {
+    var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
     let date = new Date(iso);
     const yyyy = date.getFullYear();
-    let mm = date.getMonth() + 1; // Months start at 0!
+    let mm = months[date.getMonth()]; // Months start at 0!
     let dd = date.getDate();
 
     if (dd < 10) dd = '0' + dd;
     if (mm < 10) mm = '0' + mm;
 
-    date = dd + '/' + mm + '/' + yyyy;
+    date = dd + ' ' + mm + ' ' + yyyy;
 
     let time = new Date(iso).toLocaleTimeString();
 
@@ -42,4 +43,16 @@ export const extractDescriptionFromHTML = (txt, space = false) => {
     console.log(span.innerText)
     return [span.textContent || span.innerText].toString().replace(/ +/g, ' ');
 
+}
+
+export const searchBlogs = (blogs, key) => {
+    key = key.toLowerCase();
+    return blogs.filter(blog => {
+        if (blog.user.name.toLowerCase().startsWith(key)) {
+            return blog;
+        }
+        if (blog.title.toLowerCase().startsWith(key)) {
+            return blog;
+        }
+    })
 }

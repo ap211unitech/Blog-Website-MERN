@@ -1,8 +1,8 @@
-import React, { Fragment, useEffect } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom';
-import { Button, Loader, Table } from 'semantic-ui-react';
-import { formatDate } from '../app/helpers';
+import { Button, Grid, Input, Loader, Table } from 'semantic-ui-react';
+import { formatDate, searchAuthors } from '../app/helpers';
 import { toast } from 'react-toastify';
 import { getAllUsers } from '../features/admin/adminSlice';
 
@@ -10,6 +10,52 @@ const checkIfPrimeUser = ({ email }) => {
     let emails = ['porwalarjun95@gmail.com'];
     if (emails.includes(email)) return true;
     return false;
+}
+
+const renderUserData = (usersList, user, navigate) => {
+
+    return (
+        <Table.Body>
+            {usersList?.map(curruser =>
+                <Fragment key={curruser._id}>
+                    <Table.Row textAlign='center'>
+                        <Table.Cell>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flexStart', cursor: 'pointer' }} onClick={() => navigate(`/profile/${curruser.profile._id}`)} >
+                                <img src={curruser.profile.profileUrl} style={{ borderRadius: '50%' }} width={50} height={50} alt="profile" />
+                                <p style={{ marginLeft: 9, fontSize: 16, color: '#4183c4' }} >{curruser.name}</p>
+                            </div>
+                        </Table.Cell>
+                        <Table.Cell>
+                            {curruser.email}
+                        </Table.Cell>
+                        <Table.Cell>
+                            {formatDate(curruser.createdAt)}
+                        </Table.Cell>
+                        <Table.Cell>
+                            {curruser.profile.role === 'admin' ?
+                                <Button color='green' content='Admin' /> :
+                                curruser.blogs.length > 0 ?
+                                    <Button color='blue' content='Author' /> :
+                                    <Button content='Viewer' />
+                            }
+                        </Table.Cell>
+                        <Table.Cell>
+                            <Button as='a' href={`mailto:${curruser.email}`} icon='mail' label='Send Message' />
+                        </Table.Cell>
+                        <Table.Cell>
+                            {curruser.profile.role === 'admin' ?
+                                checkIfPrimeUser(user) ?
+                                    <Button as={Link} to={'/edit/author'} state={{ user: curruser }} icon='setting' label='Edit Details' /> :
+                                    <Fragment>-------------</Fragment>
+                                :
+                                <Button as={Link} to={'/edit/author'} state={{ user: curruser }} icon='setting' label='Edit Details' />
+                            }
+                        </Table.Cell>
+                    </Table.Row>
+                </Fragment>
+            )}
+        </Table.Body>
+    )
 }
 
 function Authors() {
@@ -42,8 +88,31 @@ function Authors() {
 
     }, [profile, navigate, dispatch])
 
+    const [searchVal, setSearchVal] = useState('');
+    const [searchedUsersResult, setSearchedUsersResult] = useState([]);
+    useEffect(() => {
+        if (usersList) {
+            const searchedUsers = searchAuthors(usersList, searchVal);
+            setSearchedUsersResult(searchedUsers);
+        }
+    }, [usersList, searchVal])
+
     return (
         <Fragment>
+            {/* Search Box Authors */}
+            <Grid centered>
+                <Grid.Column width={16}>
+                    <Input
+                        icon='search'
+                        iconPosition='left'
+                        value={searchVal}
+                        onChange={(e) => setSearchVal(e.target.value)}
+                        focus
+                        placeholder='Search users by thier name / role / email . . . . . .'
+                    />
+                </Grid.Column>
+            </Grid>
+
             {isLoading ?
                 <Fragment>
                     <Loader active content='Loading authors' />
@@ -62,47 +131,17 @@ function Authors() {
                                 <Table.HeaderCell>Setting</Table.HeaderCell>
                             </Table.Row>
                         </Table.Header>
-                        <Table.Body>
-                            {usersList?.map(curruser =>
-                                <Fragment key={curruser._id}>
-                                    <Table.Row textAlign='center'>
-                                        <Table.Cell>
-                                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flexStart', cursor: 'pointer' }} onClick={() => navigate(`/profile/${curruser.profile._id}`)} >
-                                                <img src={curruser.profile.profileUrl} style={{ borderRadius: '50%' }} width={50} height={50} alt="profile" />
-                                                <p style={{ marginLeft: 9, fontSize: 16, color: '#4183c4' }} >{curruser.name}</p>
-                                            </div>
-                                        </Table.Cell>
-                                        <Table.Cell>
-                                            {curruser.email}
-                                        </Table.Cell>
-                                        <Table.Cell>
-                                            {formatDate(curruser.createdAt)}
-                                        </Table.Cell>
-                                        <Table.Cell>
-                                            {curruser.profile.role === 'admin' ?
-                                                <Button color='green' content='Admin' /> :
-                                                curruser.blogs.length > 0 ?
-                                                    <Button color='blue' content='Author' /> :
-                                                    <Button content='Viewer' />
-                                            }
-                                        </Table.Cell>
-                                        <Table.Cell>
-                                            <Button as='a' href={`mailto:${curruser.email}`} icon='mail' label='Send Message' />
-                                        </Table.Cell>
-                                        <Table.Cell>
-                                            {curruser.profile.role === 'admin' ?
-                                                checkIfPrimeUser(user) ?
-                                                    <Button as={Link} to={'/edit/author'} state={{ user: curruser }} icon='setting' label='Edit Details' /> :
-                                                    <Fragment>-------------</Fragment>
-                                                :
-                                                <Button as={Link} to={'/edit/author'} state={{ user: curruser }} icon='setting' label='Edit Details' />
-                                            }
-                                        </Table.Cell>
-                                    </Table.Row>
-                                </Fragment>
-                            )}
-                        </Table.Body>
+
+                        {/* Render Users Data */}
+                        {searchVal ?
+                            renderUserData(searchedUsersResult, user, navigate) :
+                            renderUserData(usersList, user, navigate)
+                        }
+
+                        {/* We can render data from writting this condition also. renderUserData(searchedUsersResult, user, navigate). But for more clarification, using conditional rendering */}
+
                     </Table>
+                    <br />
                 </Fragment>
             }
 

@@ -45,14 +45,36 @@ export const extractDescriptionFromHTML = (txt, space = false) => {
 
 }
 
+// Search Blogs from a given list og blogs
 export const searchBlogs = (blogs, key) => {
     key = key.toLowerCase();
     return blogs.filter(blog => {
-        if (blog.user.name.toLowerCase().startsWith(key)) {
+        if (blog.user.name.toLowerCase().includes(key)) {
             return blog;
         }
-        if (blog.title.toLowerCase().startsWith(key)) {
+        if (blog.title.toLowerCase().includes(key)) {
             return blog;
+        }
+    })
+}
+
+// Get role of an author
+const getRole = (user) => {
+    return user.profile.role === 'admin' ? 'admin' : user.blogs.length > 0 ? 'author' : 'viewer';
+}
+
+// Search Users from a given list of users
+export const searchAuthors = (users, key) => {
+    key = key.toLowerCase();
+    return users.filter(user => {
+        if (user.name.toLowerCase().includes(key)) {
+            return user;
+        }
+        if (user.email.toLowerCase().includes(key)) {
+            return user;
+        }
+        if (getRole(user).toLowerCase().includes(key)) {
+            return user;
         }
     })
 }

@@ -60,7 +60,7 @@ const renderBlogsData = (blogs, activeCategory) => {
                             </Grid.Column>
                         </Grid.Row>
                     ))
-                : <Loader active content={activeCategory ? 'Loading blogs of selected category' : 'Loading Latest Blogs'} />
+                : <Loader active content={activeCategory !== 'all blogs' ? 'Loading blogs of selected category' : 'Loading Latest Blogs'} />
             }
         </Grid>
     )
@@ -199,6 +199,8 @@ function Landing() {
                         renderBlogsData(searchedBlogsResult, activeCategory) : // when search val is not null, find blogs from selected category using key and render them
                         renderBlogsData(blog.latestBlogs, activeCategory) // when search val is null, render blogs of selected category
                     }
+
+                    {/* We can render data from writting this condition also. renderBlogsData(searchedBlogsResult, activeCategory). But for more clarification, using conditional rendering */}
 
                 </Grid.Column>
             </Grid>

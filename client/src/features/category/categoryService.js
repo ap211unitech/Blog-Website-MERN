@@ -17,13 +17,14 @@ const getAllCategory = async (token) => {
 ////////////////////////////////// ADMIN ACTIONS //////////////////////////////////
 
 // Delete a category
-const deleteCategory = async (id, token) => {
+const deleteCategory = async (data, token) => {
     const config = {
         headers: {
             Authorization: `Bearer ${token}`
-        }
+        },
+        data
     }
-    const res = await axios.delete(`${URL}/category/${id}`, config);
+    const res = await axios.delete(`${URL}/category/${data.categoryId}`, config);
     return res.data;
 }
 

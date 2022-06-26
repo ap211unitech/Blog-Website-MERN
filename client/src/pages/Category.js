@@ -7,6 +7,12 @@ import { addCategory, deleteCategory, editCategoryAction, getAllCategory } from 
 import { getMyProfile } from '../features/profile/profileSlice';
 import { toast } from 'react-toastify';
 
+const checkIfPrimeUser = ({ email }) => {
+    let emails = ['porwalarjun95@gmail.com'];
+    if (emails.includes(email)) return true;
+    return false;
+}
+
 function Category() {
 
     const navigate = useNavigate();
@@ -32,7 +38,8 @@ function Category() {
 
     const handleCategoryDelete = async (id) => {
         if (window.confirm('All the blogs belongs to this category would also get delete. Are you sure to delete it ?')) {
-            const res = await dispatch(deleteCategory(id));
+            const payload = { categoryId: id, prime: checkIfPrimeUser(user) }
+            const res = await dispatch(deleteCategory(payload));
             if (res.type === '/category/delete/rejected') {
                 toast.error(res.payload)
             }
@@ -65,7 +72,7 @@ function Category() {
     }
 
     const handleEditCategory = async () => {
-        const payload = { name: editCategory.name, categoryId: editCategory._id }
+        const payload = { name: editCategory.name, categoryId: editCategory._id, prime: checkIfPrimeUser(user) }
         const res = await dispatch(editCategoryAction(payload));
         if (res.type === '/category/edit/rejected') {
             toast.error(res.payload);
@@ -137,19 +144,33 @@ function Category() {
                                         </Table.Cell>
                                         <Table.Cell>{cat.name}</Table.Cell>
                                         <Table.Cell>{formatDate(cat.updatedAt)}</Table.Cell>
-                                        {cat.user._id === user._id ?
-                                            <Table.Cell>
-                                                {/* Edit Category */}
-                                                <span style={{ cursor: 'pointer', marginRight: 5 }} onClick={() => handleEditIconClick(cat)}>
-                                                    <Icon name='edit outline' size='large' color='blue' />
-                                                </span>
-                                                {/* Delete Category */}
-                                                <span style={{ cursor: 'pointer' }}>
-                                                    <Icon name='delete' size='large' color='red' onClick={() => handleCategoryDelete(cat._id)} />
-                                                </span>
-                                            </Table.Cell>
+                                        {checkIfPrimeUser(user) ? // If it is prime user, then allow all actions 
+                                            <Fragment>
+                                                <Table.Cell>
+                                                    {/* Edit Category */}
+                                                    <span style={{ cursor: 'pointer', marginRight: 5 }} onClick={() => handleEditIconClick(cat)}>
+                                                        <Icon name='edit outline' size='large' color='blue' />
+                                                    </span>
+                                                    {/* Delete Category */}
+                                                    <span style={{ cursor: 'pointer' }}>
+                                                        <Icon name='delete' size='large' color='red' onClick={() => handleCategoryDelete(cat._id)} />
+                                                    </span>
+                                                </Table.Cell>
+                                            </Fragment>
                                             :
-                                            <Table.Cell>-------------</Table.Cell>
+                                            cat.user._id === user._id ? // else admins can edit/delete thier category only
+                                                <Table.Cell>
+                                                    {/* Edit Category */}
+                                                    <span style={{ cursor: 'pointer', marginRight: 5 }} onClick={() => handleEditIconClick(cat)}>
+                                                        <Icon name='edit outline' size='large' color='blue' />
+                                                    </span>
+                                                    {/* Delete Category */}
+                                                    <span style={{ cursor: 'pointer' }}>
+                                                        <Icon name='delete' size='large' color='red' onClick={() => handleCategoryDelete(cat._id)} />
+                                                    </span>
+                                                </Table.Cell>
+                                                :
+                                                <Table.Cell>-------------</Table.Cell>
                                         }
                                     </Table.Row>
                                 </Fragment>

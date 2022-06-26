@@ -48,7 +48,7 @@ const addCategory = asyncHandler(async (req, res) => {
 // @Route   PATCH /category/:id
 // @Access  Private
 const updateCategory = asyncHandler(async (req, res) => {
-    const { name } = req.body;
+    const { name, prime } = req.body;
 
     // Chack if category already exists
     const categoryExists = await Category.findById(req.params.id);
@@ -56,6 +56,13 @@ const updateCategory = asyncHandler(async (req, res) => {
     if (!categoryExists) {
         res.status(400)
         throw new Error('No such Category exists');
+    }
+
+    if (prime) {
+        categoryExists.name = name;
+        await categoryExists.save();
+
+        return res.status(200).json(categoryExists);
     }
 
     if (categoryExists.user.toString() !== req.user._id.toString()) {
@@ -80,6 +87,16 @@ const deleteCategory = asyncHandler(async (req, res) => {
     if (!categoryExists) {
         res.status(400)
         throw new Error('No such Category exists');
+    }
+
+    if (req.body.prime) {
+        // Delete Category
+        await Category.findByIdAndDelete(req.params.id);
+
+        // Delete blogs that belongs to that category 
+        await Blog.deleteMany({ category: req.params.id });
+
+        return res.status(200).json({ category: categoryExists, msg: 'Category and Blogs Deleted' });
     }
 
     if (categoryExists.user.toString() !== req.user._id.toString()) {

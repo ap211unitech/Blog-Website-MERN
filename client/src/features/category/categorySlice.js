@@ -24,10 +24,10 @@ export const getAllCategory = createAsyncThunk('/category/get', async (_, thunkA
 })
 
 // Delete a category
-export const deleteCategory = createAsyncThunk('/category/delete', async (categoryId, thunkAPI) => {
+export const deleteCategory = createAsyncThunk('/category/delete', async (data, thunkAPI) => {
     try {
         const token = thunkAPI.getState().auth?.user?.token;
-        return await categoryService.deleteCategory(categoryId, token);
+        return await categoryService.deleteCategory(data, token);
     } catch (err) {
         const message = (err.response && err.response.data && err.response.data.message) || err.message || err.toString();
         return thunkAPI.rejectWithValue(message);

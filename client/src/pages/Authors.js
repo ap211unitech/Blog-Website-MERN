@@ -1,13 +1,13 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom';
-import { Button, Form, Icon, Label, Loader, Modal, Segment, Table } from 'semantic-ui-react';
+import { Button, Loader, Table } from 'semantic-ui-react';
 import { formatDate } from '../app/helpers';
 import { toast } from 'react-toastify';
 import { getAllUsers } from '../features/admin/adminSlice';
 
 const checkIfPrimeUser = ({ email }) => {
-    let emails = ['porwal.1@iitj.ac.in'];
+    let emails = ['porwalarjun95@gmail.com'];
     if (emails.includes(email)) return true;
     return false;
 }

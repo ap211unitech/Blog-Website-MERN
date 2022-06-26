@@ -2,9 +2,9 @@ import React, { Fragment } from 'react'
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify';
-import { Button, Form, Grid, Icon, Image, Label, Loader, Segment } from 'semantic-ui-react';
+import { Button, Grid, Icon, Image, Label, Loader } from 'semantic-ui-react';
 import { formatDate } from '../app/helpers';
 import { getUserDetails, toggleUserBlock, toggleUserRole } from '../features/admin/adminSlice';
 

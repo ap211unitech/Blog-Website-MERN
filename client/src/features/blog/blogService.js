@@ -9,8 +9,15 @@ const getLatestBlogs = async () => {
     return res.data;
 }
 
+// Get blogs of a category by categoryId
 const getBlogsByCategoryId = async ({ categoryId }) => {
     const res = await axios.get(`${URL}/blog/${categoryId}`);
+    return res.data;
+}
+
+// Get blogs of user by userId
+const getBlogsOfUser = async ({ userId }) => {
+    const res = await axios.get(`${URL}/blog/user/${userId}`);
     return res.data;
 }
 
@@ -101,6 +108,7 @@ const editBlog = async (data, token) => {
 export default {
     getLatestBlogs,
     getBlogsByCategoryId,
+    getBlogsOfUser,
     getBlogByBlogID,
     likeBlogByBlogID,
     dislikeBlogByBlogID,

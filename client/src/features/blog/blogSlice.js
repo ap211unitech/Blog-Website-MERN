@@ -5,6 +5,7 @@ import blogService from "./blogService";
 const initialState = {
     latestBlogs: null,
     singleBlog: null,
+    blogsOfUser: null,
     isLoading: false,
     isSuccess: false,
     isError: false,
@@ -33,6 +34,16 @@ export const getBlogsByCategoryId = createAsyncThunk('/blog/selectedCategory', a
     }
 })
 
+// Get Blogs of a user by serrId
+export const getBlogsOfUser = createAsyncThunk('/blog/specificUser', async (data, thunkAPI) => {
+    try {
+        const token = thunkAPI.getState().auth?.user?.token;
+        return await blogService.getBlogsOfUser(data, token);
+    } catch (err) {
+        const message = (err.response && err.response.data && err.response.data.message) || err.message || err.toString();
+        return thunkAPI.rejectWithValue(message);
+    }
+})
 
 // Get Blog by blogID
 export const getBlogByBlogID = createAsyncThunk('/blog/single', async (blogId, thunkAPI) => {
@@ -136,6 +147,7 @@ const blogSlice = createSlice({
         },
         blogResetLogout: (state, action) => {
             state.latestBlogs = null;
+            state.blogsOfUser = null;
             state.singleBlog = null;
             state.isLoading = false;
             state.isSuccess = false;
@@ -173,8 +185,6 @@ const blogSlice = createSlice({
                 state.successMessage = [];
                 state.errorMessage = isValidJSON(action.payload) ? Object.values(JSON.parse(action.payload)) : [action.payload];;
             })
-
-
             .addCase(getBlogsByCategoryId.pending, (state, action) => {
                 state.latestBlogs = null;
                 state.singleBlog = null;
@@ -195,6 +205,25 @@ const blogSlice = createSlice({
             })
             .addCase(getBlogsByCategoryId.rejected, (state, action) => {
                 state.latestBlogs = null;
+                state.singleBlog = null;
+                state.isLoading = false;
+                state.isSuccess = false;
+                state.isError = true;
+                state.successMessage = [];
+                state.errorMessage = isValidJSON(action.payload) ? Object.values(JSON.parse(action.payload)) : [action.payload];;
+            })
+            .addCase(getBlogsOfUser.fulfilled, (state, action) => {
+                state.blogsOfUser = action.payload;
+                state.singleBlog = null;
+                state.isLoading = false;
+                state.isSuccess = false;
+                state.isError = false;
+                state.successMessage = [];
+                state.errorMessage = [];
+            })
+            .addCase(getBlogsOfUser.rejected, (state, action) => {
+                state.latestBlogs = null;
+                state.blogsOfUser = null;
                 state.singleBlog = null;
                 state.isLoading = false;
                 state.isSuccess = false;

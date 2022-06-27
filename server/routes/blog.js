@@ -9,7 +9,7 @@ router.get('/blog/latest', blogController.getLatestBlogs);
 router.get('/blog/:categoryId', blogController.getBlogsByCategoryId);
 
 // Get Blog of a user
-router.get('/blog/:userId', blogController.getBlog);
+router.get('/blog/user/:userId', blogController.getBlog);
 
 // Get Blog of a BlogID
 router.post('/blog/single/:blogId', blogController.getBlogByBlogID);

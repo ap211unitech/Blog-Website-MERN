@@ -56,7 +56,7 @@ const renderBlogsData = (blogs, activeCategory) => {
                                 </div>
                             </Grid.Column>
                             <Grid.Column width={3}>
-                                <img height={'60%'} alt='Blog Image' src={blog.coverPhoto} />
+                                <img height={'65%'} width={'100%'} alt='Blog Image' src={blog.coverPhoto} />
                             </Grid.Column>
                         </Grid.Row>
                     ))

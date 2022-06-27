@@ -194,6 +194,10 @@ hr {
     width: 100%;
 }
 
+.single-blog-desc {
+    font-size: 18px;
+}
+
 .single-blog-desc ul {
     margin-left: 10px;
 }

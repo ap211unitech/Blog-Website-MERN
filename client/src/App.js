@@ -29,6 +29,7 @@ import EditBlog from './pages/EditBlog';
 import Category from './pages/Category';
 import Authors from './pages/Authors';
 import EditAuthor from './pages/EditAuthor';
+import Blogs from './pages/Blogs';
 
 function App() {
 
@@ -85,6 +86,7 @@ function App() {
             <Route path='/profile/:profileId' element={<SingleProfile />} />
             <Route path='/account' element={<Account />} />
             <Route path='/write' element={<WriteBlog />} />
+            <Route path='/blogs' element={<Blogs />} />
             <Route path='/edit' element={<EditBlog />} />
             <Route path='/blog/:blogId' element={<SingleBlog />} />
             <Route path='/category' element={<Category />} />

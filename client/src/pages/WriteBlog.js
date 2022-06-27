@@ -87,6 +87,7 @@ const WriteBlog = () => {
         setContent(EditorState.createEmpty());
         setImage('');
         setSelectCategory(null);
+        navigate(`/blog/${res.payload.blog._id}`);
     }
 
     const [cloudinaryUploadLoading, setCloudinaryUploadLoading] = useState(false);

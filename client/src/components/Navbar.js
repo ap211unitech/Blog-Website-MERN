@@ -63,13 +63,24 @@ function Navbar() {
                     to='/'
                 />
                 {user ?
-                    <Menu.Item
-                        name='create'
-                        active={activeItem === 'write'}
-                        onClick={handleItemClick}
-                        as={Link}
-                        to='/write'
-                    /> : null
+                    <Fragment>
+                        <Menu.Item
+                            name='create'
+                            active={activeItem === 'write'}
+                            onClick={handleItemClick}
+                            as={Link}
+                            to='/write'
+                        />
+                        <Menu.Item
+                            name='blogs'
+                            active={activeItem === 'blogs'}
+                            onClick={handleItemClick}
+                            as={Link}
+                            to='/blogs'
+                        />
+                    </Fragment>
+
+                    : null
                 }
                 {profile?.role === "admin" ?
                     <Menu.Item

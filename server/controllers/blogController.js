@@ -24,10 +24,10 @@ const getBlogsByCategoryId = asyncHandler(async (req, res) => {
 })
 
 // @Desc    Get blogs of a user
-// @Route   GET /blog/:userId
-// @Access  Private
+// @Route   GET /blog/user/:userId
+// @Access  Public
 const getBlog = asyncHandler(async (req, res) => {
-    const blogs = await Blog.find({ user: req.params.userId });
+    const blogs = await Blog.find({ user: req.params.userId }).populate('user').populate('profile').populate('category');
     res.status(200).json(blogs);
 })
 

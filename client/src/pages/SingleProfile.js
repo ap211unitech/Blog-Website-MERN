@@ -1,10 +1,11 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux'
-import { getAnyUserProfile, customProfileReset, followAnyUserProfile, getMyProfile } from '../features/profile/profileSlice';
+import { getAnyUserProfile, customProfileReset, followAnyUserProfile } from '../features/profile/profileSlice';
 import { toast } from 'react-toastify';
 import { Button, Modal, Icon, Loader, Message, List, Image, Label, Grid } from 'semantic-ui-react';
-import { extractDescriptionFromHTML, formatDate } from '../app/helpers';
+import { formatDate } from '../app/helpers';
+import BlogItem from '../components/BlogItem';
 
 function SingleProfile() {
 
@@ -268,46 +269,7 @@ function SingleProfile() {
                                     {/* <Message floating header={`Blogs by ${otherProfile.user.name.split(' ')[0]}`} /> */}
                                     <Grid>
                                         {otherProfile.blogs.map(blog => (
-                                            <Grid.Row key={blog._id} >
-                                                <Grid.Column width={13} verticalAlign='middle' >
-                                                    <div className='latestBlogAuthor'>
-                                                        <Link to={`/profile/${blog.profile._id}`} >
-                                                            <img style={{ borderRadius: '50%', margin: 'auto 6px -11px auto' }} src={blog.profile.profileUrl} width={35} height={35} alt="Profile Image" />
-                                                            {' '}  {blog.user.name}
-                                                        </Link>
-                                                        <span style={{ color: 'grey', marginLeft: 5 }}>
-                                                            Last updated on {formatDate(blog.updatedAt)}
-                                                        </span>
-                                                    </div>
-                                                    <h2 style={{ margin: '20px 0px 0px 0px', padding: 0 }} > {blog.title}</h2>
-                                                    <p style={{ fontSize: 16, paddingTop: 5, wordWrap: 'break-word', marginBottom: 10 }} >
-                                                        {extractDescriptionFromHTML(blog.desc).substr(0, 300)}...........
-                                                        <Link to={`/blog/${blog._id}`} className='blog-read-more-button' >Read more</Link>
-                                                    </p>
-                                                    <Label >{blog.category.name}</Label>
-                                                    <div className='latestBlogLDC' >
-                                                        <p>
-                                                            <Icon name='eye' />
-                                                            {blog.viewedBy.length}
-                                                        </p>
-                                                        <p>
-                                                            <Icon name='thumbs up' />
-                                                            {blog.likes.length}
-                                                        </p>
-                                                        <p>
-                                                            <Icon name='thumbs down' />
-                                                            {blog.dislikes.length}
-                                                        </p>
-                                                        <p>
-                                                            <Icon name='comments' />
-                                                            {blog.comments.length}
-                                                        </p>
-                                                    </div>
-                                                </Grid.Column>
-                                                <Grid.Column width={3}>
-                                                    <img height={'70%'} alt='Blog Image' src={blog.coverPhoto} />
-                                                </Grid.Column>
-                                            </Grid.Row>
+                                            <BlogItem blog={blog} />
                                         ))}
                                     </Grid>
                                 </Fragment>

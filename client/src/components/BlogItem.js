@@ -21,7 +21,7 @@ function BlogItem({ blog }) {
             }
             else if (res.type === '/blog/delete/fulfilled') {
                 toast.success('Blog deleted successfully')
-                navigate('/');
+                window.location.reload();
             }
         }
     }
@@ -44,7 +44,6 @@ function BlogItem({ blog }) {
                         {extractDescriptionFromHTML(blog.desc).substr(0, 300)}...........
                         <Link to={`/blog/${blog._id}`} className='blog-read-more-button' >Read more</Link>
                     </p>
-                    <Label >{blog.category.name}</Label>
                     {auth?.user?.token && auth.user._id === blog.user._id ?
                         <div style={{ display: 'flex', margin: '10px auto 13px auto' }}>
                             <div style={{}}>
@@ -54,13 +53,14 @@ function BlogItem({ blog }) {
                             </div>
 
                             <div style={{ marginLeft: 10 }}>
-                                <Button color='red' basic type='button' onClick={handleDeleteBlog}>
+                                <Button color='red' basic type='button' onClick={() => handleDeleteBlog(blog._id)}>
                                     Delete Blog
                                 </Button>
                             </div>
                         </div>
                         : null
                     }
+                    <Label >{blog.category.name}</Label>
                     <div className='latestBlogLDC' >
                         <p>
                             <Icon name='eye' />

@@ -4,9 +4,16 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify';
-import { Button, Grid, Icon, Image, Label, Loader } from 'semantic-ui-react';
+import { Button, Grid, Icon, Image, Label, Loader, Menu } from 'semantic-ui-react';
 import { formatDate } from '../app/helpers';
+import BlogItem from '../components/BlogItem';
 import { getUserDetails, toggleUserBlock, toggleUserRole } from '../features/admin/adminSlice';
+
+const checkReactedBlogs = (blogs) => {
+    return blogs.filter(blog => {
+        if (blog.likes.length || blog.dislikes.length || blog.comments.length) return blog;
+    })
+}
 
 function EditAuthor() {
 
@@ -18,6 +25,7 @@ function EditAuthor() {
     const auth = useSelector(state => state.auth);
     const [user, setUser] = useState({});
     const [loadingCompleteUserData, setLoadingCompleteUserData] = useState(false);
+    const [activeItem, setActiveItem] = useState('');
 
     useEffect(async () => {
         if (!auth || !auth.user || !auth.user.token) {
@@ -30,6 +38,7 @@ function EditAuthor() {
         }
 
         setLoadingCompleteUserData(true);
+        setActiveItem('published');
         // Get complete user data from userId
         const res = await dispatch(getUserDetails({ userId: location.state.user._id }));
         if (res.type === '/admin/getUserDetails/rejected') {
@@ -45,6 +54,7 @@ function EditAuthor() {
     // Toggle User role
     const [toggleRoleLoading, setToggleRoleLoading] = useState(false);
     const toggleRole = async () => {
+        setActiveItem('published');
         await setToggleRoleLoading(true);
         const res = await dispatch(toggleUserRole({ userId: user._id }));
         if (res.type === '/admin/toggleRole/rejected') {
@@ -59,6 +69,7 @@ function EditAuthor() {
     // Block a user
     const [toggleBlockLoading, setToggleBlockLoading] = useState(false);
     const toggleBlock = async () => {
+        setActiveItem('published');
         await setToggleBlockLoading(true);
         const res = await dispatch(toggleUserBlock({ userId: user._id }));
         if (res.type === '/admin/toggleBlock/rejected') {
@@ -68,6 +79,24 @@ function EditAuthor() {
             await setUser(res.payload);
         }
         await setToggleBlockLoading(false);
+    }
+
+    const handleMenuItemClick = async (name) => {
+        setActiveItem(name);
+        if (name === 'published') {
+            // Get all blogs of current user
+            const res = await dispatch(getUserDetails({ userId: location.state.user._id }));
+            if (res.type === '/admin/getUserDetails/rejected') {
+                navigate('/authors');
+                toast.error(res.payload);
+                return;
+            }
+            setUser(res.payload);
+        }
+        else if (name === 'reacted') {
+            const filteredBlogs = checkReactedBlogs(user?.blogs);
+            setUser((prev) => ({ ...prev, 'blogs': filteredBlogs }));
+        }
     }
 
     return (
@@ -197,6 +226,24 @@ function EditAuthor() {
                     </div>
                 </div>
             }
+            {/* Blogs Menu */}
+            <Menu pointing secondary>
+                <Menu.Item
+                    name={`Published ${user?.blogs && activeItem === 'published' ? `(${user?.blogs?.length})` : ``}`}
+                    active={activeItem === 'published'}
+                    onClick={() => handleMenuItemClick('published')}
+                />
+                <Menu.Item
+                    name={`Reacted ${user?.blogs && activeItem === 'reacted' ? `(${user?.blogs?.length})` : ``}`}
+                    active={activeItem === 'reacted'}
+                    onClick={() => handleMenuItemClick('reacted')}
+                />
+            </Menu>
+            <Fragment>
+                <Grid>
+                    {user?.blogs?.map(blog => <BlogItem key={blog._id} blog={blog} role={user?.profile?.role} />)}
+                </Grid>
+            </Fragment>
 
         </Fragment>
     )

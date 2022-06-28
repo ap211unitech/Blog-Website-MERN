@@ -6,7 +6,7 @@ import { Icon, Label, Grid, Button } from 'semantic-ui-react';
 import { extractDescriptionFromHTML, formatDate } from '../app/helpers';
 import { deleteBlog } from '../features/blog/blogSlice';
 
-function BlogItem({ blog }) {
+function BlogItem({ blog, role }) {
 
     const auth = useSelector(state => state.auth);
     const dispatch = useDispatch();
@@ -59,6 +59,21 @@ function BlogItem({ blog }) {
                             </div>
                         </div>
                         : null
+                    }
+                    {role === 'admin' && auth.user._id !== blog.user._id &&
+                        <div style={{ display: 'flex', margin: '10px auto 13px auto' }}>
+                            <div style={{}}>
+                                <Button secondary type='button' as={Link} to={`/edit`} state={{ blog: blog }}>
+                                    Edit Blog
+                                </Button>
+                            </div>
+
+                            <div style={{ marginLeft: 10 }}>
+                                <Button color='red' basic type='button' onClick={() => handleDeleteBlog(blog._id)}>
+                                    Delete Blog
+                                </Button>
+                            </div>
+                        </div>
                     }
                     <Label >{blog.category.name}</Label>
                     <div className='latestBlogLDC' >

@@ -36,7 +36,7 @@ const toggleRole = asyncHandler(async (req, res) => {
 
     let response = { ...userExists._doc };
     response['profile'] = profile;
-    response['blogs'] = await Blog.find({ user: userId });
+    response['blogs'] = await Blog.find({ user: userId }).populate('profile').populate('category');
 
     res.status(200).json(response);
 })
@@ -68,7 +68,7 @@ const toggleBlock = asyncHandler(async (req, res) => {
 
     let response = { ...userExists._doc };
     response['profile'] = profile;
-    response['blogs'] = await Blog.find({ user: userId });
+    response['blogs'] = await Blog.find({ user: userId }).populate('profile').populate('category');
 
     res.status(200).json(response);
 
@@ -106,7 +106,7 @@ const getUserDetailsByUserID = asyncHandler(async (req, res) => {
 
     let response = { ...userExists._doc };
     response['profile'] = await Profile.findOne({ user: userId });;
-    response['blogs'] = await Blog.find({ user: userId });
+    response['blogs'] = await Blog.find({ user: userId }).populate('profile').populate('category');
 
     res.status(200).json(response);
 })

@@ -3,6 +3,7 @@ const asyncHandler = require("express-async-handler");
 const Profile = require("../models/Profile");
 const User = require("../models/User");
 const Blog = require("../models/Blog");
+const { userRoleChangedEmail, userBlockEmail } = require("../utils/mail");
 
 // @Desc    Convert a user to admin or admin to user
 // @Route   POST /admin/toggleRole
@@ -33,6 +34,9 @@ const toggleRole = asyncHandler(async (req, res) => {
         profile.role = 'user';
     }
     await profile.save();
+
+    // Send email when user role changed
+    userRoleChangedEmail({ to: userExists.email, isAdminNow: profile.role === 'admin' });
 
     let response = { ...userExists._doc };
     response['profile'] = profile;
@@ -65,6 +69,9 @@ const toggleBlock = asyncHandler(async (req, res) => {
     const profile = await Profile.findOne({ user: userId });
     profile.isBlocked = !profile.isBlocked;
     await profile.save();
+
+    // Send email when user gets block/unblock
+    userBlockEmail({ to: userExists.email, isBlockNow: profile.isBlocked })
 
     let response = { ...userExists._doc };
     response['profile'] = profile;

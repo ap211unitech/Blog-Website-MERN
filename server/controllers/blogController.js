@@ -324,6 +324,24 @@ const editBlog = asyncHandler(async (req, res) => {
         throw new Error('Blog does not exists');
     }
 
+    if (req.body.prime) {
+        const categoryExists = await Category.findById(category);
+        if (!categoryExists) {
+            res.status(400)
+            throw new Error('No such category exists')
+        }
+
+        blogExists.title = title;
+        blogExists.desc = desc;
+        blogExists.coverPhoto = coverPhoto;
+        blogExists.content = content;
+        blogExists.category = category;
+
+        await blogExists.save();
+
+        return res.status(200).json({ blog: blogExists });
+    }
+
     // Check if user is same 
     if (req.user._id.toString() !== blogExists.user.toString()) {
         res.status(400)
@@ -357,6 +375,11 @@ const deleteBlog = asyncHandler(async (req, res) => {
     if (!blogExists) {
         res.status(400)
         throw new Error('No such blog exists')
+    }
+
+    if (req.body.prime) {
+        await Blog.findByIdAndDelete(req.params.id);
+        return res.status(200).json({ msg: 'Blog deleted' });
     }
 
     // Check if who created the blog and loggedIn user are same

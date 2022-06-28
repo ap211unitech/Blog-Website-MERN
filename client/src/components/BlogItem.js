@@ -14,14 +14,16 @@ function BlogItem({ blog, role }) {
 
     const handleDeleteBlog = async (blogId) => {
         if (window.confirm('Do you surely want to delete your blog?')) {
-            const res = await dispatch(deleteBlog({ id: blogId }));
+            const res = await dispatch(deleteBlog({ id: blogId, prime: role === 'admin' }));
             if (res.type === '/blog/delete/rejected') {
                 toast.error(res.payload);
                 return;
             }
             else if (res.type === '/blog/delete/fulfilled') {
-                toast.success('Blog deleted successfully')
-                window.location.reload();
+                toast.success('Blog deleted successfully');
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
             }
         }
     }

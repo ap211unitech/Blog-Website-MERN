@@ -84,11 +84,12 @@ const writeNewBlog = async (data, token) => {
 }
 
 // Delete a Blog
-const deleteBlog = async ({ id }, token) => {
+const deleteBlog = async ({ id, prime }, token) => {
     const config = {
         headers: {
             Authorization: `Bearer ${token}`
-        }
+        },
+        data: { prime }
     }
     const res = await axios.delete(`${URL}/blog/delete/${id}`, config);
     return res.data;

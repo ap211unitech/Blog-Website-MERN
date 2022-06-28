@@ -2,7 +2,7 @@ import React, { Fragment } from 'react'
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify';
 import { Button, Grid, Icon, Image, Label, Loader, Menu } from 'semantic-ui-react';
 import { formatDate } from '../app/helpers';
@@ -23,6 +23,7 @@ function EditAuthor() {
     const dispatch = useDispatch();
 
     const auth = useSelector(state => state.auth);
+    const { profile } = useSelector(state => state.profile);
     const [user, setUser] = useState({});
     const [loadingCompleteUserData, setLoadingCompleteUserData] = useState(false);
     const [activeItem, setActiveItem] = useState('');
@@ -147,6 +148,10 @@ function EditAuthor() {
                                 }
                             </div>
 
+                            <Button secondary basic as={Link} to={`/profile/${user.profile._id}`}>
+                                Visit Profile
+                            </Button>
+
                             {/* Admin Should not see toggle Buttons for him  */}
                             {user._id !== auth.user._id ?
                                 <Fragment>
@@ -241,7 +246,7 @@ function EditAuthor() {
             </Menu>
             <Fragment>
                 <Grid>
-                    {user?.blogs?.map(blog => <BlogItem key={blog._id} blog={blog} role={user?.profile?.role} />)}
+                    {user?.blogs?.map(blog => <BlogItem key={blog._id} blog={blog} role={profile?.role} />)}
                 </Grid>
             </Fragment>
 

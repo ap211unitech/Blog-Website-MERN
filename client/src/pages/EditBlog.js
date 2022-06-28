@@ -21,6 +21,7 @@ function EditBlog() {
     const dispatch = useDispatch();
 
     const auth = useSelector(state => state.auth);
+    const { profile } = useSelector(state => state.profile);
     const category = useSelector(state => state.category);
 
     const [title, setTitle] = useState();
@@ -57,7 +58,8 @@ function EditBlog() {
             desc: draftToHtml(convertToRaw(content.getCurrentContent())),
             coverPhoto,
             category: selectCategory,
-            blogId: location?.state?.blog?._id
+            blogId: location?.state?.blog?._id,
+            prime: profile?.role === 'admin'
         }
 
         const res = await dispatch(editBlogByBlogId(data));

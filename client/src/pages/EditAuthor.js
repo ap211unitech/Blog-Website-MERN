@@ -63,6 +63,7 @@ function EditAuthor() {
         }
         else if (res.type === '/admin/toggleRole/fulfilled') {
             await setUser(res.payload);
+            toast.success('User Role changed successfully.')
         }
         await setToggleRoleLoading(false);
     }
@@ -77,6 +78,12 @@ function EditAuthor() {
             toast.error(res.payload);
         }
         else if (res.type === '/admin/toggleBlock/fulfilled') {
+            if (res.payload.profile.isBlocked) {
+                toast.error('User blocked.')
+            }
+            else if (!res.payload.profile.isBlocked) {
+                toast.success('User unblocked.')
+            }
             await setUser(res.payload);
         }
         await setToggleBlockLoading(false);

@@ -22,7 +22,7 @@ const WriteBlog = () => {
 
     const auth = useSelector(state => state.auth);
     const category = useSelector(state => state.category);
-    const profile = useSelector(state => state.profile);
+    const { profile } = useSelector(state => state.profile);
 
     useEffect(async () => {
 

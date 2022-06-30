@@ -22,8 +22,14 @@ const WriteBlog = () => {
 
     const auth = useSelector(state => state.auth);
     const category = useSelector(state => state.category);
+    const profile = useSelector(state => state.profile);
 
     useEffect(async () => {
+
+        if (!profile?.isActivated) {
+            navigate('/');
+            return;
+        }
 
         if (auth.user && auth.user.token) {
             const res = await dispatch(getAllCategory());
@@ -39,7 +45,7 @@ const WriteBlog = () => {
             navigate('/');
         }
 
-    }, [auth, dispatch, navigate])
+    }, [auth, profile, dispatch, navigate])
 
     const [title, setTitle] = useState('');
     const [content, setContent] = useState(EditorState.createEmpty());

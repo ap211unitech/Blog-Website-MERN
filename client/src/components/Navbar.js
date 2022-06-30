@@ -64,13 +64,13 @@ function Navbar() {
                 />
                 {user ?
                     <Fragment>
-                        <Menu.Item
+                        {profile?.isActivated && <Menu.Item
                             name='create'
                             active={activeItem === 'write'}
                             onClick={handleItemClick}
                             as={Link}
                             to='/write'
-                        />
+                        />}
                         <Menu.Item
                             name='blogs'
                             active={activeItem === 'blogs'}

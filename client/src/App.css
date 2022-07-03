@@ -216,7 +216,7 @@ hr {
 .single-blog-desc img {
     display: block;
     margin: auto;
-    width: 100% !important;
+    max-width: 100% !important;
 }
 
 .single-blog-content img {

@@ -7,7 +7,7 @@ const Profile = require("../models/Profile");
 // @Route   GET /category
 // @Access  Private
 const getCategory = asyncHandler(async (req, res) => {
-    const categories = await Category.find().populate('user').populate('profile').sort({ 'updatedAt': -1 });
+    const categories = await Category.find().populate('user').populate('profile');
     res.status(200).json(categories);
 })
 

@@ -191,12 +191,12 @@ function SingleBlog() {
                                     singleBlog.comments.map(comment => (
                                         <div className='single-blog-comment' key={comment._id}>
                                             <div className="comment-logo">
-                                                <Link to={`/profile/${singleBlog.profile._id}`} >
+                                                <Link to={`/profile/${comment.profile._id}`} >
                                                     <img width={60} height={60} style={{ borderRadius: '50%' }} src={comment.profile.profileUrl} alt="Profile" />
                                                 </Link>
                                             </div>
                                             <div className="comment-data">
-                                                <Link to={`/profile/${singleBlog.profile._id}`}>
+                                                <Link to={`/profile/${comment.profile._id}`}>
                                                     <h4  >{comment.user.name}</h4>
                                                 </Link>
                                                 <div style={{ fontSize: 18, marginTop: 5 }} >

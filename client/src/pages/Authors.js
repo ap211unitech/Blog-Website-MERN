@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom';
-import { Button, Grid, Input, Loader, Table } from 'semantic-ui-react';
+import { Button, Grid, Input, Loader, Message, Table } from 'semantic-ui-react';
 import { formatDate, searchAuthors } from '../app/helpers';
 import { toast } from 'react-toastify';
 import { getAllUsers } from '../features/admin/adminSlice';
@@ -22,7 +22,7 @@ const renderUserData = (usersList, user, navigate) => {
                         <Table.Cell>
                             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flexStart', cursor: 'pointer' }} onClick={() => navigate(`/profile/${curruser.profile._id}`)} >
                                 <img src={curruser.profile.profileUrl} style={{ borderRadius: '50%' }} width={50} height={50} alt="profile" />
-                                <p style={{ marginLeft: 9, fontSize: 16, color: '#4183c4' }} >{curruser.name}</p>
+                                <p style={{ marginLeft: 9, fontSize: 16, color: '#4183c4' }} >{curruser.name.slice(0, 15)}</p>
                             </div>
                         </Table.Cell>
                         <Table.Cell>
@@ -112,6 +112,10 @@ function Authors() {
                     />
                 </Grid.Column>
             </Grid>
+
+            {usersList?.length > 0 && <Message info size='large'>
+                🎉 Congratulations! You now have {usersList.length} users.
+            </Message>}
 
             {isLoading ?
                 <Fragment>

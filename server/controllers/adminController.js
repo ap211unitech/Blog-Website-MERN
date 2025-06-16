@@ -86,12 +86,13 @@ const toggleBlock = asyncHandler(async (req, res) => {
 // @Access  Private
 const getAllUsers = asyncHandler(async (req, res) => {
     const users = await User.find().select('-password');
+    const profiles = await Profile.find();
+
     let responseArr = [];
 
     for (let i = 0; i < users.length; i++) {
         let currUser = { ...users[i]._doc };
-        currUser['profile'] = await Profile.findOne({ user: users[i]._id });
-        // currUser['blogs'] = await Blog.find({ user: users[i]._id });
+        currUser['profile'] = profiles.find(p=> p.user.toString() === users[i]._id.toString());
         responseArr.push(currUser);
     }
     res.status(200).json(responseArr);

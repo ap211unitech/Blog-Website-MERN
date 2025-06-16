@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment, useEffect, useMemo, useState } from 'react'
 import { toast } from 'react-toastify';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
@@ -76,6 +76,12 @@ function Landing() {
     const blog = useSelector(state => state.blog);
     const { categories } = useSelector(state => state.category);
     const [activeCategory, setActiveCategory] = useState('');
+
+    const reversedCategories = useMemo(() => 
+        [...(categories || [])].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)),
+        [categories]
+    );
+
 
     useEffect(() => {
 
@@ -181,7 +187,7 @@ function Landing() {
                             active={activeCategory === 'all blogs'}
                             onClick={handleCategoryClick}
                         />
-                        {categories?.map(category => {
+                        {reversedCategories?.map(category => {
                             return <Menu.Item
                                 name={category.name}
                                 key={category._id}
